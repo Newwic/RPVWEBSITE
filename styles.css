@@ -43,8 +43,8 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 130px;
-  padding: 28px clamp(18px, 5vw, 72px);
+  min-height: 112px;
+  padding: 30px clamp(18px, 5vw, 72px) 26px;
   background: rgba(255, 255, 255, 0.98);
   border-bottom: 1px solid rgba(220, 228, 234, 0.65);
   backdrop-filter: blur(16px);
@@ -54,19 +54,19 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(28px, 4.4vw, 52px);
+  gap: clamp(34px, 4.8vw, 58px);
   width: 100%;
 }
 
 .site-nav a {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 8px 0;
   color: #050505;
   border-radius: 0;
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 700;
   line-height: 1;
   white-space: nowrap;
 }
@@ -97,15 +97,16 @@ a {
 }
 
 .products-menu > .has-dropdown {
-  padding: 18px 22px;
+  padding: 18px 20px;
   border-radius: 7px;
+  margin: -18px -20px;
   transition: color 0.18s ease, background 0.18s ease;
 }
 
 .mega-menu {
   position: absolute;
-  left: 0;
-  top: calc(100% + 0px);
+  left: -20px;
+  top: calc(100% + 18px);
   display: none;
   min-width: 850px;
   grid-template-columns: 430px 420px;
