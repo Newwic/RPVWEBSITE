@@ -120,7 +120,6 @@ const ui = {
     navHome: "หน้าแรก",
     navProducts: "สินค้า",
     navSolutions: "โซลูชัน",
-    navArticles: "บทความ",
     navAbout: "เกี่ยวกับเรา",
     navContact: "ติดต่อ",
     quoteButton: "สอบถามราคา",
@@ -167,7 +166,6 @@ const ui = {
     navHome: "Home",
     navProducts: "Products",
     navSolutions: "Solutions",
-    navArticles: "Articles",
     navAbout: "About Us",
     navContact: "Contact",
     quoteButton: "Request Quote",
@@ -297,7 +295,6 @@ function applyLanguage() {
   setText('.site-nav a[href="#home"]', t("navHome"));
   setText('.site-nav a[href="#products"]', t("navProducts"));
   setText('.site-nav a[href="#solutions"]', t("navSolutions"));
-  setText('.site-nav a[href="articles.html"]', t("navArticles"));
   setText('.site-nav a[href="#about"]', t("navAbout"));
   setText('.site-nav a[href="#contact"]', t("navContact"));
   setText(".search-copy .eyebrow", t("searchEyebrow"));
