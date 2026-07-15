@@ -7,7 +7,7 @@
     <title>RPV Admin</title>
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20260715-r">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="admin.css?v=20260715-live-preview">
+    <link rel="stylesheet" href="admin.css?v=20260715-admin-full">
   </head>
   <body class="admin-page">
     <header class="admin-topbar">
@@ -76,6 +76,7 @@
                 <h2>Products</h2>
                 <p class="admin-panel-note">กด Preview เพื่อดูหน้าเว็บจริง หรือกดแก้ไขหลังเชื่อม Supabase แล้ว</p>
               </div>
+              <button class="button primary" type="button" id="addProductInlineButton">เพิ่มสินค้าใหม่</button>
               <div class="admin-filters">
                 <input type="search" id="adminProductSearch" placeholder="ค้นหาชื่อสินค้า หรือรุ่น" aria-label="ค้นหาสินค้า">
                 <select id="adminStatusFilter" aria-label="กรองสถานะสินค้า">
@@ -154,21 +155,21 @@
                 <h2>Home Page</h2>
                 <p class="admin-panel-note">แก้ข้อความหลักของหน้า Home แบบปลอดภัย ยังเป็น draft ใน Admin จนกว่าจะเชื่อม Supabase</p>
               </div>
-              <button class="button secondary" type="button" data-static-only>บันทึก Draft</button>
+              <button class="button secondary" type="button" data-save-section="home">บันทึก Draft</button>
             </div>
             <div class="admin-editor-grid">
-              <label>หัวข้อ Hero<input type="text" value="ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ"></label>
-              <label>ข้อความรอง<input type="text" value="ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด"></label>
-              <label>ข้อความ CTA<textarea rows="3">ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ</textarea></label>
+              <label>หัวข้อ Hero<input type="text" id="homeHeroTitle" value="ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ"></label>
+              <label>ข้อความรอง<input type="text" id="homeHeroText" value="ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด"></label>
+              <label>ข้อความ CTA<textarea id="homeCtaText" rows="3">ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ</textarea></label>
               <label>เปิด/ปิด Section
-                <select>
-                  <option>Product Search เปิด</option>
-                  <option>Contact CTA เปิด</option>
-                  <option>Footer เปิด</option>
+                <select id="homeSectionMode">
+                  <option value="all">เปิดทุก Section</option>
+                  <option value="hide-contact">ซ่อน Contact CTA</option>
+                  <option value="hide-footer">ซ่อน Footer</option>
                 </select>
               </label>
             </div>
-            <p class="admin-action-status">ตอนนี้แก้เพื่อวางรูปแบบ UI ก่อน ถ้าต้องการให้บันทึกขึ้นเว็บทันทีต้องเชื่อม Supabase</p>
+            <p class="admin-action-status" id="homeDraftStatus">แก้แล้วกดบันทึก Draft หน้าเว็บหลักใน browser นี้จะเปลี่ยนหลัง refresh</p>
           </section>
 
           <section class="admin-panel" id="contact" data-admin-section="contact" hidden>
@@ -177,15 +178,16 @@
                 <h2>Contact Information</h2>
                 <p class="admin-panel-note">ข้อมูลติดต่อที่ใช้ใน Footer และ Contact CTA</p>
               </div>
-              <button class="button secondary" type="button" data-static-only>บันทึก Draft</button>
+              <button class="button secondary" type="button" data-save-section="contact">บันทึก Draft</button>
             </div>
             <div class="admin-editor-grid">
-              <label>โทรศัพท์สำนักงาน<input type="text" value="02-194-4346-7"></label>
-              <label>มือถือ<input type="text" value="086-399-0785"></label>
-              <label>LINE<input type="text" value="@rpvofficial"></label>
-              <label>Email<input type="email" value="sales@rpv.co.th"></label>
-              <label>ที่อยู่<textarea rows="3">21/62 หมู่ 3 ถ.345 ซ.ลำโพ 1 ต.ลำโพ อ.บางบัวทอง จ.นนทบุรี 11110</textarea></label>
+              <label>โทรศัพท์สำนักงาน<input type="text" id="contactOffice" value="02-194-4346-7"></label>
+              <label>มือถือ<input type="text" id="contactMobile" value="086-399-0785"></label>
+              <label>LINE<input type="text" id="contactLine" value="@rpvofficial"></label>
+              <label>Email<input type="email" id="contactEmail" value="sales@rpv.co.th"></label>
+              <label>ที่อยู่<textarea id="contactAddress" rows="3">21/62 หมู่ 3 ถ.345 ซ.ลำโพ 1 ต.ลำโพ อ.บางบัวทอง จ.นนทบุรี 11110</textarea></label>
             </div>
+            <p class="admin-action-status" id="contactDraftStatus">แก้แล้วกดบันทึก Draft หน้าเว็บหลักใน browser นี้จะเปลี่ยนหลัง refresh</p>
           </section>
 
           <section class="admin-panel" id="media" data-admin-section="media" hidden>
@@ -205,28 +207,29 @@
                 <h2>Appearance</h2>
                 <p class="admin-panel-note">ปรับเฉพาะค่าที่ปลอดภัย ไม่ให้ใส่ HTML/CSS/JavaScript เอง</p>
               </div>
-              <button class="button secondary" type="button" data-static-only>บันทึก Draft</button>
+              <button class="button secondary" type="button" data-save-section="appearance">บันทึก Draft</button>
             </div>
             <div class="admin-editor-grid">
               <label>สีหลัก
-                <select>
-                  <option>RPV Green</option>
-                  <option>Dark Green</option>
+                <select id="appearanceTheme">
+                  <option value="rpv-green">RPV Green</option>
+                  <option value="dark-green">Dark Green</option>
                 </select>
               </label>
               <label>จำนวนสินค้า Desktop
-                <select>
-                  <option>4 ใบต่อแถว</option>
-                  <option>3 ใบต่อแถว</option>
+                <select id="appearanceColumns">
+                  <option value="4">4 ใบต่อแถว</option>
+                  <option value="3">3 ใบต่อแถว</option>
                 </select>
               </label>
               <label>รูปแบบ Hero
-                <select>
-                  <option>Search Hero</option>
-                  <option>Compact Hero</option>
+                <select id="appearanceHero">
+                  <option value="search">Search Hero</option>
+                  <option value="compact">Compact Hero</option>
                 </select>
               </label>
             </div>
+            <p class="admin-action-status" id="appearanceDraftStatus">แก้แล้วกดบันทึก Draft หน้าเว็บหลักใน browser นี้จะเปลี่ยนหลัง refresh</p>
           </section>
 
           <section class="admin-panel" id="revisions" data-admin-section="revisions" hidden>
@@ -358,7 +361,7 @@
     </dialog>
 
     <script src="../data/rpv-products.js"></script>
-    <script src="config.js?v=20260715-live-preview"></script>
-    <script type="module" src="admin.js?v=20260715-live-preview"></script>
+    <script src="config.js?v=20260715-admin-full"></script>
+    <script type="module" src="admin.js?v=20260715-admin-full"></script>
   </body>
 </html>

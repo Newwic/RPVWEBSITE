@@ -18,6 +18,15 @@ function loadAdminProductDraft() {
   }
 }
 
+function loadAdminSiteDraft() {
+  try {
+    const draft = JSON.parse(localStorage.getItem("rpvSiteDraft") || "null");
+    return draft && typeof draft === "object" ? draft : null;
+  } catch {
+    return null;
+  }
+}
+
 const products = (loadAdminProductDraft() || window.rpvProducts || [])
   .filter((product) => product.status === "active")
   .sort((a, b) => a.sortOrder - b.sortOrder);
@@ -217,6 +226,80 @@ const ui = {
   }
 };
 
+const adminSiteDraft = loadAdminSiteDraft();
+
+function applyAdminSiteDraft() {
+  if (!adminSiteDraft) return;
+
+  if (adminSiteDraft.home) {
+    if (adminSiteDraft.home.heroTitle) {
+      ui.th.heroTitle = adminSiteDraft.home.heroTitle;
+    }
+    if (adminSiteDraft.home.heroText) {
+      ui.th.heroText = adminSiteDraft.home.heroText;
+    }
+    if (adminSiteDraft.home.ctaText) {
+      ui.th.contactText = adminSiteDraft.home.ctaText;
+    }
+
+    if (adminSiteDraft.home.sectionMode === "hide-contact") {
+      document.querySelector(".contact-cta")?.setAttribute("hidden", "");
+    }
+    if (adminSiteDraft.home.sectionMode === "hide-footer") {
+      document.querySelector(".site-footer")?.setAttribute("hidden", "");
+    }
+  }
+
+  if (adminSiteDraft.contact) {
+    const contact = adminSiteDraft.contact;
+    if (contact.office) {
+      ui.th.callOffice = `โทร ${contact.office}`;
+      ui.th.officeLink = `หรือโทรสำนักงาน ${contact.office}`;
+      ui.th.footerOffice = `สำนักงาน ${contact.office}`;
+      ui.en.callOffice = `Call ${contact.office}`;
+      ui.en.officeLink = `Or call office ${contact.office}`;
+      ui.en.footerOffice = `Office ${contact.office}`;
+      document.querySelectorAll('a[href^="tel:021944346"]').forEach((link) => {
+        link.href = `tel:${contact.office.replace(/\D/g, "")}`;
+      });
+    }
+    if (contact.mobile) {
+      ui.th.callMobile = `โทร ${contact.mobile}`;
+      ui.th.footerMobile = `มือถือ ${contact.mobile}`;
+      ui.en.callMobile = `Call ${contact.mobile}`;
+      ui.en.footerMobile = `Mobile ${contact.mobile}`;
+      document.querySelectorAll('a[href^="tel:0863990785"]').forEach((link) => {
+        link.href = `tel:${contact.mobile.replace(/\D/g, "")}`;
+      });
+    }
+    if (contact.line) {
+      ui.th.lineButton = `LINE ${contact.line}`;
+      ui.th.footerLine = `LINE ${contact.line}`;
+      ui.en.lineButton = `LINE ${contact.line}`;
+      ui.en.footerLine = `LINE ${contact.line}`;
+    }
+    if (contact.address) {
+      ui.th.footerAddress = contact.address;
+      ui.en.footerAddress = contact.address;
+    }
+  }
+
+  if (adminSiteDraft.appearance) {
+    const appearance = adminSiteDraft.appearance;
+    if (appearance.theme === "dark-green") {
+      document.documentElement.style.setProperty("--green", "#0d5f45");
+      document.documentElement.style.setProperty("--green-dark", "#073a2c");
+    }
+    if (appearance.columns === "3") {
+      document.documentElement.style.setProperty("--admin-product-columns", "3");
+      document.body.classList.add("admin-draft-three-columns");
+    }
+    if (appearance.hero === "compact") {
+      document.body.classList.add("admin-draft-compact-hero");
+    }
+  }
+}
+
 function t(key) {
   return ui[currentLanguage][key];
 }
@@ -235,7 +318,7 @@ function categoryLabel(category) {
 
 function productName(product) {
   if (currentLanguage === "th") {
-    return productThai[product.id]?.name || product.nameTh || product.nameEn;
+    return product.nameTh || productThai[product.id]?.name || product.nameEn;
   }
 
   return product.nameEn || productThai[product.id]?.name || product.nameTh;
@@ -251,7 +334,7 @@ function secondaryProductName(product) {
 
 function productDescription(product) {
   if (currentLanguage === "th") {
-    return productThai[product.id]?.description || product.shortDescriptionTh || product.shortDescriptionEn;
+    return product.shortDescriptionTh || productThai[product.id]?.description || product.shortDescriptionEn;
   }
 
   return product.shortDescriptionEn || productThai[product.id]?.description || product.shortDescriptionTh;
@@ -537,6 +620,7 @@ productModal.addEventListener("click", (event) => {
   }
 });
 
+applyAdminSiteDraft();
 applyLanguage();
 renderFilters();
 renderProducts();

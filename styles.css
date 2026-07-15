@@ -506,8 +506,17 @@ input {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--admin-product-columns, 4), minmax(0, 1fr));
   gap: 14px;
+}
+
+.admin-draft-compact-hero .product-search-hero {
+  min-height: 180px;
+  padding-block: 18px;
+}
+
+.admin-draft-compact-hero .search-copy h1 {
+  font-size: clamp(26px, 3vw, 36px);
 }
 
 .product-card {

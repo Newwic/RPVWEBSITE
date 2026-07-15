@@ -18,6 +18,7 @@ const adminModeText = document.querySelector("#adminModeText");
 const adminModeBanner = document.querySelector("#adminModeBanner");
 const adminActionStatus = document.querySelector("#adminActionStatus");
 const addProductButton = document.querySelector("#addProductButton");
+const addProductInlineButton = document.querySelector("#addProductInlineButton");
 const exportProductsButton = document.querySelector("#exportProductsButton");
 const clearDraftButton = document.querySelector("#clearDraftButton");
 const adminNavLinks = document.querySelectorAll("[data-admin-nav]");
@@ -63,6 +64,60 @@ let supabaseClient = null;
 let adminProducts = [];
 let adminDataMode = "static";
 let adminRevisions = [];
+let siteDraft = loadSiteDraft();
+
+const siteDraftDefaults = {
+  home: {
+    heroTitle: "ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ",
+    heroText: "ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด",
+    ctaText: "ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ",
+    sectionMode: "all"
+  },
+  contact: {
+    office: "02-194-4346-7",
+    mobile: "086-399-0785",
+    line: "@rpvofficial",
+    email: "sales@rpv.co.th",
+    address: "21/62 หมู่ 3 ถ.345 ซ.ลำโพ 1 ต.ลำโพ อ.บางบัวทอง จ.นนทบุรี 11110"
+  },
+  appearance: {
+    theme: "rpv-green",
+    columns: "4",
+    hero: "search"
+  }
+};
+
+function loadSiteDraft() {
+  try {
+    const draft = JSON.parse(localStorage.getItem("rpvSiteDraft") || "null");
+    return draft && typeof draft === "object" ? draft : {};
+  } catch {
+    localStorage.removeItem("rpvSiteDraft");
+    return {};
+  }
+}
+
+function mergedSiteDraft() {
+  return {
+    home: { ...siteDraftDefaults.home, ...(siteDraft.home || {}) },
+    contact: { ...siteDraftDefaults.contact, ...(siteDraft.contact || {}) },
+    appearance: { ...siteDraftDefaults.appearance, ...(siteDraft.appearance || {}) }
+  };
+}
+
+function persistSiteDraft() {
+  localStorage.setItem("rpvSiteDraft", JSON.stringify(siteDraft));
+}
+
+function setControlValue(selector, value) {
+  const control = document.querySelector(selector);
+  if (control) control.value = value ?? "";
+}
+
+function readControl(selector, fallback = "") {
+  const control = document.querySelector(selector);
+  return control ? control.value.trim() || fallback : fallback;
+}
 
 function getControlValue(control, fallback = "") {
   return control ? control.value.trim() || fallback : fallback;
@@ -288,6 +343,107 @@ function persistStaticProducts() {
   localStorage.setItem("rpvProductsDraft", JSON.stringify(products));
 }
 
+function hydrateSiteDraftControls() {
+  const draft = mergedSiteDraft();
+  setControlValue("#homeHeroTitle", draft.home.heroTitle);
+  setControlValue("#homeHeroText", draft.home.heroText);
+  setControlValue("#homeCtaText", draft.home.ctaText);
+  setControlValue("#homeSectionMode", draft.home.sectionMode);
+  setControlValue("#contactOffice", draft.contact.office);
+  setControlValue("#contactMobile", draft.contact.mobile);
+  setControlValue("#contactLine", draft.contact.line);
+  setControlValue("#contactEmail", draft.contact.email);
+  setControlValue("#contactAddress", draft.contact.address);
+  setControlValue("#appearanceTheme", draft.appearance.theme);
+  setControlValue("#appearanceColumns", draft.appearance.columns);
+  setControlValue("#appearanceHero", draft.appearance.hero);
+}
+
+function saveSiteSection(sectionName) {
+  const draft = mergedSiteDraft();
+
+  if (sectionName === "home") {
+    siteDraft = {
+      ...siteDraft,
+      home: {
+        heroTitle: readControl("#homeHeroTitle", draft.home.heroTitle),
+        heroText: readControl("#homeHeroText", draft.home.heroText),
+        ctaText: readControl("#homeCtaText", draft.home.ctaText),
+        sectionMode: readControl("#homeSectionMode", draft.home.sectionMode)
+      }
+    };
+    setStatus(document.querySelector("#homeDraftStatus"), "บันทึก Home draft แล้ว รีเฟรชหน้าเว็บหลักเพื่อดูผล");
+    recordRevision("Saved Home Page draft");
+  }
+
+  if (sectionName === "contact") {
+    siteDraft = {
+      ...siteDraft,
+      contact: {
+        office: readControl("#contactOffice", draft.contact.office),
+        mobile: readControl("#contactMobile", draft.contact.mobile),
+        line: readControl("#contactLine", draft.contact.line),
+        email: readControl("#contactEmail", draft.contact.email),
+        address: readControl("#contactAddress", draft.contact.address)
+      }
+    };
+    setStatus(document.querySelector("#contactDraftStatus"), "บันทึก Contact draft แล้ว รีเฟรชหน้าเว็บหลักเพื่อดูผล");
+    recordRevision("Saved Contact draft");
+  }
+
+  if (sectionName === "appearance") {
+    siteDraft = {
+      ...siteDraft,
+      appearance: {
+        theme: readControl("#appearanceTheme", draft.appearance.theme),
+        columns: readControl("#appearanceColumns", draft.appearance.columns),
+        hero: readControl("#appearanceHero", draft.appearance.hero)
+      }
+    };
+    setStatus(document.querySelector("#appearanceDraftStatus"), "บันทึก Appearance draft แล้ว รีเฟรชหน้าเว็บหลักเพื่อดูผล");
+    recordRevision("Saved Appearance draft");
+  }
+
+  persistSiteDraft();
+  setStatus(adminActionStatus, "บันทึก draft แล้ว หน้าเว็บหลักใน browser นี้จะเปลี่ยนหลัง refresh ถ้าต้องการให้ทุกคนเห็นต้องเชื่อม Supabase หรือแก้ไฟล์จริงแล้ว push");
+  updateAdminSidePreview(sectionName === "home" ? "home-page" : sectionName);
+}
+
+function renameCategory(oldName) {
+  const nextName = window.prompt(`เปลี่ยนชื่อหมวดหมู่ "${oldName}" เป็น`, oldName);
+  if (!nextName || nextName.trim() === oldName) return;
+
+  adminProducts = adminProducts.map((product) => {
+    const current = product.category || product.categories?.name_th || "";
+    if (current !== oldName) return product;
+    return {
+      ...product,
+      category: nextName.trim(),
+      categories: {
+        name_th: nextName.trim(),
+        name_en: nextName.trim()
+      }
+    };
+  });
+  persistStaticProducts();
+  recordRevision(`Renamed category: ${oldName} -> ${nextName.trim()}`);
+  refreshAdminView(`เปลี่ยนหมวด "${oldName}" เป็น "${nextName.trim()}" แล้ว`);
+}
+
+function hideCategory(categoryName) {
+  const count = adminProducts.filter((product) => (product.category || product.categories?.name_th) === categoryName).length;
+  const confirmed = window.confirm(`ซ่อนสินค้าทั้งหมดในหมวด "${categoryName}" จำนวน ${count} รายการใช่ไหม?`);
+  if (!confirmed) return;
+
+  adminProducts = adminProducts.map((product) => {
+    const current = product.category || product.categories?.name_th || "";
+    return current === categoryName ? { ...product, status: "hidden" } : product;
+  });
+  persistStaticProducts();
+  recordRevision(`Hidden category products: ${categoryName}`);
+  refreshAdminView(`ซ่อนสินค้าในหมวด "${categoryName}" แล้ว`);
+}
+
 function slugify(value) {
   return String(value || "")
     .trim()
@@ -445,7 +601,8 @@ function renderCategories() {
         <strong>${escapeHtml(category)}</strong>
         <p>${count} รายการสินค้า</p>
         <div class="admin-row-actions">
-          <button class="button secondary" type="button" data-static-only>แก้ไข</button>
+          <button class="button secondary" type="button" data-rename-category="${escapeHtml(category)}">แก้ชื่อ</button>
+          <button class="button danger" type="button" data-hide-category="${escapeHtml(category)}">ซ่อนหมวด</button>
           <a class="button secondary" href="../index.html#products" target="_blank" rel="noopener">Preview</a>
         </div>
       </article>
@@ -653,6 +810,8 @@ async function bootAdminPage() {
 
   if (!isConfigured) {
     showFallbackDashboard();
+    hydrateSiteDraftControls();
+    updateAdminSidePreview((window.location.hash || "#dashboard").slice(1));
     return;
   }
 
@@ -672,6 +831,8 @@ async function bootAdminPage() {
   adminGuard.hidden = true;
   adminDashboard.hidden = false;
   await loadDashboard(client);
+  hydrateSiteDraftControls();
+  updateAdminSidePreview((window.location.hash || "#dashboard").slice(1));
 }
 
 async function bootLoginPage() {
@@ -731,6 +892,9 @@ clearDraftButton?.addEventListener("click", () => {
   const confirmed = window.confirm("ล้าง draft ใน browser นี้ แล้วกลับไปใช้ข้อมูลจากไฟล์ GitHub ใช่ไหม?");
   if (!confirmed) return;
   localStorage.removeItem("rpvProductsDraft");
+  localStorage.removeItem("rpvSiteDraft");
+  siteDraft = {};
+  hydrateSiteDraftControls();
   adminProducts = (window.rpvProducts || []).map(productToAdmin).sort((a, b) => (a.sort_order || 100) - (b.sort_order || 100));
   refreshAdminView("ล้าง draft แล้ว รีเฟรชหน้าเว็บหลักเพื่อกลับไปใช้ข้อมูลเดิม");
   recordRevision("Cleared local product draft");
@@ -754,9 +918,33 @@ document.addEventListener("click", (event) => {
 });
 
 document.querySelector("#addCategoryButton")?.addEventListener("click", () => {
-  setStatus(adminActionStatus, "เพิ่มหมวดหมู่ผ่านการเพิ่ม/แก้ไขสินค้าในเมนู Products ก่อน เมื่อเชื่อม Supabase แล้วจะทำฟอร์มหมวดหมู่แยกได้");
+  const categoryName = window.prompt("ชื่อหมวดหมู่ใหม่");
+  if (!categoryName?.trim()) return;
+  setStatus(adminActionStatus, `สร้างหมวด "${categoryName.trim()}" ผ่านสินค้า draft รายการแรกในหมวดนี้`);
   showAdminSection("products");
-  openEditor();
+  openEditor({
+    id: "",
+    slug: slugify(categoryName),
+    name_th: "",
+    name_en: "",
+    category: categoryName.trim(),
+    categories: { name_th: categoryName.trim(), name_en: categoryName.trim() },
+    status: "draft",
+    sort_order: adminProducts.length + 1
+  });
+});
+
+adminCategoriesList?.addEventListener("click", (event) => {
+  const renameButton = event.target.closest("[data-rename-category]");
+  if (renameButton) {
+    renameCategory(renameButton.dataset.renameCategory);
+    return;
+  }
+
+  const hideButton = event.target.closest("[data-hide-category]");
+  if (hideButton) {
+    hideCategory(hideButton.dataset.hideCategory);
+  }
 });
 
 openFirstProductEditor?.addEventListener("click", () => {
@@ -780,6 +968,16 @@ productsBody?.addEventListener("click", (event) => {
 
 addProductButton?.addEventListener("click", () => {
   openEditor();
+});
+
+addProductInlineButton?.addEventListener("click", () => {
+  openEditor();
+});
+
+document.addEventListener("click", (event) => {
+  const saveButton = event.target.closest("[data-save-section]");
+  if (!saveButton) return;
+  saveSiteSection(saveButton.dataset.saveSection);
 });
 
 closeProductEditor?.addEventListener("click", closeEditor);
