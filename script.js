@@ -17,6 +17,6 @@ siteNav.addEventListener("click", (event) => {
 
 contactForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  formNote.textContent = "รับข้อมูลตัวอย่างแล้ว เดี๋ยวขั้นต่อไปค่อยต่อระบบส่งจริง";
+  formNote.textContent = "Demo form submitted. Connect a real form service later.";
   contactForm.reset();
 });
