@@ -173,10 +173,10 @@ input {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(380px, 1fr);
-  gap: clamp(28px, 5vw, 72px);
+  grid-template-columns: minmax(0, 0.86fr) minmax(360px, 1fr);
+  gap: clamp(22px, 4vw, 48px);
   align-items: center;
-  padding: clamp(42px, 7vw, 80px) clamp(18px, 5vw, 64px);
+  padding: clamp(24px, 4.5vw, 44px) clamp(18px, 5vw, 64px);
   background: linear-gradient(135deg, var(--white), var(--green-soft));
 }
 
@@ -190,17 +190,17 @@ input {
 }
 
 .hero h1 {
-  max-width: 820px;
+  max-width: 700px;
   margin: 0;
-  font-size: clamp(34px, 5vw, 58px);
+  font-size: clamp(30px, 4vw, 46px);
   font-weight: 900;
-  line-height: 1.12;
+  line-height: 1.08;
 }
 
 .hero p {
-  max-width: 720px;
+  max-width: 660px;
   color: var(--muted);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .hero-actions,
@@ -209,7 +209,7 @@ input {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 24px;
+  margin-top: 18px;
 }
 
 .hero-visual {
@@ -218,7 +218,7 @@ input {
 
 .hero-visual img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 8.2;
   object-fit: cover;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -227,10 +227,10 @@ input {
 
 .hero-note {
   position: absolute;
-  right: 18px;
-  bottom: 18px;
-  min-width: 150px;
-  padding: 14px 16px;
+  right: 14px;
+  bottom: 14px;
+  min-width: 132px;
+  padding: 10px 12px;
   background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -243,7 +243,7 @@ input {
 
 .hero-note strong {
   color: var(--green-dark);
-  font-size: 34px;
+  font-size: 28px;
   line-height: 1;
 }
 
@@ -252,6 +252,10 @@ input {
 .about-section,
 .contact-cta {
   padding: clamp(64px, 8vw, 104px) clamp(18px, 5vw, 64px);
+}
+
+.products-section {
+  padding-top: clamp(32px, 5vw, 56px);
 }
 
 .section-heading {
