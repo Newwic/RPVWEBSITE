@@ -28,6 +28,9 @@ const closeProductEditor = document.querySelector("#closeProductEditor");
 const archiveProductButton = document.querySelector("#archiveProductButton");
 const duplicateProductButton = document.querySelector("#duplicateProductButton");
 const categorySuggestions = document.querySelector("#categorySuggestions");
+const productImageFile = document.querySelector("#productImageFile");
+const productImagePreview = document.querySelector("#productImagePreview");
+const productImageCaption = document.querySelector("#productImageCaption");
 
 const fields = {
   id: document.querySelector("#productId"),
@@ -120,6 +123,25 @@ function setStatus(element, message, isError = false) {
   if (!element) return;
   element.textContent = message;
   element.style.color = isError ? "#b42318" : "";
+}
+
+function updateImagePreview(value) {
+  if (!productImagePreview || !productImageCaption) return;
+  const imageValue = String(value || "").trim();
+  productImagePreview.src = imageValue;
+  productImagePreview.alt = imageValue ? "ตัวอย่างรูปสินค้า" : "";
+  productImageCaption.textContent = imageValue
+    ? (imageValue.startsWith("data:") ? "รูปที่เลือกจากเครื่อง" : imageValue)
+    : "ยังไม่มีรูปสินค้า";
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => resolve(reader.result));
+    reader.addEventListener("error", () => reject(reader.error));
+    reader.readAsDataURL(file);
+  });
 }
 
 function setAdminMode(mode) {
@@ -313,6 +335,8 @@ function fillEditor(product) {
   fields.descEn.value = product?.short_description_en || "";
   fields.features.value = Array.isArray(product?.features) ? product.features.join(", ") : "";
   fields.featured.checked = Boolean(product?.featured);
+  if (productImageFile) productImageFile.value = "";
+  updateImagePreview(fields.image.value);
 }
 
 function openEditor(product = null) {
@@ -455,6 +479,38 @@ fields.nameEn?.addEventListener("input", () => {
 
 fields.nameTh?.addEventListener("input", () => {
   if (!fields.slug.value.trim() && !fields.nameEn.value.trim()) fields.slug.value = slugify(fields.nameTh.value);
+});
+
+fields.image?.addEventListener("input", () => {
+  updateImagePreview(fields.image.value);
+});
+
+productImageFile?.addEventListener("change", async () => {
+  const file = productImageFile.files?.[0];
+  if (!file) return;
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (!allowedTypes.includes(file.type)) {
+    productImageFile.value = "";
+    setStatus(editorStatus, "ไฟล์รูปต้องเป็น JPG, PNG หรือ WebP เท่านั้น", true);
+    return;
+  }
+
+  const maxBytes = 1.5 * 1024 * 1024;
+  if (file.size > maxBytes) {
+    productImageFile.value = "";
+    setStatus(editorStatus, "รูปใหญ่เกินไป กรุณาย่อให้ไม่เกิน 1.5 MB ก่อน", true);
+    return;
+  }
+
+  try {
+    const dataUrl = await readFileAsDataUrl(file);
+    fields.image.value = dataUrl;
+    updateImagePreview(dataUrl);
+    setStatus(editorStatus, `เลือกรูปแล้ว: ${file.name} กดบันทึก Draft แล้ว Export เพื่อใช้กับเว็บจริง`);
+  } catch {
+    setStatus(editorStatus, "อ่านไฟล์รูปไม่สำเร็จ ลองเลือกรูปใหม่อีกครั้ง", true);
+  }
 });
 
 archiveProductButton?.addEventListener("click", () => {
