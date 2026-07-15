@@ -378,7 +378,6 @@ function updateLanguageButtons() {
 
 function applyLanguage() {
   document.documentElement.lang = currentLanguage;
-  if (productSearch) document.title = t("title");
   modalClose?.setAttribute("aria-label", t("closeModal"));
   updateLanguageButtons();
 
