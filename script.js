@@ -18,7 +18,7 @@ let currentLanguage = localStorage.getItem("rpvLanguage") || "th";
 
 const copy = {
   th: {
-    langButton: "EN",
+    langButton: "TH / EN",
     quoteButton: "สอบถามราคา",
     nav: ["Home", "Products", "Solutions", "About Us", "Contact"],
     heroTitle: "โซลูชันเครื่องขัดผิวและอุปกรณ์สำหรับงานอุตสาหกรรม",
@@ -60,7 +60,7 @@ const copy = {
     title: "RPV Industrial Supply | เครื่องขัดผิว วัสดุขัด และอุปกรณ์อุตสาหกรรม"
   },
   en: {
-    langButton: "TH",
+    langButton: "TH / EN",
     quoteButton: "Request Quote",
     nav: ["Home", "Products", "Solutions", "About Us", "Contact"],
     heroTitle: "Surface finishing machines and industrial equipment solutions",
