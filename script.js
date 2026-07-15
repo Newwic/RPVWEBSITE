@@ -83,6 +83,10 @@ function renderProducts() {
   visibleProducts.forEach((product) => {
     const card = document.createElement("article");
     card.className = `product-card${product.featured ? " featured" : ""}`;
+    card.dataset.detail = product.id;
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `ดูรายละเอียด ${product.nameTh || product.nameEn}`);
     card.innerHTML = `
       <div class="product-image">${imageMarkup(product)}</div>
       <div class="product-body">
@@ -145,6 +149,10 @@ siteNav.addEventListener("click", (event) => {
 productSearch.addEventListener("input", renderProducts);
 
 productGrid.addEventListener("click", (event) => {
+  if (event.target.closest("a")) {
+    return;
+  }
+
   const detailButton = event.target.closest("[data-detail]");
 
   if (!detailButton) {
@@ -152,6 +160,25 @@ productGrid.addEventListener("click", (event) => {
   }
 
   const product = products.find((item) => item.id === detailButton.dataset.detail);
+
+  if (product) {
+    openProductModal(product);
+  }
+});
+
+productGrid.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") {
+    return;
+  }
+
+  const card = event.target.closest("[data-detail]");
+
+  if (!card) {
+    return;
+  }
+
+  event.preventDefault();
+  const product = products.find((item) => item.id === card.dataset.detail);
 
   if (product) {
     openProductModal(product);

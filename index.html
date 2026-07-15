@@ -88,16 +88,27 @@
           <p>แสดงรายการสินค้าที่พบจากข้อมูลเดิมและหมวดที่ยืนยันได้บนหน้า Home โดยตรง เลือกหมวดหรือค้นหาชื่อสินค้าได้ทันที</p>
         </div>
 
-        <div class="product-tools">
-          <label class="search-box">
-            <span>ค้นหาสินค้า</span>
-            <input type="search" id="productSearch" placeholder="ค้นหาชื่อสินค้า รุ่น หรือหมวด เช่น Steel Shot">
-          </label>
-          <div class="filter-row" id="categoryFilters" aria-label="Product category filters"></div>
-        </div>
+        <div class="product-browser">
+          <aside class="product-sidebar" aria-label="Product categories">
+            <div class="sidebar-title">Products</div>
+            <label class="search-box">
+              <span>ค้นหาสินค้า</span>
+              <input type="search" id="productSearch" placeholder="ชื่อสินค้า รุ่น หรือหมวด">
+            </label>
+            <div class="filter-row" id="categoryFilters" aria-label="Product category filters"></div>
+          </aside>
 
-        <div class="product-count" id="productCount" aria-live="polite"></div>
-        <div class="product-grid" id="productGrid"></div>
+          <div class="product-list-panel">
+            <div class="product-panel-head">
+              <div>
+                <strong>รายการสินค้า</strong>
+                <span>กดที่รูปหรือปุ่มเพื่อดูรายละเอียดสินค้า</span>
+              </div>
+              <div class="product-count" id="productCount" aria-live="polite"></div>
+            </div>
+            <div class="product-grid" id="productGrid"></div>
+          </div>
+        </div>
       </section>
 
       <section class="why-section" id="solutions">
