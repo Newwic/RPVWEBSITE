@@ -26,6 +26,7 @@ const editorTitle = document.querySelector("#productEditorTitle");
 const editorStatus = document.querySelector("#editorStatus");
 const closeProductEditor = document.querySelector("#closeProductEditor");
 const archiveProductButton = document.querySelector("#archiveProductButton");
+const deleteProductButton = document.querySelector("#deleteProductButton");
 const duplicateProductButton = document.querySelector("#duplicateProductButton");
 const categorySuggestions = document.querySelector("#categorySuggestions");
 const productImageFile = document.querySelector("#productImageFile");
@@ -257,6 +258,7 @@ function renderProducts() {
       <td>
         <div class="admin-row-actions">
           <a class="button secondary" href="../index.html#products" target="_blank" rel="noopener">Preview</a>
+          <button class="button danger" type="button" data-delete-product="${escapeHtml(product.id)}">ลบ</button>
           <button class="button primary" type="button" data-edit-product="${escapeHtml(product.id)}">แก้ไข</button>
         </div>
       </td>
@@ -370,6 +372,19 @@ function saveStaticDraft(product) {
   refreshAdminView("บันทึก draft ในหน้า Admin แล้ว ถ้าต้องการให้เว็บจริงเปลี่ยน ให้กด Export data file แล้วอัปเดต data/rpv-products.js");
 }
 
+function deleteStaticProduct(productId) {
+  const product = adminProducts.find((item) => item.id === productId);
+  if (!product) return;
+
+  const productName = product.name_th || product.name_en || product.model || product.id;
+  const confirmed = window.confirm(`ลบสินค้า "${productName}" ออกจากไฟล์ Export ใช่ไหม?\n\nถ้ายังไม่ Export และ push เว็บจริงจะยังไม่เปลี่ยน`);
+  if (!confirmed) return;
+
+  adminProducts = adminProducts.filter((item) => item.id !== productId);
+  refreshAdminView("ลบสินค้าออกจากรายการ Admin แล้ว กด Export data file แล้วอัปเดต data/rpv-products.js เพื่อให้เว็บจริงเปลี่ยน");
+  closeEditor();
+}
+
 async function saveDatabaseProduct(product) {
   setStatus(editorStatus, "โหมด Supabase ยังต้องต่อฟอร์มกับตาราง products ในระยะถัดไป", true);
   return false;
@@ -464,6 +479,12 @@ statusFilter?.addEventListener("change", renderProducts);
 exportProductsButton?.addEventListener("click", exportProductsData);
 
 productsBody?.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest("[data-delete-product]");
+  if (deleteButton) {
+    deleteStaticProduct(deleteButton.dataset.deleteProduct);
+    return;
+  }
+
   const editButton = event.target.closest("[data-edit-product]");
   if (!editButton) return;
 
@@ -525,6 +546,15 @@ productImageFile?.addEventListener("change", async () => {
 archiveProductButton?.addEventListener("click", () => {
   fields.status.value = "hidden";
   setStatus(editorStatus, "ตั้งสถานะเป็น Hidden แล้ว กดบันทึก Draft เพื่อยืนยัน");
+});
+
+deleteProductButton?.addEventListener("click", () => {
+  if (!fields.id.value) {
+    setStatus(editorStatus, "สินค้านี้ยังไม่ได้บันทึก ถ้าต้องการยกเลิกให้กดปิดหน้าต่างได้เลย", true);
+    return;
+  }
+
+  deleteStaticProduct(fields.id.value);
 });
 
 duplicateProductButton?.addEventListener("click", () => {

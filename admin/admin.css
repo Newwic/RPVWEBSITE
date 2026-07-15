@@ -302,6 +302,18 @@
   min-height: 38px;
 }
 
+.button.danger {
+  border-color: #dc2626;
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.button.danger:hover,
+.button.danger:focus-visible {
+  border-color: #b91c1c;
+  background: #b91c1c;
+}
+
 .admin-editor-dialog {
   width: min(940px, calc(100vw - 32px));
   max-height: calc(100vh - 32px);
