@@ -359,7 +359,7 @@ function productMatchesSearch(product, keyword) {
 }
 
 function filteredProducts() {
-  const keyword = productSearch.value.trim();
+  const keyword = productSearch?.value.trim() || "";
 
   return products.filter((product) => {
     const categoryMatch = currentCategory === "All" || product.category === currentCategory;
@@ -378,24 +378,24 @@ function updateLanguageButtons() {
 
 function applyLanguage() {
   document.documentElement.lang = currentLanguage;
-  document.title = t("title");
-  modalClose.setAttribute("aria-label", t("closeModal"));
+  if (productSearch) document.title = t("title");
+  modalClose?.setAttribute("aria-label", t("closeModal"));
   updateLanguageButtons();
 
   setText(".quote-button", t("quoteButton"));
   setText(".brand small", t("brandSubtitle"));
-  setText('.site-nav a[href="#home"]', t("navHome"));
-  setText('.site-nav a[href="#products"]', t("navProducts"));
-  setText('.site-nav a[href="#solutions"]', t("navSolutions"));
-  setText('.site-nav a[href="#about"]', t("navAbout"));
-  setText('.site-nav a[href="#contact"]', t("navContact"));
+  setText('.site-nav a[href="index.html"]', t("navHome"));
+  setText('.site-nav a[href="products.html"]', t("navProducts"));
+  setText('.site-nav a[href="solutions.html"]', t("navSolutions"));
+  setText('.site-nav a[href="about.html"]', t("navAbout"));
+  setText('.site-nav a[href="contact.html"]', t("navContact"));
   setText(".search-copy .eyebrow", t("searchEyebrow"));
   setText(".search-copy h1", t("heroTitle"));
   setText(".search-copy p:not(.eyebrow)", t("heroText"));
   setText(".quick-categories-head h2", t("categoryTitle"));
   setText(".quick-categories-head p", t("categoryText"));
   setText(".hero-search span", t("searchLabel"));
-  productSearch.placeholder = t("searchPlaceholder");
+  if (productSearch) productSearch.placeholder = t("searchPlaceholder");
   setText(".product-panel-head strong", t("productListTitle"));
   setText(".product-panel-head span", t("productListHint"));
   setText(".contact-cta h2", t("contactTitle"));
@@ -408,13 +408,14 @@ function applyLanguage() {
   setText(".footer-office", t("footerOffice"));
   setText(".footer-mobile", t("footerMobile"));
   setText(".footer-line", t("footerLine"));
-  setText('.footer-links a[href="#products"]', t("footerProducts"));
-  setText('.footer-links a[href="#about"]', t("footerAboutLink"));
-  setText('.footer-links a[href="#contact"]', t("footerContactLink"));
+  setText('.footer-links a[href="products.html"]', t("footerProducts"));
+  setText('.footer-links a[href="about.html"]', t("footerAboutLink"));
+  setText('.footer-links a[href="contact.html"]', t("footerContactLink"));
   setText(".copyright", t("footerCopyright"));
 }
 
 function renderFilters() {
+  if (!categoryFilters) return;
   categoryFilters.innerHTML = "";
 
   uniqueCategories().forEach((category) => {
@@ -459,6 +460,7 @@ function imageMarkup(product) {
 }
 
 function renderProducts() {
+  if (!productGrid || !productCount) return;
   const visibleProducts = filteredProducts();
 
   productCount.textContent = t("showing")(visibleProducts.length, products.length);
@@ -535,18 +537,18 @@ function openProductModal(product) {
 }
 
 function closeMobileNav() {
-  siteNav.classList.remove("is-open");
+  siteNav?.classList.remove("is-open");
   document.body.classList.remove("nav-open");
-  navToggle.setAttribute("aria-expanded", "false");
+  navToggle?.setAttribute("aria-expanded", "false");
 }
 
-navToggle.addEventListener("click", () => {
+navToggle?.addEventListener("click", () => {
   const isOpen = siteNav.classList.toggle("is-open");
   document.body.classList.toggle("nav-open", isOpen);
   navToggle.setAttribute("aria-expanded", String(isOpen));
 });
 
-siteNav.addEventListener("click", (event) => {
+siteNav?.addEventListener("click", (event) => {
   if (event.target.matches("a")) {
     closeMobileNav();
   }
@@ -574,9 +576,9 @@ languageButtons.forEach((button) => {
   });
 });
 
-productSearch.addEventListener("input", renderProducts);
+productSearch?.addEventListener("input", renderProducts);
 
-productGrid.addEventListener("click", (event) => {
+productGrid?.addEventListener("click", (event) => {
   if (event.target.closest("a")) {
     return;
   }
@@ -594,7 +596,7 @@ productGrid.addEventListener("click", (event) => {
   }
 });
 
-productGrid.addEventListener("keydown", (event) => {
+productGrid?.addEventListener("keydown", (event) => {
   if (event.key !== "Enter" && event.key !== " ") {
     return;
   }
@@ -613,8 +615,8 @@ productGrid.addEventListener("keydown", (event) => {
   }
 });
 
-modalClose.addEventListener("click", () => productModal.close());
-productModal.addEventListener("click", (event) => {
+modalClose?.addEventListener("click", () => productModal.close());
+productModal?.addEventListener("click", (event) => {
   if (event.target === productModal) {
     productModal.close();
   }
