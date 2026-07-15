@@ -19,6 +19,13 @@ const adminModeBanner = document.querySelector("#adminModeBanner");
 const adminActionStatus = document.querySelector("#adminActionStatus");
 const addProductButton = document.querySelector("#addProductButton");
 const exportProductsButton = document.querySelector("#exportProductsButton");
+const adminNavLinks = document.querySelectorAll("[data-admin-nav]");
+const adminSections = document.querySelectorAll("[data-admin-section]");
+const adminCategoriesList = document.querySelector("#adminCategoriesList");
+const adminMediaGrid = document.querySelector("#adminMediaGrid");
+const openFirstProductEditor = document.querySelector("#openFirstProductEditor");
+const settingDataMode = document.querySelector("#settingDataMode");
+const revisionList = document.querySelector("#adminRevisionList");
 
 const editorDialog = document.querySelector("#productEditorDialog");
 const editorForm = document.querySelector("#productEditorForm");
@@ -52,6 +59,40 @@ const fields = {
 let supabaseClient = null;
 let adminProducts = [];
 let adminDataMode = "static";
+let adminRevisions = [];
+
+function showAdminSection(sectionId = "dashboard") {
+  const target = sectionId || "dashboard";
+
+  adminSections.forEach((section) => {
+    section.hidden = section.dataset.adminSection !== target;
+  });
+
+  adminNavLinks.forEach((link) => {
+    const isActive = link.dataset.adminNav === target;
+    if (isActive) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
+  if (window.location.hash !== `#${target}`) {
+    history.replaceState(null, "", `#${target}`);
+  }
+}
+
+function recordRevision(message) {
+  adminRevisions.unshift({
+    message,
+    time: new Date().toLocaleString("th-TH")
+  });
+
+  if (!revisionList) return;
+  revisionList.innerHTML = adminRevisions.length
+    ? adminRevisions.map((item) => `<li><strong>${escapeHtml(item.time)}</strong> ${escapeHtml(item.message)}</li>`).join("")
+    : "<li>ยังไม่มี revision ในรอบนี้</li>";
+}
 
 function productToAdmin(product) {
   return {
@@ -155,6 +196,11 @@ function isAllowedImageFile(file) {
 
 function setAdminMode(mode) {
   adminDataMode = mode;
+  if (settingDataMode) {
+    settingDataMode.textContent = mode === "static"
+      ? "Data mode: Static fallback"
+      : "Data mode: Supabase database";
+  }
 
   if (mode === "static") {
     if (adminModeText) {
@@ -239,6 +285,52 @@ function renderCategorySuggestions() {
   categorySuggestions.innerHTML = categories.map((category) => `<option value="${escapeHtml(category)}"></option>`).join("");
 }
 
+function renderCategories() {
+  if (!adminCategoriesList) return;
+  const categoryMap = new Map();
+
+  adminProducts.forEach((product) => {
+    const category = product.category || product.categories?.name_th || "Uncategorized";
+    categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
+  });
+
+  const categories = [...categoryMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  adminCategoriesList.innerHTML = categories.length
+    ? categories.map(([category, count]) => `
+      <article>
+        <strong>${escapeHtml(category)}</strong>
+        <p>${count} รายการสินค้า</p>
+        <div class="admin-row-actions">
+          <button class="button secondary" type="button" data-static-only>แก้ไข</button>
+          <a class="button secondary" href="../index.html#products" target="_blank" rel="noopener">Preview</a>
+        </div>
+      </article>
+    `).join("")
+    : "<article><strong>ยังไม่มีหมวดหมู่</strong><p>เพิ่มสินค้าแล้วหมวดหมู่จะแสดงที่นี่</p></article>";
+}
+
+function renderMediaLibrary() {
+  if (!adminMediaGrid) return;
+  const media = adminProducts
+    .filter((product) => product.image)
+    .map((product) => ({
+      image: product.image,
+      name: product.name_th || product.name_en || product.model || product.id
+    }));
+
+  adminMediaGrid.innerHTML = media.length
+    ? media.map((item) => `
+      <figure>
+        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy">
+        <figcaption>${escapeHtml(item.name)}</figcaption>
+      </figure>
+    `).join("")
+    : `<div class="admin-empty-state">
+        <strong>ยังไม่มีรูปสินค้า</strong>
+        <p>กด Products > แก้ไข แล้วเลือกรูปจากเครื่องเพื่อเพิ่มรูป</p>
+      </div>`;
+}
+
 function renderProducts() {
   if (!productsBody) return;
   const visible = filteredProducts();
@@ -270,6 +362,8 @@ function refreshAdminView(message = "") {
   adminProducts.sort((a, b) => (a.sort_order || 100) - (b.sort_order || 100));
   renderStats(adminProducts);
   renderCategorySuggestions();
+  renderCategories();
+  renderMediaLibrary();
   renderProducts();
   if (message) setStatus(adminActionStatus, message);
 }
@@ -369,6 +463,7 @@ function saveStaticDraft(product) {
   } else {
     adminProducts.push(product);
   }
+  recordRevision(`Saved product draft: ${product.name_th || product.name_en || product.id}`);
   refreshAdminView("บันทึก draft ในหน้า Admin แล้ว ถ้าต้องการให้เว็บจริงเปลี่ยน ให้กด Export data file แล้วอัปเดต data/rpv-products.js");
 }
 
@@ -381,6 +476,7 @@ function deleteStaticProduct(productId) {
   if (!confirmed) return;
 
   adminProducts = adminProducts.filter((item) => item.id !== productId);
+  recordRevision(`Deleted product draft: ${productName}`);
   refreshAdminView("ลบสินค้าออกจากรายการ Admin แล้ว กด Export data file แล้วอัปเดต data/rpv-products.js เพื่อให้เว็บจริงเปลี่ยน");
   closeEditor();
 }
@@ -477,6 +573,34 @@ logoutButton?.addEventListener("click", async () => {
 productSearch?.addEventListener("input", renderProducts);
 statusFilter?.addEventListener("change", renderProducts);
 exportProductsButton?.addEventListener("click", exportProductsData);
+
+adminNavLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    showAdminSection(link.dataset.adminNav);
+  });
+});
+
+document.addEventListener("click", (event) => {
+  const staticButton = event.target.closest("[data-static-only]");
+  if (!staticButton) return;
+
+  const section = staticButton.closest("[data-admin-section]");
+  const sectionName = section?.id || section?.dataset.adminSection || "section";
+  setStatus(adminActionStatus, "ส่วนนี้เปิดให้กดได้แล้ว แต่ยังไม่บันทึกถาวรจนกว่าจะเชื่อม Supabase");
+  recordRevision(`ทดลองใช้เมนู ${sectionName}`);
+});
+
+document.querySelector("#addCategoryButton")?.addEventListener("click", () => {
+  setStatus(adminActionStatus, "เพิ่มหมวดหมู่ผ่านการเพิ่ม/แก้ไขสินค้าในเมนู Products ก่อน เมื่อเชื่อม Supabase แล้วจะทำฟอร์มหมวดหมู่แยกได้");
+  showAdminSection("products");
+  openEditor();
+});
+
+openFirstProductEditor?.addEventListener("click", () => {
+  showAdminSection("products");
+  openEditor(adminProducts[0] || null);
+});
 
 productsBody?.addEventListener("click", (event) => {
   const deleteButton = event.target.closest("[data-delete-product]");
@@ -585,3 +709,4 @@ editorForm?.addEventListener("submit", async (event) => {
 
 bootLoginPage();
 bootAdminPage();
+showAdminSection((window.location.hash || "#dashboard").slice(1));

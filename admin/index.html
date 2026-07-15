@@ -23,16 +23,16 @@
 
     <main class="admin-shell">
       <aside class="admin-sidebar" aria-label="Admin menu">
-        <a aria-current="page" href="#dashboard">Dashboard</a>
-        <a href="#products">Products</a>
-        <a href="#categories">Categories</a>
-        <a href="#home-page">Home Page</a>
-        <a href="#contact">Contact Information</a>
-        <a href="#media">Media Library</a>
-        <a href="#appearance">Appearance</a>
-        <a href="#revisions">Revisions</a>
-        <a href="#users">Users</a>
-        <a href="#settings">Settings</a>
+        <a aria-current="page" href="#dashboard" data-admin-nav="dashboard">Dashboard</a>
+        <a href="#products" data-admin-nav="products">Products</a>
+        <a href="#categories" data-admin-nav="categories">Categories</a>
+        <a href="#home-page" data-admin-nav="home-page">Home Page</a>
+        <a href="#contact" data-admin-nav="contact">Contact Information</a>
+        <a href="#media" data-admin-nav="media">Media Library</a>
+        <a href="#appearance" data-admin-nav="appearance">Appearance</a>
+        <a href="#revisions" data-admin-nav="revisions">Revisions</a>
+        <a href="#users" data-admin-nav="users">Users</a>
+        <a href="#settings" data-admin-nav="settings">Settings</a>
       </aside>
 
       <section class="admin-content" aria-labelledby="adminDashboardTitle">
@@ -42,7 +42,7 @@
         </div>
 
         <div class="admin-dashboard" id="adminDashboard" hidden>
-          <div class="admin-page-head">
+          <div class="admin-page-head" data-admin-section="dashboard">
             <div>
               <p class="admin-kicker">DASHBOARD</p>
               <h1>ภาพรวมระบบหลังบ้าน</h1>
@@ -54,7 +54,7 @@
             </div>
           </div>
 
-          <section class="admin-mode-banner" id="adminModeBanner" aria-live="polite">
+          <section class="admin-mode-banner" id="adminModeBanner" data-admin-section="dashboard" aria-live="polite">
             <div>
               <strong>โหมดดูข้อมูลเดิม</strong>
               <p>ตอนนี้ Admin อ่านข้อมูลจากไฟล์เว็บเดิมก่อน จึงแก้เป็น Draft และ Export ไฟล์ได้ แต่ถ้าต้องการกดบันทึกแล้วขึ้นเว็บอัตโนมัติ ต้องเชื่อม Supabase ก่อน</p>
@@ -62,14 +62,14 @@
             <a class="button secondary" href="../docs/admin-architecture.md" target="_blank" rel="noopener">ดูแผนเชื่อมระบบ</a>
           </section>
 
-          <div class="admin-stats" aria-label="Product status summary">
+          <div class="admin-stats" data-admin-section="dashboard" aria-label="Product status summary">
             <article><span id="statProducts">0</span><small>สินค้าทั้งหมด</small></article>
             <article><span id="statPublished">0</span><small>Published</small></article>
             <article><span id="statDraft">0</span><small>Draft</small></article>
             <article><span id="statHidden">0</span><small>Hidden</small></article>
           </div>
 
-          <section class="admin-panel" id="products">
+          <section class="admin-panel" id="products" data-admin-section="products" hidden>
             <div class="admin-panel-head">
               <div>
                 <h2>Products</h2>
@@ -108,7 +108,7 @@
             </div>
           </section>
 
-          <section class="admin-panel" id="edit-guide">
+          <section class="admin-panel" id="edit-guide" data-admin-section="dashboard">
             <h2>จะแก้ข้อมูลยังไง?</h2>
             <div class="admin-guide-grid">
               <article>
@@ -126,13 +126,134 @@
             </div>
           </section>
 
-          <section class="admin-panel">
+          <section class="admin-panel" data-admin-section="dashboard">
             <h2>สถานะ Phase 1</h2>
             <ul class="admin-checklist">
               <li>มีหน้า Admin และ Login แบบ noindex</li>
               <li>มีเมนูหลังบ้านตามโครงสร้างที่ต้องการ</li>
               <li>ยังไม่เปิดปุ่มบันทึกจริงจนกว่า Supabase และ RLS พร้อม</li>
               <li>ไม่มี password, service role key, token หรือ secret ใน frontend</li>
+            </ul>
+          </section>
+
+          <section class="admin-panel" id="categories" data-admin-section="categories" hidden>
+            <div class="admin-panel-head">
+              <div>
+                <h2>Categories</h2>
+                <p class="admin-panel-note">จัดการหมวดหมู่สินค้าที่ใช้กรองหน้า Home/Product</p>
+              </div>
+              <button class="button primary" type="button" id="addCategoryButton">เพิ่มหมวดหมู่</button>
+            </div>
+            <div class="admin-placeholder-grid" id="adminCategoriesList"></div>
+          </section>
+
+          <section class="admin-panel" id="home-page" data-admin-section="home-page" hidden>
+            <div class="admin-panel-head">
+              <div>
+                <h2>Home Page</h2>
+                <p class="admin-panel-note">แก้ข้อความหลักของหน้า Home แบบปลอดภัย ยังเป็น draft ใน Admin จนกว่าจะเชื่อม Supabase</p>
+              </div>
+              <button class="button secondary" type="button" data-static-only>บันทึก Draft</button>
+            </div>
+            <div class="admin-editor-grid">
+              <label>หัวข้อ Hero<input type="text" value="ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ"></label>
+              <label>ข้อความรอง<input type="text" value="ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด"></label>
+              <label>ข้อความ CTA<textarea rows="3">ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ</textarea></label>
+              <label>เปิด/ปิด Section
+                <select>
+                  <option>Product Search เปิด</option>
+                  <option>Contact CTA เปิด</option>
+                  <option>Footer เปิด</option>
+                </select>
+              </label>
+            </div>
+            <p class="admin-action-status">ตอนนี้แก้เพื่อวางรูปแบบ UI ก่อน ถ้าต้องการให้บันทึกขึ้นเว็บทันทีต้องเชื่อม Supabase</p>
+          </section>
+
+          <section class="admin-panel" id="contact" data-admin-section="contact" hidden>
+            <div class="admin-panel-head">
+              <div>
+                <h2>Contact Information</h2>
+                <p class="admin-panel-note">ข้อมูลติดต่อที่ใช้ใน Footer และ Contact CTA</p>
+              </div>
+              <button class="button secondary" type="button" data-static-only>บันทึก Draft</button>
+            </div>
+            <div class="admin-editor-grid">
+              <label>โทรศัพท์สำนักงาน<input type="text" value="02-194-4346-7"></label>
+              <label>มือถือ<input type="text" value="086-399-0785"></label>
+              <label>LINE<input type="text" value="@rpvofficial"></label>
+              <label>Email<input type="email" value="sales@rpv.co.th"></label>
+              <label>ที่อยู่<textarea rows="3">21/62 หมู่ 3 ถ.345 ซ.ลำโพ 1 ต.ลำโพ อ.บางบัวทอง จ.นนทบุรี 11110</textarea></label>
+            </div>
+          </section>
+
+          <section class="admin-panel" id="media" data-admin-section="media" hidden>
+            <div class="admin-panel-head">
+              <div>
+                <h2>Media Library</h2>
+                <p class="admin-panel-note">รวมรูปที่ใช้กับสินค้าใน Admin ตอนนี้เป็นรูปจากข้อมูลสินค้าและรูปที่เลือกแบบ draft</p>
+              </div>
+              <button class="button secondary" type="button" id="openFirstProductEditor">เพิ่มรูปผ่านสินค้า</button>
+            </div>
+            <div class="admin-media-grid" id="adminMediaGrid"></div>
+          </section>
+
+          <section class="admin-panel" id="appearance" data-admin-section="appearance" hidden>
+            <div class="admin-panel-head">
+              <div>
+                <h2>Appearance</h2>
+                <p class="admin-panel-note">ปรับเฉพาะค่าที่ปลอดภัย ไม่ให้ใส่ HTML/CSS/JavaScript เอง</p>
+              </div>
+              <button class="button secondary" type="button" data-static-only>บันทึก Draft</button>
+            </div>
+            <div class="admin-editor-grid">
+              <label>สีหลัก
+                <select>
+                  <option>RPV Green</option>
+                  <option>Dark Green</option>
+                </select>
+              </label>
+              <label>จำนวนสินค้า Desktop
+                <select>
+                  <option>4 ใบต่อแถว</option>
+                  <option>3 ใบต่อแถว</option>
+                </select>
+              </label>
+              <label>รูปแบบ Hero
+                <select>
+                  <option>Search Hero</option>
+                  <option>Compact Hero</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section class="admin-panel" id="revisions" data-admin-section="revisions" hidden>
+            <h2>Revisions</h2>
+            <p class="admin-panel-note">ประวัติการแก้ไขจะแสดงครบหลังเชื่อม Supabase revision_history ตอนนี้แสดงเฉพาะรายการแก้ในรอบนี้</p>
+            <ul class="admin-checklist" id="adminRevisionList">
+              <li>ยังไม่มี revision ในรอบนี้</li>
+            </ul>
+          </section>
+
+          <section class="admin-panel" id="users" data-admin-section="users" hidden>
+            <h2>Users</h2>
+            <p class="admin-panel-note">จัดการ Super Admin, Editor, Viewer หลังเชื่อม Supabase Auth และ admin_profiles</p>
+            <div class="admin-placeholder-grid">
+              <article><strong>Super Admin</strong><p>จัดการทุกอย่างและเพิ่มผู้ดูแลได้</p></article>
+              <article><strong>Editor</strong><p>แก้สินค้า ข้อความ และรูปภาพได้</p></article>
+              <article><strong>Viewer</strong><p>ดูข้อมูลและ Preview ได้ แต่บันทึกไม่ได้</p></article>
+            </div>
+          </section>
+
+          <section class="admin-panel" id="settings" data-admin-section="settings" hidden>
+            <h2>Settings</h2>
+            <p class="admin-panel-note">สถานะระบบหลังบ้านและการเชื่อมต่อ</p>
+            <ul class="admin-checklist">
+              <li id="settingDataMode">Data mode: Static fallback</li>
+              <li>Admin page: noindex,nofollow</li>
+              <li>Service role key: ไม่อยู่ใน Frontend</li>
+              <li>GitHub: ใช้เก็บ source code ต่อไป</li>
             </ul>
           </section>
         </div>
