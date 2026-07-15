@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/line-qr-favicon.png">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -47,46 +48,35 @@
     </header>
 
     <main id="home">
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">RPV INDUSTRIAL SUPPLY CO., LTD.</p>
-          <h1>โซลูชันเครื่องขัดผิวและอุปกรณ์สำหรับงานอุตสาหกรรม</h1>
-          <p>
-            เครื่องจักร วัสดุขัด และอุปกรณ์สำหรับเพิ่มคุณภาพผิวชิ้นงาน
-            พร้อมคำแนะนำในการเลือกระบบที่เหมาะสมกับการผลิต
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#products">ดูสินค้าทั้งหมด</a>
-            <a class="button secondary" href="#contact">ปรึกษาการเลือกเครื่อง</a>
+      <section class="product-search-hero" aria-labelledby="productSearchTitle">
+        <div class="search-hero-inner">
+          <div class="search-copy">
+            <p class="eyebrow">RPV PRODUCT SEARCH</p>
+            <h1 id="productSearchTitle">ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ</h1>
+            <p>ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด</p>
           </div>
-        </div>
-        <div class="hero-visual">
-          <img src="assets/rpv-banner-reference.jpg" alt="ภาพอ้างอิงงานอุตสาหกรรมของ RPV" fetchpriority="high">
+          <label class="search-box hero-search">
+            <span>ค้นหาสินค้า</span>
+            <input type="search" id="productSearch" placeholder="ค้นหาชื่อสินค้า รุ่น หรือหมวดสินค้า" autocomplete="off">
+          </label>
         </div>
       </section>
 
       <section class="products-section" id="products">
-        <div class="section-heading">
-          <p class="eyebrow">ผลิตภัณฑ์ของเรา / Our Products</p>
-          <h2>สินค้าหลักของ RPV</h2>
-          <p>แสดงรายการสินค้าที่พบจากข้อมูลเดิมและหมวดที่ยืนยันได้บนหน้า Home โดยตรง เลือกหมวดหรือค้นหาชื่อสินค้าได้ทันที</p>
+        <div class="quick-categories" aria-label="Product category filters">
+          <div class="quick-categories-head">
+            <h2>เลือกหมวดสินค้า</h2>
+            <p>กดหมวดเพื่อกรองสินค้าในหน้านี้ทันที</p>
+          </div>
+          <div class="filter-row" id="categoryFilters"></div>
         </div>
 
         <div class="product-browser">
-          <aside class="product-sidebar" aria-label="Product categories">
-            <div class="sidebar-logo" aria-label="RPV">RPV</div>
-            <label class="search-box">
-              <span>ค้นหาสินค้า</span>
-              <input type="search" id="productSearch" placeholder="ชื่อสินค้า รุ่น หรือหมวด">
-            </label>
-            <div class="filter-row" id="categoryFilters" aria-label="Product category filters"></div>
-          </aside>
-
           <div class="product-list-panel">
             <div class="product-panel-head">
               <div>
                 <strong>รายการสินค้า</strong>
-                <span>กดที่รูปหรือปุ่มเพื่อดูรายละเอียดสินค้า</span>
+                <span>ค้นหาและเลือกหมวดเพื่อดูสินค้าที่ตรงกับงานของคุณ</span>
               </div>
               <div class="product-count" id="productCount" aria-live="polite"></div>
             </div>
@@ -95,74 +85,56 @@
         </div>
       </section>
 
-      <section class="about-section" id="about">
-        <div>
-          <p class="eyebrow">Company Profile</p>
-          <h2>RPV INDUSTRIAL SUPPLY CO., LTD.</h2>
-          <p>
-            บริษัท อาร์พีวี อินดัสเทรียล ซัพพลาย จำกัด จำหน่ายเครื่องจักรอุตสาหกรรม
-            เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง
-          </p>
-        </div>
-        <dl class="company-facts">
-          <div><dt>LINE</dt><dd>@rpvofficial</dd></div>
-          <div><dt>โทรศัพท์</dt><dd>02-194-4346-7</dd></div>
-          <div><dt>มือถือ</dt><dd>086-399-0785</dd></div>
-          <div><dt>ที่อยู่</dt><dd>21/62 หมู่ 3 ถนน 345 ซอยลำโพ 1 ตำบลลำโพ อำเภอบางบัวทอง จังหวัดนนทบุรี 11110</dd></div>
-        </dl>
-      </section>
-
       <section class="contact-cta" id="contact">
-        <div>
-          <p class="eyebrow">Contact RPV</p>
-          <h2>ไม่แน่ใจว่าควรใช้เครื่องหรือวัสดุขัดแบบใด?</h2>
-          <p>ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยประเมิน</p>
-        </div>
-        <div class="cta-buttons">
-          <a class="button line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">เพิ่ม LINE: @rpvofficial</a>
-          <a class="button secondary" href="tel:021944346">โทร 02-194-4346-7</a>
-          <a class="button secondary" href="tel:0863990785">โทร 086-399-0785</a>
-          <a class="button primary" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">ขอใบเสนอราคา</a>
+        <div class="contact-cta-inner">
+          <div class="contact-copy">
+            <p class="eyebrow">CONTACT RPV</p>
+            <h2>ไม่แน่ใจว่าควรเลือกเครื่องหรือวัสดุขัดแบบใด?</h2>
+            <p>ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ</p>
+          </div>
+          <div class="cta-actions">
+            <a class="button line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">LINE @rpvofficial</a>
+            <a class="button secondary" href="tel:0863990785">โทร 086-399-0785</a>
+            <a class="office-link" href="tel:021944346">หรือโทรสำนักงาน 02-194-4346-7</a>
+          </div>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
       <div class="footer-main">
-        <div class="footer-brand">
+        <div class="footer-company" id="about">
           <span class="brand-mark">RPV</span>
-          <p>จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง</p>
-        </div>
-
-        <div class="footer-qr" aria-label="LINE QR placeholder">
-          <span>LINE QR</span>
-          <small>@rpvofficial</small>
+          <h3>RPV INDUSTRIAL SUPPLY CO., LTD.</h3>
+          <p class="footer-about">จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง</p>
+          <p class="footer-address">21/62 หมู่ 3 ถ.345 ซ.ลำโพ 1 ต.ลำโพ อ.บางบัวทอง จ.นนทบุรี 11110</p>
         </div>
 
         <div class="footer-contact">
           <h3>Contact</h3>
-          <dl>
-            <div><dt>Call :</dt><dd>02-194-4346-7</dd></div>
-            <div><dt>Mobile :</dt><dd>086-399-0785</dd></div>
-            <div><dt>Fax :</dt><dd>02-194-4348</dd></div>
-            <div><dt>E-Mail :</dt><dd>sales@rpv.co.th</dd></div>
-          </dl>
+          <div class="footer-contact-grid">
+            <img class="footer-qr" src="assets/line-qr-favicon.png" alt="LINE QR @rpvofficial">
+            <ul>
+              <li><a class="footer-office" href="tel:021944346">สำนักงาน 02-194-4346-7</a></li>
+              <li><a class="footer-mobile" href="tel:0863990785">มือถือ 086-399-0785</a></li>
+              <li><a class="footer-line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">LINE @rpvofficial</a></li>
+              <li><a href="mailto:sales@rpv.co.th">Email sales@rpv.co.th</a></li>
+            </ul>
+          </div>
         </div>
 
-        <div class="footer-social">
-          <h3>Social</h3>
-          <dl>
-            <div><dt>Line :</dt><dd>@rpvofficial</dd></div>
-            <div><dt>Facebook :</dt><dd>เครื่องพ่นทราย ทรายพ่น รับจ้างยิงทราย Sand Blasting by RPV</dd></div>
-            <div><dt>Facebook :</dt><dd>Surface Finishing ขัดลบครีบ ลบคม ขัดเงา วัสดุขัด เตรียมผิวโลหะ by rpv.co.th</dd></div>
-            <div><dt>Facebook :</dt><dd>RPV Industrial Supply Co.,Ltd.</dd></div>
-          </dl>
+        <div class="footer-links">
+          <h3>Quick Links</h3>
+          <a href="#products">สินค้าทั้งหมด</a>
+          <a href="#about">เกี่ยวกับเรา</a>
+          <a href="#contact">ติดต่อเรา</a>
+          <a href="https://www.facebook.com/rpv.co.th" target="_blank" rel="noopener">Facebook RPV</a>
+          <a href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">LINE</a>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p class="copyright">Copyright© 2026 www.rpv.co.th | All rights reserved</p>
-        <p>Overseas Contact : rattana@rpv.co.th</p>
+        <p class="copyright">© 2026 RPV Industrial Supply Co., Ltd. All rights reserved.</p>
       </div>
     </footer>
 

@@ -90,36 +90,36 @@ const ui = {
   th: {
     title: "RPV Industrial Supply | เครื่องขัดผิว วัสดุขัด และอุปกรณ์อุตสาหกรรม",
     quoteButton: "สอบถามราคา",
-    heroTitle: "โซลูชันเครื่องขัดผิวและอุปกรณ์สำหรับงานอุตสาหกรรม",
-    heroText: "เครื่องจักร วัสดุขัด และอุปกรณ์สำหรับเพิ่มคุณภาพผิวชิ้นงาน พร้อมคำแนะนำในการเลือกระบบที่เหมาะสมกับการผลิต",
-    viewProducts: "ดูสินค้าทั้งหมด",
-    consultButton: "ปรึกษาการเลือกเครื่อง",
-    productsEyebrow: "ผลิตภัณฑ์ของเรา / Our Products",
-    productsTitle: "สินค้าหลักของ RPV",
-    productsIntro: "แสดงรายการสินค้าหลักบนหน้า Home โดยตรง เลือกหมวดหรือค้นหาชื่อสินค้าได้ทันที",
+    searchEyebrow: "RPV PRODUCT SEARCH",
+    heroTitle: "ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ",
+    heroText: "ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด",
+    categoryTitle: "เลือกหมวดสินค้า",
+    categoryText: "กดหมวดเพื่อกรองสินค้าในหน้านี้ทันที",
     searchLabel: "ค้นหาสินค้า",
-    searchPlaceholder: "ชื่อสินค้า รุ่น หรือหมวด",
+    searchPlaceholder: "ค้นหาชื่อสินค้า รุ่น หรือหมวดสินค้า",
     productListTitle: "รายการสินค้า",
-    productListHint: "กดที่รูปหรือปุ่มเพื่อดูรายละเอียดสินค้า",
+    productListHint: "ค้นหาและเลือกหมวดเพื่อดูสินค้าที่ตรงกับงานของคุณ",
     allProducts: "สินค้าทั้งหมด",
-    showing: (visible, total) => `แสดง ${visible} จาก ${total} รายการ`,
+    showing: (visible) => `พบ ${visible} รายการ`,
+    noResults: "ไม่พบสินค้าที่ค้นหา กรุณาลองใช้คำอื่นหรือสอบถามทีมงาน RPV",
     detail: "ดูรายละเอียด",
-    askPrice: "สอบถามราคา",
+    askPrice: "สอบถามผ่าน LINE",
     productPlaceholder: "สินค้า",
     noImage: "ยังไม่มีรูปสินค้าสำหรับ",
-    aboutText: "บริษัท อาร์พีวี อินดัสเทรียล ซัพพลาย จำกัด จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง",
-    telLabel: "โทรศัพท์",
-    mobileLabel: "มือถือ",
-    addressLabel: "ที่อยู่",
-    addressText: "21/62 หมู่ 3 ถนน 345 ซอยลำโพ 1 ตำบลลำโพ อำเภอบางบัวทอง จังหวัดนนทบุรี 11110",
-    contactTitle: "ไม่แน่ใจว่าควรใช้เครื่องหรือวัสดุขัดแบบใด?",
-    contactText: "ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยประเมิน",
-    lineButton: "เพิ่ม LINE: @rpvofficial",
-    callOffice: "โทร 02-194-4346-7",
+    contactTitle: "ไม่แน่ใจว่าควรเลือกเครื่องหรือวัสดุขัดแบบใด?",
+    contactText: "ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ",
+    lineButton: "LINE @rpvofficial",
     callMobile: "โทร 086-399-0785",
-    requestQuote: "ขอใบเสนอราคา",
+    officeLink: "หรือโทรสำนักงาน 02-194-4346-7",
     footerAbout: "จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง",
-    footerCopyright: "Copyright© 2026 www.rpv.co.th | All rights reserved",
+    footerAddress: "21/62 หมู่ 3 ถ.345 ซ.ลำโพ 1 ต.ลำโพ อ.บางบัวทอง จ.นนทบุรี 11110",
+    footerOffice: "สำนักงาน 02-194-4346-7",
+    footerMobile: "มือถือ 086-399-0785",
+    footerLine: "LINE @rpvofficial",
+    footerProducts: "สินค้าทั้งหมด",
+    footerAboutLink: "เกี่ยวกับเรา",
+    footerContactLink: "ติดต่อเรา",
+    footerCopyright: "© 2026 RPV Industrial Supply Co., Ltd. All rights reserved.",
     modalFeatures: "จุดเด่นที่ยืนยันได้",
     modalMore: "ข้อมูลเพิ่มเติม",
     modalNote: "ยังไม่มีสเปกรายละเอียดหรือราคาที่ตรวจสอบครบถ้วน จึงแสดงเป็น “สอบถามราคา” เพื่อหลีกเลี่ยงข้อมูลผิดพลาด",
@@ -129,36 +129,36 @@ const ui = {
   en: {
     title: "RPV Industrial Supply | Surface Finishing Machines and Industrial Equipment",
     quoteButton: "Request Quote",
-    heroTitle: "Surface finishing machines and industrial equipment solutions",
-    heroText: "Machines, polishing media, and industrial equipment for improving part surface quality, with guidance for choosing the right process.",
-    viewProducts: "View All Products",
-    consultButton: "Consult Product Selection",
-    productsEyebrow: "Our Products",
-    productsTitle: "RPV Main Products",
-    productsIntro: "Browse core products directly on the Home page. Filter by category or search by name and model.",
+    searchEyebrow: "RPV PRODUCT SEARCH",
+    heroTitle: "Find the right machines and polishing media for your work",
+    heroText: "Search by product name, model, machine type, or polishing media.",
+    categoryTitle: "Quick Categories",
+    categoryText: "Select a category to filter products on this page.",
     searchLabel: "Search products",
-    searchPlaceholder: "Product name, model, or category",
+    searchPlaceholder: "Search product name, model, or category",
     productListTitle: "Product List",
-    productListHint: "Click an image or button to view product details",
+    productListHint: "Search and choose a category to find matching products.",
     allProducts: "All Products",
-    showing: (visible, total) => `Showing ${visible} of ${total} items`,
+    showing: (visible) => `Found ${visible} items`,
+    noResults: "No matching products found. Try another keyword or contact the RPV team.",
     detail: "View Details",
-    askPrice: "Ask for Price",
+    askPrice: "Ask via LINE",
     productPlaceholder: "Product",
     noImage: "No product image yet for",
-    aboutText: "RPV Industrial Supply Co., Ltd. supplies industrial machinery, surface finishing machines, polishing media, parts, and related equipment.",
-    telLabel: "Telephone",
-    mobileLabel: "Mobile",
-    addressLabel: "Address",
-    addressText: "21/62 Moo 3, 345 Rd., Soi Lumpo 1, Lumpo, Bangbuathong, Nonthaburi 11110, Thailand",
-    contactTitle: "Not sure which machine or media to use?",
-    contactText: "Send us your part photo, material, surface issue, and target result for initial recommendation.",
-    lineButton: "Add LINE: @rpvofficial",
-    callOffice: "Call 02-194-4346-7",
+    contactTitle: "Not sure which machine or polishing media to choose?",
+    contactText: "Send your part photo, material, surface issue, and target result so our team can recommend the right option.",
+    lineButton: "LINE @rpvofficial",
     callMobile: "Call 086-399-0785",
-    requestQuote: "Request a Quote",
+    officeLink: "Or call office 02-194-4346-7",
     footerAbout: "Supplier of industrial machinery, surface finishing machines, polishing media, parts, and related equipment.",
-    footerCopyright: "Copyright© 2026 www.rpv.co.th | All rights reserved",
+    footerAddress: "21/62 Moo 3, 345 Rd., Soi Lumpo 1, Lumpo, Bangbuathong, Nonthaburi 11110, Thailand",
+    footerOffice: "Office 02-194-4346-7",
+    footerMobile: "Mobile 086-399-0785",
+    footerLine: "LINE @rpvofficial",
+    footerProducts: "All Products",
+    footerAboutLink: "About Us",
+    footerContactLink: "Contact Us",
+    footerCopyright: "© 2026 RPV Industrial Supply Co., Ltd. All rights reserved.",
     modalFeatures: "Confirmed Highlights",
     modalMore: "More Information",
     modalNote: "Detailed specifications or verified pricing are not yet available, so this item is shown as “Ask for Price” to avoid inaccurate information.",
@@ -245,29 +245,28 @@ function applyLanguage() {
   updateLanguageButtons();
 
   setText(".quote-button", t("quoteButton"));
-  setText(".hero h1", t("heroTitle"));
-  setText(".hero-copy > p:not(.eyebrow)", t("heroText"));
-  setText(".hero-actions .button.primary", t("viewProducts"));
-  setText(".hero-actions .button.secondary", t("consultButton"));
-  setText(".products-section .section-heading .eyebrow", t("productsEyebrow"));
-  setText(".products-section .section-heading h2", t("productsTitle"));
-  setText(".products-section .section-heading p:not(.eyebrow)", t("productsIntro"));
-  setText(".search-box span", t("searchLabel"));
+  setText(".search-copy .eyebrow", t("searchEyebrow"));
+  setText(".search-copy h1", t("heroTitle"));
+  setText(".search-copy p:not(.eyebrow)", t("heroText"));
+  setText(".quick-categories-head h2", t("categoryTitle"));
+  setText(".quick-categories-head p", t("categoryText"));
+  setText(".hero-search span", t("searchLabel"));
   productSearch.placeholder = t("searchPlaceholder");
   setText(".product-panel-head strong", t("productListTitle"));
   setText(".product-panel-head span", t("productListHint"));
-  setText(".about-section p:not(.eyebrow)", t("aboutText"));
-  setText(".company-facts div:nth-child(2) dt", t("telLabel"));
-  setText(".company-facts div:nth-child(3) dt", t("mobileLabel"));
-  setText(".company-facts div:nth-child(4) dt", t("addressLabel"));
-  setText(".company-facts div:nth-child(4) dd", t("addressText"));
   setText(".contact-cta h2", t("contactTitle"));
-  setText(".contact-cta p:not(.eyebrow)", t("contactText"));
-  setText(".cta-buttons .button.line", t("lineButton"));
-  setText('.cta-buttons a[href="tel:021944346"]', t("callOffice"));
-  setText('.cta-buttons a[href="tel:0863990785"]', t("callMobile"));
-  setText(".cta-buttons .button.primary", t("requestQuote"));
-  setText(".footer-brand p", t("footerAbout"));
+  setText(".contact-copy p:not(.eyebrow)", t("contactText"));
+  setText(".cta-actions .button.line", t("lineButton"));
+  setText('.cta-actions a[href="tel:0863990785"]', t("callMobile"));
+  setText(".office-link", t("officeLink"));
+  setText(".footer-about", t("footerAbout"));
+  setText(".footer-address", t("footerAddress"));
+  setText(".footer-office", t("footerOffice"));
+  setText(".footer-mobile", t("footerMobile"));
+  setText(".footer-line", t("footerLine"));
+  setText('.footer-links a[href="#products"]', t("footerProducts"));
+  setText('.footer-links a[href="#about"]', t("footerAboutLink"));
+  setText('.footer-links a[href="#contact"]', t("footerContactLink"));
   setText(".copyright", t("footerCopyright"));
 }
 
@@ -278,7 +277,16 @@ function renderFilters() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "filter-button";
-    button.textContent = category === "All" ? t("allProducts") : category;
+    const label = category === "All" ? t("allProducts") : category;
+    const shortLabel = category === "All"
+      ? "ALL"
+      : category
+        .split(/\s+/)
+        .map((word) => word[0])
+        .join("")
+        .slice(0, 3)
+        .toUpperCase();
+    button.innerHTML = `<span class="category-mark">${shortLabel}</span><span>${label}</span>`;
     button.setAttribute("aria-pressed", String(category === currentCategory));
 
     button.addEventListener("click", () => {
@@ -312,11 +320,21 @@ function renderProducts() {
   productCount.textContent = t("showing")(visibleProducts.length, products.length);
   productGrid.innerHTML = "";
 
+  if (visibleProducts.length === 0) {
+    productGrid.innerHTML = `
+      <div class="no-results">
+        <p>${t("noResults")}</p>
+        <a class="button line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">${t("askPrice")}</a>
+      </div>
+    `;
+    return;
+  }
+
   visibleProducts.forEach((product) => {
     const name = productName(product);
     const secondaryName = secondaryProductName(product);
     const description = productDescription(product);
-    const modelText = product.model ? ` / ${product.model}` : "";
+    const modelText = product.model || "-";
     const card = document.createElement("article");
     card.className = `product-card${product.featured ? " featured" : ""}`;
     card.dataset.detail = product.id;
@@ -328,12 +346,9 @@ function renderProducts() {
       <div class="product-body">
         <span class="product-category">${product.category}</span>
         <h3>${name}</h3>
-        <p class="product-en">${secondaryName}${modelText}</p>
+        <p class="product-en">${secondaryName}</p>
+        <p class="product-model">${modelText}</p>
         <p class="product-desc">${description}</p>
-        <ul class="feature-list">
-          ${product.features.slice(0, 3).map((feature) => `<li>${feature}</li>`).join("")}
-        </ul>
-        <div class="price-note">${t("askPrice")}</div>
       </div>
       <div class="product-actions">
         <button class="button detail" type="button" data-detail="${product.id}">${t("detail")}</button>
