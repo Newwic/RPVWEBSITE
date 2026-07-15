@@ -248,7 +248,6 @@ input {
 }
 
 .products-section,
-.why-section,
 .about-section,
 .contact-cta {
   padding: clamp(64px, 8vw, 104px) clamp(18px, 5vw, 64px);
@@ -269,7 +268,6 @@ input {
 }
 
 .section-heading h2,
-.why-section h2,
 .about-section h2,
 .contact-cta h2 {
   margin: 0;
@@ -529,31 +527,6 @@ input {
   padding: 0 18px 18px;
 }
 
-.why-section {
-  background: var(--white);
-}
-
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  max-width: 1160px;
-  margin: 0 auto;
-}
-
-.why-grid article {
-  padding: 22px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
-
-.why-grid strong,
-.why-grid span {
-  display: block;
-}
-
-.why-grid span,
 .about-section p,
 .company-facts dd,
 .contact-cta p,
@@ -779,7 +752,6 @@ input {
     width: auto;
   }
 
-  .why-grid,
   .site-footer {
     grid-template-columns: 1fr 1fr;
   }
@@ -793,7 +765,6 @@ input {
   .site-header,
   .hero,
   .products-section,
-  .why-section,
   .about-section,
   .contact-cta,
   .site-footer {
@@ -807,7 +778,6 @@ input {
   }
 
   .product-grid,
-  .why-grid,
   .site-footer {
     grid-template-columns: 1fr;
   }
