@@ -18,6 +18,22 @@ const statusFilter = document.querySelector("#adminStatusFilter");
 let supabaseClient = null;
 let adminProducts = [];
 
+function staticProductsFallback() {
+  return (window.rpvProducts || []).map((product) => ({
+    id: product.id,
+    slug: product.slug,
+    name_th: product.nameTh,
+    name_en: product.nameEn,
+    model: product.model,
+    status: product.status === "active" ? "published" : product.status || "draft",
+    sort_order: product.sortOrder,
+    categories: {
+      name_th: product.category,
+      name_en: product.category
+    }
+  })).sort((a, b) => (a.sort_order || 100) - (b.sort_order || 100));
+}
+
 function setStatus(element, message, isError = false) {
   if (!element) return;
   element.textContent = message;
@@ -103,10 +119,18 @@ function renderProducts() {
       <td><span class="admin-badge">${product.status}</span></td>
       <td>${product.sort_order ?? "-"}</td>
       <td>
-        <button class="button secondary" type="button" disabled>Preview</button>
+        <a class="button secondary" href="../index.html#products" target="_blank" rel="noopener">Preview</a>
       </td>
     </tr>
   `).join("");
+}
+
+function showFallbackDashboard() {
+  adminProducts = staticProductsFallback();
+  adminGuard.hidden = true;
+  adminDashboard.hidden = false;
+  renderStats(adminProducts);
+  renderProducts();
 }
 
 async function loadDashboard(client) {
@@ -129,7 +153,7 @@ async function bootAdminPage() {
   if (!guardStatus) return;
 
   if (!isConfigured) {
-    setStatus(guardStatus, "ยังไม่ได้ตั้งค่า Supabase ใน admin/config.js ระบบจึงยังไม่เปิดหลังบ้านจริง", true);
+    showFallbackDashboard();
     return;
   }
 
@@ -199,4 +223,3 @@ statusFilter?.addEventListener("change", renderProducts);
 
 bootLoginPage();
 bootAdminPage();
-
