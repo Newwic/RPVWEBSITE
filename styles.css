@@ -71,6 +71,10 @@ a {
   white-space: nowrap;
 }
 
+.nav-item {
+  position: relative;
+}
+
 .site-nav a:hover {
   color: var(--brand);
   background: transparent;
@@ -84,6 +88,78 @@ a {
   border-right: 6px solid transparent;
   border-top: 7px solid currentColor;
   transform: translateY(1px);
+}
+
+.products-menu:hover > .has-dropdown,
+.products-menu:focus-within > .has-dropdown {
+  color: white;
+  background: #43ad33;
+}
+
+.products-menu > .has-dropdown {
+  padding: 18px 22px;
+  border-radius: 7px;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+
+.mega-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0px);
+  display: none;
+  min-width: 850px;
+  grid-template-columns: 430px 420px;
+  align-items: stretch;
+  background: white;
+  border-top: 1px solid #d3d3d3;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16);
+}
+
+.products-menu:hover .mega-menu,
+.products-menu:focus-within .mega-menu {
+  display: grid;
+}
+
+.product-categories,
+.product-submenu {
+  display: grid;
+  align-content: start;
+  padding: 0;
+}
+
+.product-submenu {
+  border-left: 1px solid #d8d8d8;
+}
+
+.site-nav .mega-menu a {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 13px 22px;
+  color: #333;
+  border-radius: 0;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-transform: none;
+}
+
+.site-nav .mega-menu a:hover,
+.site-nav .mega-menu .category-item.active {
+  color: white;
+  background: #43ad33;
+}
+
+.site-nav .mega-menu .category-item:not(.active):hover,
+.site-nav .product-submenu a:hover {
+  color: #43ad33;
+  background: #f3f7f2;
+}
+
+.arrow {
+  margin-left: 18px;
+  font-size: 26px;
+  line-height: 0.8;
 }
 
 .nav-toggle {
@@ -441,6 +517,38 @@ a {
   .site-nav a {
     padding: 14px 12px;
     font-size: 18px;
+  }
+
+  .nav-item {
+    position: static;
+  }
+
+  .products-menu > .has-dropdown {
+    padding: 14px 12px;
+    border-radius: 0;
+  }
+
+  .mega-menu {
+    position: static;
+    min-width: 0;
+    grid-template-columns: 1fr;
+    box-shadow: none;
+    border: 1px solid var(--line);
+  }
+
+  .products-menu:hover .mega-menu,
+  .products-menu:focus-within .mega-menu {
+    display: grid;
+  }
+
+  .product-submenu {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .site-nav .mega-menu a {
+    padding: 11px 16px;
+    font-size: 16px;
   }
 
   .site-nav.is-open {
