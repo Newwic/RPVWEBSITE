@@ -19,6 +19,33 @@ let currentLanguage = ["th", "en"].includes(urlLanguage)
   ? urlLanguage
   : localStorage.getItem("rpvLanguage") || "th";
 
+const categoryText = {
+  th: {
+    All: "สินค้าทั้งหมด",
+    "Polishing Machines": "เครื่องขัดผิว",
+    "Magnetic Polishing Machines": "เครื่องขัดแม่เหล็ก",
+    "Magnetic Pins": "เข็มขัดแม่เหล็ก",
+    "Ceramic Media": "หินขัดเซรามิก",
+    "Plastic Media": "หินขัดพลาสติก",
+    "Stainless Steel Media": "วัสดุขัดสแตนเลส",
+    "Polishing Media": "วัสดุขัด",
+    "Compound and Chemicals": "น้ำยาขัดและเคมีภัณฑ์",
+    "Industrial Equipment": "อุปกรณ์อุตสาหกรรม"
+  },
+  en: {
+    All: "All Products",
+    "Polishing Machines": "Polishing Machines",
+    "Magnetic Polishing Machines": "Magnetic Polishing Machines",
+    "Magnetic Pins": "Magnetic Pins",
+    "Ceramic Media": "Ceramic Media",
+    "Plastic Media": "Plastic Media",
+    "Stainless Steel Media": "Stainless Steel Media",
+    "Polishing Media": "Polishing Media",
+    "Compound and Chemicals": "Compound and Chemicals",
+    "Industrial Equipment": "Industrial Equipment"
+  }
+};
+
 const productThai = {
   "vibratory-finishing-machine": {
     name: "เครื่องขัดแบบเขย่า",
@@ -89,8 +116,14 @@ const productThai = {
 const ui = {
   th: {
     title: "RPV Industrial Supply | เครื่องขัดผิว วัสดุขัด และอุปกรณ์อุตสาหกรรม",
+    brandSubtitle: "โซลูชันงานขัดผิว",
+    navHome: "หน้าแรก",
+    navProducts: "สินค้า",
+    navSolutions: "โซลูชัน",
+    navAbout: "เกี่ยวกับเรา",
+    navContact: "ติดต่อ",
     quoteButton: "สอบถามราคา",
-    searchEyebrow: "RPV PRODUCT SEARCH",
+    searchEyebrow: "ค้นหาสินค้า RPV",
     heroTitle: "ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ",
     heroText: "ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด",
     categoryTitle: "เลือกหมวดสินค้า",
@@ -109,6 +142,7 @@ const ui = {
     contactTitle: "ไม่แน่ใจว่าควรเลือกเครื่องหรือวัสดุขัดแบบใด?",
     contactText: "ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ",
     lineButton: "LINE @rpvofficial",
+    callOffice: "โทร 02-194-4346-7",
     callMobile: "โทร 086-399-0785",
     officeLink: "หรือโทรสำนักงาน 02-194-4346-7",
     footerAbout: "จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง",
@@ -128,6 +162,12 @@ const ui = {
   },
   en: {
     title: "RPV Industrial Supply | Surface Finishing Machines and Industrial Equipment",
+    brandSubtitle: "Surface Finishing Solutions",
+    navHome: "Home",
+    navProducts: "Products",
+    navSolutions: "Solutions",
+    navAbout: "About Us",
+    navContact: "Contact",
     quoteButton: "Request Quote",
     searchEyebrow: "RPV PRODUCT SEARCH",
     heroTitle: "Find the right machines and polishing media for your work",
@@ -148,6 +188,7 @@ const ui = {
     contactTitle: "Not sure which machine or polishing media to choose?",
     contactText: "Send your part photo, material, surface issue, and target result so our team can recommend the right option.",
     lineButton: "LINE @rpvofficial",
+    callOffice: "Call 02-194-4346-7",
     callMobile: "Call 086-399-0785",
     officeLink: "Or call office 02-194-4346-7",
     footerAbout: "Supplier of industrial machinery, surface finishing machines, polishing media, parts, and related equipment.",
@@ -177,6 +218,10 @@ function setText(selector, value) {
   if (element) {
     element.textContent = value;
   }
+}
+
+function categoryLabel(category) {
+  return categoryText[currentLanguage]?.[category] || category;
 }
 
 function productName(product) {
@@ -214,6 +259,7 @@ function productMatchesSearch(product, keyword) {
     product.nameEn,
     product.model,
     product.category,
+    categoryLabel(product.category),
     productDescription(product)
   ].join(" ").toLowerCase();
 
@@ -245,6 +291,12 @@ function applyLanguage() {
   updateLanguageButtons();
 
   setText(".quote-button", t("quoteButton"));
+  setText(".brand small", t("brandSubtitle"));
+  setText('.site-nav a[href="#home"]', t("navHome"));
+  setText('.site-nav a[href="#products"]', t("navProducts"));
+  setText('.site-nav a[href="#solutions"]', t("navSolutions"));
+  setText('.site-nav a[href="#about"]', t("navAbout"));
+  setText('.site-nav a[href="#contact"]', t("navContact"));
   setText(".search-copy .eyebrow", t("searchEyebrow"));
   setText(".search-copy h1", t("heroTitle"));
   setText(".search-copy p:not(.eyebrow)", t("heroText"));
@@ -277,7 +329,7 @@ function renderFilters() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "filter-button";
-    const label = category === "All" ? t("allProducts") : category;
+    const label = categoryLabel(category);
     const shortLabel = category === "All"
       ? "ALL"
       : category
@@ -344,7 +396,7 @@ function renderProducts() {
     card.innerHTML = `
       <div class="product-image">${imageMarkup(product)}</div>
       <div class="product-body">
-        <span class="product-category">${product.category}</span>
+        <span class="product-category">${categoryLabel(product.category)}</span>
         <h3>${name}</h3>
         <p class="product-en">${secondaryName}</p>
         <p class="product-model">${modelText}</p>
@@ -370,7 +422,7 @@ function openProductModal(product) {
     <div class="modal-layout">
       <div class="product-image modal-image">${imageMarkup(product)}</div>
       <div>
-        <span class="product-category">${product.category}</span>
+        <span class="product-category">${categoryLabel(product.category)}</span>
         <h2>${name}</h2>
         <p class="product-en">${secondaryName}${modelText}</p>
         <p>${description}</p>
