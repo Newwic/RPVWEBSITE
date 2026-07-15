@@ -144,6 +144,14 @@ function readFileAsDataUrl(file) {
   });
 }
 
+function isAllowedImageFile(file) {
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+  const lowerName = file.name.toLowerCase();
+  return allowedTypes.includes(file.type)
+    || allowedExtensions.some((extension) => lowerName.endsWith(extension));
+}
+
 function setAdminMode(mode) {
   adminDataMode = mode;
 
@@ -489,17 +497,18 @@ productImageFile?.addEventListener("change", async () => {
   const file = productImageFile.files?.[0];
   if (!file) return;
 
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-  if (!allowedTypes.includes(file.type)) {
+  setStatus(editorStatus, `กำลังอ่านรูป: ${file.name}`);
+
+  if (!isAllowedImageFile(file)) {
     productImageFile.value = "";
     setStatus(editorStatus, "ไฟล์รูปต้องเป็น JPG, PNG หรือ WebP เท่านั้น", true);
     return;
   }
 
-  const maxBytes = 1.5 * 1024 * 1024;
+  const maxBytes = 5 * 1024 * 1024;
   if (file.size > maxBytes) {
     productImageFile.value = "";
-    setStatus(editorStatus, "รูปใหญ่เกินไป กรุณาย่อให้ไม่เกิน 1.5 MB ก่อน", true);
+    setStatus(editorStatus, "รูปใหญ่เกินไป กรุณาย่อให้ไม่เกิน 5 MB ก่อน", true);
     return;
   }
 
