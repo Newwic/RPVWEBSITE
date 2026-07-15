@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>RPV Admin Login</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20260715-r">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="admin.css">
+  </head>
+  <body class="admin-page">
+    <main class="admin-auth">
+      <section class="admin-auth-card" aria-labelledby="adminLoginTitle">
+        <img class="admin-logo" src="../assets/logoRPV.png" alt="RPV">
+        <p class="admin-kicker">RPV ADMIN</p>
+        <h1 id="adminLoginTitle">เข้าสู่ระบบผู้ดูแล</h1>
+        <p>ระบบนี้ใช้สำหรับผู้ดูแลเว็บไซต์เท่านั้น ทุกคำสั่งแก้ไขข้อมูลต้องตรวจสอบสิทธิ์จริงผ่าน Supabase และ RLS</p>
+
+        <form class="admin-form" id="adminLoginForm">
+          <label>
+            Email
+            <input type="email" id="adminEmail" autocomplete="email" required>
+          </label>
+          <label>
+            Password
+            <input type="password" id="adminPassword" autocomplete="current-password" required>
+          </label>
+          <button class="button primary" type="submit">Login</button>
+          <p class="admin-status" id="adminLoginStatus" role="status"></p>
+        </form>
+
+        <div class="admin-note">
+          <strong>ยังไม่พร้อมใช้งานจริงจนกว่าจะตั้งค่า Supabase</strong>
+          <span>ใส่ Supabase URL และ anon key ใน <code>admin/config.js</code> หลังจากเปิด RLS แล้วเท่านั้น</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script type="module" src="admin.js"></script>
+  </body>
+</html>
+

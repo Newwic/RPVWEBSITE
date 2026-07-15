@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://newwic.github.io/RPVWEBSITE/sitemap.xml

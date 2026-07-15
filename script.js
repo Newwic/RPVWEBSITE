@@ -120,6 +120,7 @@ const ui = {
     navHome: "หน้าแรก",
     navProducts: "สินค้า",
     navSolutions: "โซลูชัน",
+    navArticles: "บทความ",
     navAbout: "เกี่ยวกับเรา",
     navContact: "ติดต่อ",
     quoteButton: "สอบถามราคา",
@@ -166,6 +167,7 @@ const ui = {
     navHome: "Home",
     navProducts: "Products",
     navSolutions: "Solutions",
+    navArticles: "Articles",
     navAbout: "About Us",
     navContact: "Contact",
     quoteButton: "Request Quote",
@@ -295,6 +297,7 @@ function applyLanguage() {
   setText('.site-nav a[href="#home"]', t("navHome"));
   setText('.site-nav a[href="#products"]', t("navProducts"));
   setText('.site-nav a[href="#solutions"]', t("navSolutions"));
+  setText('.site-nav a[href="articles.html"]', t("navArticles"));
   setText('.site-nav a[href="#about"]', t("navAbout"));
   setText('.site-nav a[href="#contact"]', t("navContact"));
   setText(".search-copy .eyebrow", t("searchEyebrow"));
@@ -442,15 +445,33 @@ function openProductModal(product) {
   productModal.showModal();
 }
 
+function closeMobileNav() {
+  siteNav.classList.remove("is-open");
+  document.body.classList.remove("nav-open");
+  navToggle.setAttribute("aria-expanded", "false");
+}
+
 navToggle.addEventListener("click", () => {
   const isOpen = siteNav.classList.toggle("is-open");
+  document.body.classList.toggle("nav-open", isOpen);
   navToggle.setAttribute("aria-expanded", String(isOpen));
 });
 
 siteNav.addEventListener("click", (event) => {
   if (event.target.matches("a")) {
-    siteNav.classList.remove("is-open");
-    navToggle.setAttribute("aria-expanded", "false");
+    closeMobileNav();
+  }
+});
+
+document.addEventListener("click", (event) => {
+  if (!document.body.classList.contains("nav-open")) return;
+  if (event.target.closest(".site-nav, .nav-toggle, .header-actions")) return;
+  closeMobileNav();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeMobileNav();
   }
 });
 
