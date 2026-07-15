@@ -7,20 +7,89 @@ const productCount = document.querySelector("#productCount");
 const productModal = document.querySelector("#productModal");
 const modalContent = document.querySelector("#modalContent");
 const modalClose = document.querySelector(".modal-close");
-const languageToggle = document.querySelector("#languageToggle");
+const languageButtons = document.querySelectorAll("[data-lang]");
 
 const products = (window.rpvProducts || [])
   .filter((product) => product.status === "active")
   .sort((a, b) => a.sortOrder - b.sortOrder);
 
 let currentCategory = "All";
-let currentLanguage = localStorage.getItem("rpvLanguage") || "th";
+const urlLanguage = new URLSearchParams(window.location.search).get("lang");
+let currentLanguage = ["th", "en"].includes(urlLanguage)
+  ? urlLanguage
+  : localStorage.getItem("rpvLanguage") || "th";
 
-const copy = {
+const productThai = {
+  "vibratory-finishing-machine": {
+    name: "เครื่องขัดแบบเขย่า",
+    description: "เครื่องจักรสำหรับงานลบคม ขัดผิว และขัดเงาชิ้นงานในกระบวนการ mass finishing"
+  },
+  "centrifugal-finishing-machine": {
+    name: "เครื่องขัดแบบจานหมุน",
+    description: "เครื่องขัดสำหรับงานที่ต้องการแรงขัดสูงและรอบการทำงานรวดเร็ว"
+  },
+  "barrel-rotary-finishing-machine": {
+    name: "เครื่องขัดแบบถังกลิ้ง",
+    description: "เครื่องขัดแบบถังสำหรับงานขัดชิ้นงานจำนวนมากและงานผิวที่ต้องใช้เวลา"
+  },
+  "dryer-machine": {
+    name: "เครื่องอบแห้ง",
+    description: "เครื่องอบแห้งสำหรับชิ้นงานหลังผ่านกระบวนการขัดหรือล้าง"
+  },
+  "vibratory-separator": {
+    name: "เครื่องแยกชิ้นงาน",
+    description: "เครื่องช่วยแยกชิ้นงานออกจาก media หลังจบกระบวนการขัด"
+  },
+  "magnetic-polishing-machine": {
+    name: "เครื่องขัดระบบแม่เหล็ก",
+    description: "เครื่องขัดสำหรับชิ้นงานขนาดเล็กหรือชิ้นงานที่มีรายละเอียดซับซ้อน"
+  },
+  "magnetic-pins": {
+    name: "เข็มขัดแม่เหล็ก",
+    description: "วัสดุขัดสำหรับใช้งานร่วมกับเครื่องขัดระบบแม่เหล็ก"
+  },
+  "ceramic-media": {
+    name: "หินขัดเซรามิก",
+    description: "วัสดุขัดเซรามิกสำหรับเครื่องขัดแบบเขย่าและเครื่องขัดผิว"
+  },
+  "plastic-media": {
+    name: "หินขัดพลาสติก",
+    description: "วัสดุขัดพลาสติกสำหรับงานขัดที่ต้องการถนอมผิวชิ้นงาน"
+  },
+  "stainless-steel-media": {
+    name: "วัสดุขัดสแตนเลส",
+    description: "วัสดุขัดโลหะสำหรับงานขัดเงาและงานผิวที่ต้องการความสม่ำเสมอ"
+  },
+  "compound-chemicals": {
+    name: "น้ำยาขัดและเคมีภัณฑ์",
+    description: "น้ำยาขัด น้ำยาล้าง และสารช่วยในกระบวนการขัดผิวชิ้นงาน"
+  },
+  "glass-beads-no-12": {
+    name: "เม็ดแก้วพ่นทราย เบอร์ 12",
+    description: "เม็ดแก้วสำหรับงานพ่นผิว งานลบคมละเอียด และงานผิว satin"
+  },
+  "steel-shot": {
+    name: "เม็ดเหล็กกลม",
+    description: "เม็ดเหล็กกลมสำหรับงาน shot blasting และเตรียมผิวโลหะ"
+  },
+  "steel-grit": {
+    name: "เม็ดเหล็กทรงเหลี่ยม",
+    description: "เม็ดเหล็กทรงเหลี่ยมสำหรับสร้าง profile และเตรียมผิวโลหะ"
+  },
+  "carbon-steel-cut-wire": {
+    name: "เม็ดลวดตัดคาร์บอนสตีล",
+    description: "เม็ดลวดตัดสำหรับงาน shot peening และงานลบคม"
+  },
+  "portable-under-blaster": {
+    name: "เครื่องพ่นทรายแบบพกพา",
+    description: "เครื่องพ่นทรายแบบพกพาสำหรับงานภาคสนาม งานซ่อมบำรุง และงานเตรียมผิว"
+  }
+};
+
+const ui = {
   th: {
-    langButton: "TH / EN",
+    title: "RPV Industrial Supply | เครื่องขัดผิว วัสดุขัด และอุปกรณ์อุตสาหกรรม",
     quoteButton: "สอบถามราคา",
-    nav: ["Home", "Products", "Solutions", "About Us", "Contact"],
     heroTitle: "โซลูชันเครื่องขัดผิวและอุปกรณ์สำหรับงานอุตสาหกรรม",
     heroText: "เครื่องจักร วัสดุขัด และอุปกรณ์สำหรับเพิ่มคุณภาพผิวชิ้นงาน พร้อมคำแนะนำในการเลือกระบบที่เหมาะสมกับการผลิต",
     viewProducts: "ดูสินค้าทั้งหมด",
@@ -36,8 +105,8 @@ const copy = {
     showing: (visible, total) => `แสดง ${visible} จาก ${total} รายการ`,
     detail: "ดูรายละเอียด",
     askPrice: "สอบถามราคา",
-    noImage: "ยังไม่มีรูปสินค้าสำหรับ",
     productPlaceholder: "สินค้า",
+    noImage: "ยังไม่มีรูปสินค้าสำหรับ",
     aboutText: "บริษัท อาร์พีวี อินดัสเทรียล ซัพพลาย จำกัด จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง",
     telLabel: "โทรศัพท์",
     mobileLabel: "มือถือ",
@@ -50,19 +119,16 @@ const copy = {
     callMobile: "โทร 086-399-0785",
     requestQuote: "ขอใบเสนอราคา",
     footerAbout: "จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง",
-    footerCategories: "Polishing Machines, Magnetic Polishing Machines, Polishing Media, Industrial Equipment",
     footerCopyright: "© 2026 RPV Industrial Supply. หากมีการเก็บข้อมูลลูกค้า ควรเพิ่ม Privacy Policy",
     modalFeatures: "จุดเด่นที่ยืนยันได้",
     modalMore: "ข้อมูลเพิ่มเติม",
     modalNote: "ยังไม่มีสเปกรายละเอียดหรือราคาที่ตรวจสอบครบถ้วน จึงแสดงเป็น “สอบถามราคา” เพื่อหลีกเลี่ยงข้อมูลผิดพลาด",
     addLine: "เพิ่ม LINE",
-    closeModal: "ปิดหน้าต่างสินค้า",
-    title: "RPV Industrial Supply | เครื่องขัดผิว วัสดุขัด และอุปกรณ์อุตสาหกรรม"
+    closeModal: "ปิดหน้าต่างสินค้า"
   },
   en: {
-    langButton: "TH / EN",
+    title: "RPV Industrial Supply | Surface Finishing Machines and Industrial Equipment",
     quoteButton: "Request Quote",
-    nav: ["Home", "Products", "Solutions", "About Us", "Contact"],
     heroTitle: "Surface finishing machines and industrial equipment solutions",
     heroText: "Machines, polishing media, and industrial equipment for improving part surface quality, with guidance for choosing the right process.",
     viewProducts: "View All Products",
@@ -78,8 +144,8 @@ const copy = {
     showing: (visible, total) => `Showing ${visible} of ${total} items`,
     detail: "View Details",
     askPrice: "Ask for Price",
-    noImage: "No product image yet for",
     productPlaceholder: "Product",
+    noImage: "No product image yet for",
     aboutText: "RPV Industrial Supply Co., Ltd. supplies industrial machinery, surface finishing machines, polishing media, parts, and related equipment.",
     telLabel: "Telephone",
     mobileLabel: "Mobile",
@@ -92,19 +158,17 @@ const copy = {
     callMobile: "Call 086-399-0785",
     requestQuote: "Request a Quote",
     footerAbout: "Supplier of industrial machinery, surface finishing machines, polishing media, parts, and related equipment.",
-    footerCategories: "Polishing Machines, Magnetic Polishing Machines, Polishing Media, Industrial Equipment",
     footerCopyright: "© 2026 RPV Industrial Supply. Add a Privacy Policy if customer data is collected.",
     modalFeatures: "Confirmed Highlights",
     modalMore: "More Information",
     modalNote: "Detailed specifications or verified pricing are not yet available, so this item is shown as “Ask for Price” to avoid inaccurate information.",
     addLine: "Add LINE",
-    closeModal: "Close product dialog",
-    title: "RPV Industrial Supply | Surface Finishing Machines and Industrial Equipment"
+    closeModal: "Close product dialog"
   }
 };
 
 function t(key) {
-  return copy[currentLanguage][key];
+  return ui[currentLanguage][key];
 }
 
 function setText(selector, value) {
@@ -115,24 +179,28 @@ function setText(selector, value) {
   }
 }
 
-function setAllText(selector, values) {
-  document.querySelectorAll(selector).forEach((element, index) => {
-    if (values[index]) {
-      element.textContent = values[index];
-    }
-  });
-}
-
 function productName(product) {
-  return currentLanguage === "th" ? product.nameTh : product.nameEn;
+  if (currentLanguage === "th") {
+    return productThai[product.id]?.name || product.nameTh || product.nameEn;
+  }
+
+  return product.nameEn || productThai[product.id]?.name || product.nameTh;
 }
 
 function secondaryProductName(product) {
-  return currentLanguage === "th" ? product.nameEn : product.nameTh;
+  if (currentLanguage === "th") {
+    return product.nameEn || "";
+  }
+
+  return productThai[product.id]?.name || "";
 }
 
 function productDescription(product) {
-  return currentLanguage === "th" ? product.shortDescriptionTh : product.shortDescriptionEn;
+  if (currentLanguage === "th") {
+    return productThai[product.id]?.description || product.shortDescriptionTh || product.shortDescriptionEn;
+  }
+
+  return product.shortDescriptionEn || productThai[product.id]?.description || product.shortDescriptionTh;
 }
 
 function uniqueCategories() {
@@ -140,16 +208,16 @@ function uniqueCategories() {
 }
 
 function productMatchesSearch(product, keyword) {
-  const searchableText = [
-    product.nameTh,
+  const text = [
+    productName(product),
+    secondaryProductName(product),
     product.nameEn,
     product.model,
     product.category,
-    product.shortDescriptionTh,
-    product.shortDescriptionEn
+    productDescription(product)
   ].join(" ").toLowerCase();
 
-  return searchableText.includes(keyword.toLowerCase());
+  return text.includes(keyword.toLowerCase());
 }
 
 function filteredProducts() {
@@ -162,15 +230,21 @@ function filteredProducts() {
   });
 }
 
+function updateLanguageButtons() {
+  languageButtons.forEach((button) => {
+    const isActive = button.dataset.lang === currentLanguage;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
 function applyLanguage() {
   document.documentElement.lang = currentLanguage;
   document.title = t("title");
-  languageToggle.textContent = t("langButton");
-  languageToggle.setAttribute("aria-pressed", String(currentLanguage === "en"));
   modalClose.setAttribute("aria-label", t("closeModal"));
+  updateLanguageButtons();
 
   setText(".quote-button", t("quoteButton"));
-  setAllText(".site-nav a", t("nav"));
   setText(".hero h1", t("heroTitle"));
   setText(".hero-copy > p:not(.eyebrow)", t("heroText"));
   setText(".hero-actions .button.primary", t("viewProducts"));
@@ -194,7 +268,6 @@ function applyLanguage() {
   setText('.cta-buttons a[href="tel:0863990785"]', t("callMobile"));
   setText(".cta-buttons .button.primary", t("requestQuote"));
   setText(".footer-brand p", t("footerAbout"));
-  setText(".site-footer div:nth-of-type(4) p", t("footerCategories"));
   setText(".copyright", t("footerCopyright"));
 }
 
@@ -243,6 +316,7 @@ function renderProducts() {
     const name = productName(product);
     const secondaryName = secondaryProductName(product);
     const description = productDescription(product);
+    const modelText = product.model ? ` / ${product.model}` : "";
     const card = document.createElement("article");
     card.className = `product-card${product.featured ? " featured" : ""}`;
     card.dataset.detail = product.id;
@@ -254,7 +328,7 @@ function renderProducts() {
       <div class="product-body">
         <span class="product-category">${product.category}</span>
         <h3>${name}</h3>
-        <p class="product-en">${secondaryName}${product.model ? ` / ${product.model}` : ""}</p>
+        <p class="product-en">${secondaryName}${modelText}</p>
         <p class="product-desc">${description}</p>
         <ul class="feature-list">
           ${product.features.slice(0, 3).map((feature) => `<li>${feature}</li>`).join("")}
@@ -275,6 +349,7 @@ function openProductModal(product) {
   const name = productName(product);
   const secondaryName = secondaryProductName(product);
   const description = productDescription(product);
+  const modelText = product.model ? ` / ${product.model}` : "";
 
   modalContent.innerHTML = `
     <div class="modal-layout">
@@ -282,7 +357,7 @@ function openProductModal(product) {
       <div>
         <span class="product-category">${product.category}</span>
         <h2>${name}</h2>
-        <p class="product-en">${secondaryName}${product.model ? ` / ${product.model}` : ""}</p>
+        <p class="product-en">${secondaryName}${modelText}</p>
         <p>${description}</p>
         <h3>${t("modalFeatures")}</h3>
         <ul class="feature-list modal-features">
@@ -312,12 +387,14 @@ siteNav.addEventListener("click", (event) => {
   }
 });
 
-languageToggle.addEventListener("click", () => {
-  currentLanguage = currentLanguage === "th" ? "en" : "th";
-  localStorage.setItem("rpvLanguage", currentLanguage);
-  applyLanguage();
-  renderFilters();
-  renderProducts();
+languageButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    currentLanguage = button.dataset.lang;
+    localStorage.setItem("rpvLanguage", currentLanguage);
+    applyLanguage();
+    renderFilters();
+    renderProducts();
+  });
 });
 
 productSearch.addEventListener("input", renderProducts);

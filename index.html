@@ -38,7 +38,10 @@
       </nav>
 
       <div class="header-actions">
-        <button class="language-switch" id="languageToggle" type="button" aria-label="Switch language" aria-pressed="false">EN</button>
+        <div class="language-switch" role="group" aria-label="Language switch">
+          <button class="language-option is-active" type="button" data-lang="th" aria-pressed="true">TH</button>
+          <button class="language-option" type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
         <a class="quote-button" href="#contact">สอบถามราคา</a>
       </div>
     </header>
