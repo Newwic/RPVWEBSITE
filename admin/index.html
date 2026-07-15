@@ -46,10 +46,18 @@
             <div>
               <p class="admin-kicker">DASHBOARD</p>
               <h1>ภาพรวมระบบหลังบ้าน</h1>
-              <p>ข้อมูลด้านล่างอ่านจาก Supabase เมื่อเชื่อมต่อแล้ว ถ้ายังไม่ตั้งค่า ระบบจะไม่เปิดให้บันทึกข้อมูลจริง</p>
+              <p id="adminModeText">กำลังตรวจสอบแหล่งข้อมูล...</p>
             </div>
-            <button class="button primary" type="button" disabled>เพิ่มสินค้าใหม่</button>
+            <button class="button primary" id="addProductButton" type="button">เพิ่มสินค้าใหม่</button>
           </div>
+
+          <section class="admin-mode-banner" id="adminModeBanner" aria-live="polite">
+            <div>
+              <strong>โหมดดูข้อมูลเดิม</strong>
+              <p>ตอนนี้ Admin อ่านข้อมูลจากไฟล์เว็บเดิมก่อน จึงยังแก้และบันทึกจริงไม่ได้ ต้องเชื่อม Supabase ก่อนถึงจะเปิดปุ่ม Save/Publish</p>
+            </div>
+            <a class="button secondary" href="../docs/admin-architecture.md" target="_blank" rel="noopener">ดูแผนเชื่อมระบบ</a>
+          </section>
 
           <div class="admin-stats" aria-label="Product status summary">
             <article><span id="statProducts">0</span><small>สินค้าทั้งหมด</small></article>
@@ -60,7 +68,10 @@
 
           <section class="admin-panel" id="products">
             <div class="admin-panel-head">
-              <h2>Products</h2>
+              <div>
+                <h2>Products</h2>
+                <p class="admin-panel-note">กด Preview เพื่อดูหน้าเว็บจริง หรือกดแก้ไขหลังเชื่อม Supabase แล้ว</p>
+              </div>
               <div class="admin-filters">
                 <input type="search" id="adminProductSearch" placeholder="ค้นหาชื่อสินค้า หรือรุ่น" aria-label="ค้นหาสินค้า">
                 <select id="adminStatusFilter" aria-label="กรองสถานะสินค้า">
@@ -72,6 +83,7 @@
                 </select>
               </div>
             </div>
+            <p class="admin-action-status" id="adminActionStatus" role="status"></p>
             <div class="admin-table-wrap">
               <table class="admin-table">
                 <thead>
@@ -90,6 +102,24 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </section>
+
+          <section class="admin-panel" id="edit-guide">
+            <h2>จะแก้ข้อมูลยังไง?</h2>
+            <div class="admin-guide-grid">
+              <article>
+                <strong>1. ตอนนี้ดูข้อมูลได้</strong>
+                <p>Admin แสดงสินค้าจากเว็บเดิม 16 รายการ เพื่อให้ตรวจ UI และข้อมูลก่อน</p>
+              </article>
+              <article>
+                <strong>2. ถ้าจะกดบันทึกจริง</strong>
+                <p>ต้องสร้าง Supabase แล้วรัน schema ในโฟลเดอร์ <code>supabase/</code></p>
+              </article>
+              <article>
+                <strong>3. หลังเชื่อม Supabase</strong>
+                <p>ปุ่มแก้ไขสินค้า รูปภาพ หน้า Home และข้อมูลติดต่อจะบันทึกลง Database ได้</p>
+              </article>
             </div>
           </section>
 

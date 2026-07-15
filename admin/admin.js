@@ -14,9 +14,14 @@ const statDraft = document.querySelector("#statDraft");
 const statHidden = document.querySelector("#statHidden");
 const productSearch = document.querySelector("#adminProductSearch");
 const statusFilter = document.querySelector("#adminStatusFilter");
+const adminModeText = document.querySelector("#adminModeText");
+const adminModeBanner = document.querySelector("#adminModeBanner");
+const adminActionStatus = document.querySelector("#adminActionStatus");
+const addProductButton = document.querySelector("#addProductButton");
 
 let supabaseClient = null;
 let adminProducts = [];
+let adminDataMode = "static";
 
 function staticProductsFallback() {
   return (window.rpvProducts || []).map((product) => ({
@@ -38,6 +43,23 @@ function setStatus(element, message, isError = false) {
   if (!element) return;
   element.textContent = message;
   element.style.color = isError ? "#b42318" : "";
+}
+
+function setAdminMode(mode) {
+  adminDataMode = mode;
+
+  if (mode === "static") {
+    if (adminModeText) {
+      adminModeText.textContent = "กำลังแสดงข้อมูลจากไฟล์เว็บเดิม ยังไม่สามารถแก้และบันทึกจริงได้จนกว่าจะเชื่อม Supabase";
+    }
+    adminModeBanner?.classList.remove("is-live");
+    return;
+  }
+
+  if (adminModeText) {
+    adminModeText.textContent = "กำลังแสดงข้อมูลจาก Supabase สามารถจัดการข้อมูลตามสิทธิ์ผู้ใช้ได้";
+  }
+  adminModeBanner?.classList.add("is-live");
 }
 
 async function loadSupabase() {
@@ -119,13 +141,19 @@ function renderProducts() {
       <td><span class="admin-badge">${product.status}</span></td>
       <td>${product.sort_order ?? "-"}</td>
       <td>
-        <a class="button secondary" href="../index.html#products" target="_blank" rel="noopener">Preview</a>
+        <div class="admin-row-actions">
+          <a class="button secondary" href="../index.html#products" target="_blank" rel="noopener">Preview</a>
+          <button class="button primary" type="button" data-edit-product="${product.id}">
+            แก้ไข
+          </button>
+        </div>
       </td>
     </tr>
   `).join("");
 }
 
 function showFallbackDashboard() {
+  setAdminMode("static");
   adminProducts = staticProductsFallback();
   adminGuard.hidden = true;
   adminDashboard.hidden = false;
@@ -145,6 +173,7 @@ async function loadDashboard(client) {
   }
 
   adminProducts = data || [];
+  setAdminMode("database");
   renderStats(adminProducts);
   renderProducts();
 }
@@ -220,6 +249,28 @@ logoutButton?.addEventListener("click", async () => {
 
 productSearch?.addEventListener("input", renderProducts);
 statusFilter?.addEventListener("change", renderProducts);
+
+productsBody?.addEventListener("click", (event) => {
+  const editButton = event.target.closest("[data-edit-product]");
+  if (!editButton) return;
+
+  if (adminDataMode === "static") {
+    setStatus(adminActionStatus, "ตอนนี้ยังแก้ไขไม่ได้ เพราะ Admin กำลังอ่านจากไฟล์เว็บเดิม ต้องเชื่อม Supabase ก่อนจึงจะบันทึกจริงได้", true);
+    return;
+  }
+
+  setStatus(adminActionStatus, "หน้าฟอร์มแก้ไขจะเปิดในระยะถัดไป หลังเชื่อม Auth/RLS และ Database แล้ว", true);
+});
+
+addProductButton?.addEventListener("click", () => {
+  if (adminDataMode === "static") {
+    setStatus(adminActionStatus, "ยังเพิ่มสินค้าไม่ได้ ต้องเชื่อม Supabase ก่อน เพื่อให้ข้อมูลไม่หายหลัง Refresh", true);
+    document.querySelector("#products")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  setStatus(adminActionStatus, "หน้าฟอร์มเพิ่มสินค้าจะเปิดในระยะถัดไป", true);
+});
 
 bootLoginPage();
 bootAdminPage();

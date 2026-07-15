@@ -220,6 +220,37 @@
   margin: 0;
 }
 
+.admin-mode-banner {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  color: var(--green-dark);
+  background: #fff8e7;
+  border: 1px solid #f1d38a;
+  border-radius: 8px;
+}
+
+.admin-mode-banner.is-live {
+  background: var(--green-soft);
+  border-color: rgba(22, 134, 92, 0.22);
+}
+
+.admin-mode-banner p,
+.admin-panel-note,
+.admin-action-status,
+.admin-guide-grid p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.admin-action-status {
+  min-height: 22px;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
 .admin-filters {
   display: grid;
   grid-template-columns: minmax(220px, 320px) 160px;
@@ -259,6 +290,30 @@
   font-weight: 900;
 }
 
+.admin-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-row-actions .button {
+  min-height: 38px;
+}
+
+.admin-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.admin-guide-grid article {
+  padding: 14px;
+  background: #f7fbf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
 .admin-checklist {
   margin: 12px 0 0;
   padding-left: 22px;
@@ -291,7 +346,8 @@
   }
 
   .admin-page-head,
-  .admin-panel-head {
+  .admin-panel-head,
+  .admin-mode-banner {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -302,6 +358,10 @@
 
   .admin-filters {
     width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-guide-grid {
     grid-template-columns: 1fr;
   }
 
