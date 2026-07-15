@@ -48,13 +48,16 @@
               <h1>ภาพรวมระบบหลังบ้าน</h1>
               <p id="adminModeText">กำลังตรวจสอบแหล่งข้อมูล...</p>
             </div>
-            <button class="button primary" id="addProductButton" type="button">เพิ่มสินค้าใหม่</button>
+            <div class="admin-head-actions">
+              <button class="button secondary" id="exportProductsButton" type="button">Export data file</button>
+              <button class="button primary" id="addProductButton" type="button">เพิ่มสินค้าใหม่</button>
+            </div>
           </div>
 
           <section class="admin-mode-banner" id="adminModeBanner" aria-live="polite">
             <div>
               <strong>โหมดดูข้อมูลเดิม</strong>
-              <p>ตอนนี้ Admin อ่านข้อมูลจากไฟล์เว็บเดิมก่อน จึงยังแก้และบันทึกจริงไม่ได้ ต้องเชื่อม Supabase ก่อนถึงจะเปิดปุ่ม Save/Publish</p>
+              <p>ตอนนี้ Admin อ่านข้อมูลจากไฟล์เว็บเดิมก่อน จึงแก้เป็น Draft และ Export ไฟล์ได้ แต่ถ้าต้องการกดบันทึกแล้วขึ้นเว็บอัตโนมัติ ต้องเชื่อม Supabase ก่อน</p>
             </div>
             <a class="button secondary" href="../docs/admin-architecture.md" target="_blank" rel="noopener">ดูแผนเชื่อมระบบ</a>
           </section>
@@ -109,16 +112,16 @@
             <h2>จะแก้ข้อมูลยังไง?</h2>
             <div class="admin-guide-grid">
               <article>
-                <strong>1. ตอนนี้ดูข้อมูลได้</strong>
-                <p>Admin แสดงสินค้าจากเว็บเดิม 16 รายการ เพื่อให้ตรวจ UI และข้อมูลก่อน</p>
+                <strong>1. ตอนนี้เพิ่ม/แก้ Draft ได้</strong>
+                <p>Admin แสดงสินค้าจากเว็บเดิม 16 รายการ และแก้ข้อมูลชั่วคราวในหน้า Admin ได้</p>
               </article>
               <article>
-                <strong>2. ถ้าจะกดบันทึกจริง</strong>
-                <p>ต้องสร้าง Supabase แล้วรัน schema ในโฟลเดอร์ <code>supabase/</code></p>
+                <strong>2. ถ้าจะใช้กับเว็บจริงตอนนี้</strong>
+                <p>กด Export data file แล้วนำไฟล์ไปแทนที่ <code>data/rpv-products.js</code> จากนั้นค่อย push ขึ้น GitHub</p>
               </article>
               <article>
                 <strong>3. หลังเชื่อม Supabase</strong>
-                <p>ปุ่มแก้ไขสินค้า รูปภาพ หน้า Home และข้อมูลติดต่อจะบันทึกลง Database ได้</p>
+                <p>ปุ่ม Save/Publish จะบันทึกลง Database ได้โดยไม่ต้องแก้ไฟล์หรือ push ทุกครั้ง</p>
               </article>
             </div>
           </section>
@@ -135,6 +138,89 @@
         </div>
       </section>
     </main>
+
+    <dialog class="admin-editor-dialog" id="productEditorDialog">
+      <form class="admin-editor" id="productEditorForm" method="dialog">
+        <div class="admin-editor-head">
+          <div>
+            <p class="admin-kicker">PRODUCT EDITOR</p>
+            <h2 id="productEditorTitle">แก้ไขสินค้า</h2>
+            <p>บันทึกในโหมด Static จะเป็น draft ในหน้า Admin ก่อน ต้อง Export ไฟล์เพื่อเอาไปใช้กับเว็บจริง</p>
+          </div>
+          <button class="button secondary" id="closeProductEditor" type="button">ปิด</button>
+        </div>
+
+        <input type="hidden" id="productId">
+
+        <div class="admin-editor-grid">
+          <label>
+            ชื่อสินค้า ภาษาไทย
+            <input type="text" id="productNameTh" required>
+          </label>
+          <label>
+            ชื่อสินค้า English
+            <input type="text" id="productNameEn">
+          </label>
+          <label>
+            Slug
+            <input type="text" id="productSlug" required>
+          </label>
+          <label>
+            รุ่น
+            <input type="text" id="productModel">
+          </label>
+          <label>
+            หมวดหมู่
+            <input type="text" id="productCategory" list="categorySuggestions" required>
+          </label>
+          <label>
+            สถานะ
+            <select id="productStatus">
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+              <option value="hidden">Hidden</option>
+              <option value="archived">Archived</option>
+            </select>
+          </label>
+          <label>
+            ลำดับ
+            <input type="number" id="productSortOrder" min="1" step="1">
+          </label>
+          <label>
+            รูปสินค้า URL/path
+            <input type="text" id="productImage" placeholder="assets/product-name.webp">
+          </label>
+        </div>
+
+        <div class="admin-editor-grid wide">
+          <label>
+            คำอธิบายสั้น ภาษาไทย
+            <textarea id="productDescTh" rows="3"></textarea>
+          </label>
+          <label>
+            Short description English
+            <textarea id="productDescEn" rows="3"></textarea>
+          </label>
+          <label>
+            Keywords / Features คั่นด้วย comma
+            <input type="text" id="productFeatures" placeholder="Deburring, Polishing">
+          </label>
+          <label class="admin-checkbox">
+            <input type="checkbox" id="productFeatured">
+            เลือกเป็นสินค้าแนะนำ
+          </label>
+        </div>
+
+        <datalist id="categorySuggestions"></datalist>
+
+        <p class="admin-action-status" id="editorStatus" role="status"></p>
+        <div class="admin-editor-actions">
+          <button class="button secondary" id="archiveProductButton" type="button">ซ่อนสินค้า</button>
+          <button class="button secondary" id="duplicateProductButton" type="button">Duplicate</button>
+          <button class="button primary" id="saveProductButton" type="submit">บันทึก Draft</button>
+        </div>
+      </form>
+    </dialog>
 
     <script src="../data/rpv-products.js"></script>
     <script src="config.js"></script>
