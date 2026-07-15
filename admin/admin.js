@@ -19,6 +19,7 @@ const adminModeBanner = document.querySelector("#adminModeBanner");
 const adminActionStatus = document.querySelector("#adminActionStatus");
 const addProductButton = document.querySelector("#addProductButton");
 const exportProductsButton = document.querySelector("#exportProductsButton");
+const clearDraftButton = document.querySelector("#clearDraftButton");
 const adminNavLinks = document.querySelectorAll("[data-admin-nav]");
 const adminSections = document.querySelectorAll("[data-admin-section]");
 const adminCategoriesList = document.querySelector("#adminCategoriesList");
@@ -268,9 +269,23 @@ function adminToProduct(product) {
 }
 
 function staticProductsFallback() {
+  try {
+    const savedDraft = JSON.parse(localStorage.getItem("rpvProductsDraft") || "null");
+    if (Array.isArray(savedDraft)) {
+      return savedDraft.map(productToAdmin).sort((a, b) => (a.sort_order || 100) - (b.sort_order || 100));
+    }
+  } catch {
+    localStorage.removeItem("rpvProductsDraft");
+  }
+
   return (window.rpvProducts || [])
     .map(productToAdmin)
     .sort((a, b) => (a.sort_order || 100) - (b.sort_order || 100));
+}
+
+function persistStaticProducts() {
+  const products = adminProducts.map(adminToProduct);
+  localStorage.setItem("rpvProductsDraft", JSON.stringify(products));
 }
 
 function slugify(value) {
@@ -333,7 +348,7 @@ function setAdminMode(mode) {
 
   if (mode === "static") {
     if (adminModeText) {
-      adminModeText.textContent = "กำลังแสดงข้อมูลจากไฟล์เว็บเดิม สามารถแก้เป็น draft และ Export ไฟล์ได้ แต่ยังไม่บันทึกขึ้นเว็บอัตโนมัติจนกว่าจะเชื่อม Supabase";
+      adminModeText.textContent = "กำลังแสดงข้อมูลจากไฟล์เว็บเดิม แก้แล้วหน้าเว็บใน browser นี้จะเปลี่ยนทันที ถ้าจะให้ทุกเครื่องเห็นต้อง Export/push หรือเชื่อม Supabase";
     }
     adminModeBanner?.classList.remove("is-live");
     return;
@@ -593,8 +608,9 @@ function saveStaticDraft(product) {
   } else {
     adminProducts.push(product);
   }
+  persistStaticProducts();
   recordRevision(`Saved product draft: ${product.name_th || product.name_en || product.id}`);
-  refreshAdminView("บันทึก draft ในหน้า Admin แล้ว ถ้าต้องการให้เว็บจริงเปลี่ยน ให้กด Export data file แล้วอัปเดต data/rpv-products.js");
+  refreshAdminView("บันทึกแล้ว หน้าเว็บใน browser นี้จะเปลี่ยนทันที รีเฟรชหน้าเว็บเพื่อดูผล");
 }
 
 function deleteStaticProduct(productId) {
@@ -606,8 +622,9 @@ function deleteStaticProduct(productId) {
   if (!confirmed) return;
 
   adminProducts = adminProducts.filter((item) => item.id !== productId);
+  persistStaticProducts();
   recordRevision(`Deleted product draft: ${productName}`);
-  refreshAdminView("ลบสินค้าออกจากรายการ Admin แล้ว กด Export data file แล้วอัปเดต data/rpv-products.js เพื่อให้เว็บจริงเปลี่ยน");
+  refreshAdminView("ลบแล้ว หน้าเว็บใน browser นี้จะเปลี่ยนทันที รีเฟรชหน้าเว็บเพื่อดูผล");
   closeEditor();
 }
 
@@ -709,6 +726,15 @@ statusFilter?.addEventListener("change", () => {
   updateAdminSidePreview("products");
 });
 exportProductsButton?.addEventListener("click", exportProductsData);
+
+clearDraftButton?.addEventListener("click", () => {
+  const confirmed = window.confirm("ล้าง draft ใน browser นี้ แล้วกลับไปใช้ข้อมูลจากไฟล์ GitHub ใช่ไหม?");
+  if (!confirmed) return;
+  localStorage.removeItem("rpvProductsDraft");
+  adminProducts = (window.rpvProducts || []).map(productToAdmin).sort((a, b) => (a.sort_order || 100) - (b.sort_order || 100));
+  refreshAdminView("ล้าง draft แล้ว รีเฟรชหน้าเว็บหลักเพื่อกลับไปใช้ข้อมูลเดิม");
+  recordRevision("Cleared local product draft");
+});
 
 adminNavLinks.forEach((link) => {
   link.addEventListener("click", (event) => {

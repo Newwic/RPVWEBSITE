@@ -9,7 +9,16 @@ const modalContent = document.querySelector("#modalContent");
 const modalClose = document.querySelector(".modal-close");
 const languageButtons = document.querySelectorAll("[data-lang]");
 
-const products = (window.rpvProducts || [])
+function loadAdminProductDraft() {
+  try {
+    const draft = JSON.parse(localStorage.getItem("rpvProductsDraft") || "null");
+    return Array.isArray(draft) ? draft : null;
+  } catch {
+    return null;
+  }
+}
+
+const products = (loadAdminProductDraft() || window.rpvProducts || [])
   .filter((product) => product.status === "active")
   .sort((a, b) => a.sortOrder - b.sortOrder);
 
