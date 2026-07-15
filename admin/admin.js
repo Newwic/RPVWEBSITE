@@ -26,6 +26,8 @@ const adminMediaGrid = document.querySelector("#adminMediaGrid");
 const openFirstProductEditor = document.querySelector("#openFirstProductEditor");
 const settingDataMode = document.querySelector("#settingDataMode");
 const revisionList = document.querySelector("#adminRevisionList");
+let adminSidePreview = null;
+let editorLivePreview = null;
 
 const editorDialog = document.querySelector("#productEditorDialog");
 const editorForm = document.querySelector("#productEditorForm");
@@ -61,6 +63,132 @@ let adminProducts = [];
 let adminDataMode = "static";
 let adminRevisions = [];
 
+function getControlValue(control, fallback = "") {
+  return control ? control.value.trim() || fallback : fallback;
+}
+
+function sectionControls(sectionId) {
+  const section = document.querySelector(`[data-admin-section="${sectionId}"]`);
+  return section ? [...section.querySelectorAll("input, textarea, select")] : [];
+}
+
+function ensureAdminPreview() {
+  if (adminSidePreview || !adminDashboard) return;
+  adminSidePreview = document.createElement("aside");
+  adminSidePreview.className = "admin-side-preview";
+  adminSidePreview.setAttribute("aria-live", "polite");
+  adminDashboard.appendChild(adminSidePreview);
+}
+
+function ensureEditorPreview() {
+  if (editorLivePreview || !editorForm) return;
+  editorLivePreview = document.createElement("aside");
+  editorLivePreview.className = "admin-live-preview admin-product-preview";
+  editorLivePreview.innerHTML = `
+    <p class="admin-kicker">LIVE PREVIEW</p>
+    <figure class="admin-preview-product-image">
+      <img id="editorPreviewImage" alt="">
+      <span id="editorPreviewPlaceholder">No image</span>
+    </figure>
+    <small id="editorPreviewCategory"></small>
+    <h3 id="editorPreviewName"></h3>
+    <p id="editorPreviewModel"></p>
+    <p id="editorPreviewDesc"></p>
+    <div class="admin-preview-actions"><span>ดูรายละเอียด</span><span>LINE</span></div>
+  `;
+  editorForm.insertBefore(editorLivePreview, editorForm.querySelector(".admin-editor-actions"));
+}
+
+function updateProductEditorPreview() {
+  ensureEditorPreview();
+  if (!editorLivePreview) return;
+
+  const image = getControlValue(fields.image);
+  const previewImage = editorLivePreview.querySelector("#editorPreviewImage");
+  const placeholder = editorLivePreview.querySelector("#editorPreviewPlaceholder");
+
+  previewImage.src = image;
+  previewImage.hidden = !image;
+  placeholder.hidden = Boolean(image);
+  editorLivePreview.querySelector("#editorPreviewCategory").textContent = getControlValue(fields.category, "Category");
+  editorLivePreview.querySelector("#editorPreviewName").textContent = getControlValue(fields.nameTh, getControlValue(fields.nameEn, "ชื่อสินค้า"));
+  editorLivePreview.querySelector("#editorPreviewModel").textContent = getControlValue(fields.model, "Model / รุ่น");
+  editorLivePreview.querySelector("#editorPreviewDesc").textContent = getControlValue(fields.descTh, getControlValue(fields.descEn, "คำอธิบายสั้นของสินค้า"));
+}
+
+function updateAdminSidePreview(sectionId = (window.location.hash || "#dashboard").slice(1)) {
+  ensureAdminPreview();
+  if (!adminSidePreview) return;
+
+  const controls = sectionControls(sectionId);
+  const values = controls.map((control) => getControlValue(control)).filter(Boolean);
+
+  if (sectionId === "home-page") {
+    adminSidePreview.innerHTML = `
+      <p class="admin-kicker">LIVE PREVIEW</p>
+      <div class="admin-preview-hero">
+        <small>RPV PRODUCT SEARCH</small>
+        <h3>${escapeHtml(values[0] || "ค้นหาเครื่องจักรและวัสดุขัด")}</h3>
+        <p>${escapeHtml(values[1] || "ค้นหาจากชื่อสินค้า รุ่น หรือหมวดสินค้า")}</p>
+        <div class="admin-preview-search">ค้นหาชื่อสินค้า รุ่น หรือหมวดสินค้า</div>
+      </div>
+      <div class="admin-preview-cta"><strong>CONTACT RPV</strong><p>${escapeHtml(values[2] || "ส่งรูปชิ้นงานให้ทีมงานช่วยแนะนำ")}</p></div>
+    `;
+    return;
+  }
+
+  if (sectionId === "contact") {
+    adminSidePreview.innerHTML = `
+      <p class="admin-kicker">LIVE PREVIEW</p>
+      <div class="admin-contact-preview">
+        <h3>Contact</h3>
+        <p>Office: ${escapeHtml(values[0] || "02-194-4346-7")}</p>
+        <p>Mobile: ${escapeHtml(values[1] || "086-399-0785")}</p>
+        <p>LINE: ${escapeHtml(values[2] || "@rpvofficial")}</p>
+        <p>Email: ${escapeHtml(values[3] || "sales@rpv.co.th")}</p>
+        <small>${escapeHtml(values[4] || "Address")}</small>
+      </div>
+    `;
+    return;
+  }
+
+  if (sectionId === "appearance") {
+    const columns = values[1]?.includes("3") ? 3 : 4;
+    adminSidePreview.innerHTML = `
+      <p class="admin-kicker">LIVE PREVIEW</p>
+      <div class="admin-appearance-sample">
+        <h3>${escapeHtml(values[2] || "Search Hero")}</h3>
+        <div class="admin-preview-grid" style="grid-template-columns: repeat(${columns}, minmax(0, 1fr));">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <small>${escapeHtml(values[0] || "RPV Green")} / ${columns} columns</small>
+      </div>
+    `;
+    return;
+  }
+
+  if (sectionId === "products") {
+    const first = filteredProducts()[0] || adminProducts[0];
+    adminSidePreview.innerHTML = `
+      <p class="admin-kicker">LIVE PREVIEW</p>
+      <div class="admin-preview-product-mini">
+        <strong>${escapeHtml(first?.name_th || first?.name_en || "เลือกสินค้าเพื่อดู Preview")}</strong>
+        <p>${escapeHtml(first?.model || "Model")}</p>
+        <small>${escapeHtml(first?.category || first?.categories?.name_th || "Category")}</small>
+      </div>
+    `;
+    return;
+  }
+
+  adminSidePreview.innerHTML = `
+    <p class="admin-kicker">LIVE PREVIEW</p>
+    <div class="admin-preview-empty">
+      <strong>${escapeHtml(sectionId || "Dashboard")}</strong>
+      <p>เลือกเมนู Home Page, Contact, Appearance หรือ Products เพื่อดูตัวอย่างแบบ realtime</p>
+    </div>
+  `;
+}
+
 function showAdminSection(sectionId = "dashboard") {
   const target = sectionId || "dashboard";
 
@@ -80,6 +208,7 @@ function showAdminSection(sectionId = "dashboard") {
   if (window.location.hash !== `#${target}`) {
     history.replaceState(null, "", `#${target}`);
   }
+  updateAdminSidePreview(target);
 }
 
 function recordRevision(message) {
@@ -441,6 +570,7 @@ function fillEditor(product) {
   fields.featured.checked = Boolean(product?.featured);
   if (productImageFile) productImageFile.value = "";
   updateImagePreview(fields.image.value);
+  updateProductEditorPreview();
 }
 
 function openEditor(product = null) {
@@ -570,8 +700,14 @@ logoutButton?.addEventListener("click", async () => {
   window.location.href = "login.html";
 });
 
-productSearch?.addEventListener("input", renderProducts);
-statusFilter?.addEventListener("change", renderProducts);
+productSearch?.addEventListener("input", () => {
+  renderProducts();
+  updateAdminSidePreview("products");
+});
+statusFilter?.addEventListener("change", () => {
+  renderProducts();
+  updateAdminSidePreview("products");
+});
 exportProductsButton?.addEventListener("click", exportProductsData);
 
 adminNavLinks.forEach((link) => {
@@ -636,6 +772,22 @@ fields.nameTh?.addEventListener("input", () => {
 
 fields.image?.addEventListener("input", () => {
   updateImagePreview(fields.image.value);
+  updateProductEditorPreview();
+});
+
+Object.values(fields).forEach((field) => {
+  field?.addEventListener("input", updateProductEditorPreview);
+  field?.addEventListener("change", updateProductEditorPreview);
+});
+
+adminDashboard?.addEventListener("input", (event) => {
+  const section = event.target.closest("[data-admin-section]");
+  if (section) updateAdminSidePreview(section.dataset.adminSection);
+});
+
+adminDashboard?.addEventListener("change", (event) => {
+  const section = event.target.closest("[data-admin-section]");
+  if (section) updateAdminSidePreview(section.dataset.adminSection);
 });
 
 productImageFile?.addEventListener("change", async () => {
@@ -661,6 +813,7 @@ productImageFile?.addEventListener("change", async () => {
     const dataUrl = await readFileAsDataUrl(file);
     fields.image.value = dataUrl;
     updateImagePreview(dataUrl);
+    updateProductEditorPreview();
     setStatus(editorStatus, `เลือกรูปแล้ว: ${file.name} กดบันทึก Draft แล้ว Export เพื่อใช้กับเว็บจริง`);
   } catch {
     setStatus(editorStatus, "อ่านไฟล์รูปไม่สำเร็จ ลองเลือกรูปใหม่อีกครั้ง", true);
@@ -710,3 +863,4 @@ editorForm?.addEventListener("submit", async (event) => {
 bootLoginPage();
 bootAdminPage();
 showAdminSection((window.location.hash || "#dashboard").slice(1));
+updateAdminSidePreview((window.location.hash || "#dashboard").slice(1));
