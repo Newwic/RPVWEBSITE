@@ -225,28 +225,6 @@ input {
   box-shadow: var(--shadow);
 }
 
-.hero-note {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
-  min-width: 132px;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
-
-.hero-note strong,
-.hero-note span {
-  display: block;
-}
-
-.hero-note strong {
-  color: var(--green-dark);
-  font-size: 28px;
-  line-height: 1;
-}
-
 .products-section,
 .about-section,
 .contact-cta {

@@ -25,7 +25,6 @@ const copy = {
     heroText: "เครื่องจักร วัสดุขัด และอุปกรณ์สำหรับเพิ่มคุณภาพผิวชิ้นงาน พร้อมคำแนะนำในการเลือกระบบที่เหมาะสมกับการผลิต",
     viewProducts: "ดูสินค้าทั้งหมด",
     consultButton: "ปรึกษาการเลือกเครื่อง",
-    homeProductCount: "รายการสินค้าในหน้า Home",
     productsEyebrow: "ผลิตภัณฑ์ของเรา / Our Products",
     productsTitle: "สินค้าหลักของ RPV",
     productsIntro: "แสดงรายการสินค้าหลักบนหน้า Home โดยตรง เลือกหมวดหรือค้นหาชื่อสินค้าได้ทันที",
@@ -68,7 +67,6 @@ const copy = {
     heroText: "Machines, polishing media, and industrial equipment for improving part surface quality, with guidance for choosing the right process.",
     viewProducts: "View All Products",
     consultButton: "Consult Product Selection",
-    homeProductCount: "products on Home page",
     productsEyebrow: "Our Products",
     productsTitle: "RPV Main Products",
     productsIntro: "Browse core products directly on the Home page. Filter by category or search by name and model.",
@@ -177,7 +175,6 @@ function applyLanguage() {
   setText(".hero-copy > p:not(.eyebrow)", t("heroText"));
   setText(".hero-actions .button.primary", t("viewProducts"));
   setText(".hero-actions .button.secondary", t("consultButton"));
-  setText(".hero-note span", t("homeProductCount"));
   setText(".products-section .section-heading .eyebrow", t("productsEyebrow"));
   setText(".products-section .section-heading h2", t("productsTitle"));
   setText(".products-section .section-heading p:not(.eyebrow)", t("productsIntro"));
