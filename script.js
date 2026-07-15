@@ -61,6 +61,10 @@ function renderProductMenu() {
 
     link.addEventListener("mouseenter", () => setActiveCategory(link, category));
     link.addEventListener("focus", () => setActiveCategory(link, category));
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      setActiveCategory(link, category);
+    });
 
     categoryList.appendChild(link);
 
@@ -78,8 +82,24 @@ navToggle.addEventListener("click", () => {
 });
 
 siteNav.addEventListener("click", (event) => {
+  const productsButton = event.target.closest(".has-dropdown");
+
+  if (productsButton) {
+    event.preventDefault();
+    productsButton.closest(".products-menu").classList.toggle("is-open");
+    return;
+  }
+
+  if (event.target.matches(".product-submenu a")) {
+    siteNav.classList.remove("is-open");
+    document.querySelector(".products-menu")?.classList.remove("is-open");
+    navToggle.setAttribute("aria-expanded", "false");
+    return;
+  }
+
   if (event.target.matches("a") && !event.target.closest(".products-menu")) {
     siteNav.classList.remove("is-open");
+    document.querySelector(".products-menu")?.classList.remove("is-open");
     navToggle.setAttribute("aria-expanded", "false");
   }
 });

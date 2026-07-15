@@ -117,7 +117,8 @@ a {
 }
 
 .products-menu:hover .mega-menu,
-.products-menu:focus-within .mega-menu {
+.products-menu:focus-within .mega-menu,
+.products-menu.is-open .mega-menu {
   display: grid;
 }
 
@@ -152,6 +153,7 @@ a {
 }
 
 .site-nav .mega-menu .category-item:not(.active):hover,
+.site-nav .mega-menu .category-item:not(.active):focus,
 .site-nav .product-submenu a:hover {
   color: #43ad33;
   background: #f3f7f2;
@@ -538,7 +540,8 @@ a {
   }
 
   .products-menu:hover .mega-menu,
-  .products-menu:focus-within .mega-menu {
+  .products-menu:focus-within .mega-menu,
+  .products-menu.is-open .mega-menu {
     display: grid;
   }
 
