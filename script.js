@@ -106,6 +106,6 @@ siteNav.addEventListener("click", (event) => {
 
 contactForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  formNote.textContent = "Demo form submitted. Connect a real form service later.";
+  formNote.textContent = "Order request received. Connect a real form service later.";
   contactForm.reset();
 });
