@@ -91,7 +91,8 @@ a {
 }
 
 .products-menu:hover > .has-dropdown,
-.products-menu:focus-within > .has-dropdown {
+.products-menu:focus-within > .has-dropdown,
+.products-menu.is-open > .has-dropdown {
   color: white;
   background: #43ad33;
 }
@@ -107,6 +108,7 @@ a {
   position: absolute;
   left: -20px;
   top: calc(100% + 18px);
+  z-index: 50;
   display: none;
   min-width: 850px;
   grid-template-columns: 430px 420px;
