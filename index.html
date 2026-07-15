@@ -1,134 +1,197 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RPVWEBSITE | Company Profile</title>
-    <meta name="description" content="A clean company profile website template for services, portfolio, and contact information.">
+    <title>RPV Industrial Supply | เครื่องขัดผิว วัสดุขัด และอุปกรณ์อุตสาหกรรม</title>
+    <meta name="description" content="RPV Industrial Supply จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง พร้อมคำแนะนำในการเลือกระบบที่เหมาะสมกับการผลิต">
+    <meta property="og:title" content="RPV Industrial Supply">
+    <meta property="og:description" content="โซลูชันเครื่องขัดผิวและอุปกรณ์สำหรับงานอุตสาหกรรม">
+    <meta property="og:image" content="assets/rpv-banner-reference.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <header class="site-header">
-      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <a class="brand" href="#home" aria-label="RPV Home">
+        <span class="brand-mark">RPV</span>
+        <span>
+          <strong>RPV INDUSTRIAL SUPPLY</strong>
+          <small>Surface Finishing Solutions</small>
+        </span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
         <span></span>
         <span></span>
         <span></span>
       </button>
-      <nav class="site-nav" aria-label="Main menu">
-        <a href="#home">HOME</a>
-        <a href="#about">ABOUT</a>
-        <div class="nav-item products-menu">
-          <a class="has-dropdown" href="#services">PRODUCTS</a>
-          <div class="mega-menu" aria-label="Products menu">
-            <div class="product-categories" data-product-categories>
-              <a class="category-item active" href="#services">
-                <span>Mass Finishing</span>
-                <span class="arrow">&gt;</span>
-              </a>
-              <a class="category-item" href="#services">
-                <span>Blasting System</span>
-                <span class="arrow">&gt;</span>
-              </a>
-              <a class="category-item" href="#services">
-                <span>Others Products</span>
-                <span class="arrow">&gt;</span>
-              </a>
-            </div>
-            <div class="product-submenu" data-product-submenu>
-              <a href="#services">Vibratory Finishing Machine</a>
-              <a href="#services">Centrifugal Finishing Machine</a>
-              <a href="#services">Barrel & Rotary Finishing Machine</a>
-              <a href="#services">Dryer Machine</a>
-              <a href="#services">Roto Finish - USA</a>
-              <a href="#services">Vibratory Separator</a>
-              <a href="#services">Media & Compound</a>
-            </div>
-          </div>
-        </div>
-        <a href="#services">SERVICE</a>
-        <a href="#company-profile">COMPANY PROFILE</a>
-        <a href="#contact">CONTACT</a>
+
+      <nav class="site-nav" aria-label="เมนูหลัก">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
       </nav>
+
+      <div class="header-actions">
+        <a class="language-switch" href="#home" aria-label="Language switch">TH / EN</a>
+        <a class="quote-button" href="#contact">สอบถามราคา</a>
+      </div>
     </header>
 
     <main id="home">
-      <span class="anchor-target" id="about"></span>
-      <section class="shop-hero">
-        <div class="shop-hero-content">
-          <p class="shop-label">Online Store</p>
-          <h1>Premium products, clear packages, fast ordering.</h1>
-          <p>Choose the package that fits your needs. Clean design, simple ordering, and friendly support for every customer.</p>
-          <a class="button primary large" href="#services">Shop Packages</a>
-        </div>
-      </section>
-
-      <section class="shop-products" id="services">
-        <div class="section-heading">
-          <p class="eyebrow">Packages</p>
-          <h2>Choose Your Product Package</h2>
-          <p>Three simple options for customers who want a fast and easy online shopping experience.</p>
-        </div>
-        <div class="product-grid">
-          <article class="shop-card">
-            <span class="package-tag">Starter</span>
-            <h3>Starter Package</h3>
-            <p>Best for first-time customers who want to try quality products at an easy price.</p>
-            <strong class="package-price">฿590</strong>
-            <a class="button primary" href="#contact">Order Now</a>
-          </article>
-          <article class="shop-card featured">
-            <span class="package-tag">Popular</span>
-            <h3>Standard Package</h3>
-            <p>The best value package for everyday use with balanced price, quality, and support.</p>
-            <strong class="package-price">฿1,290</strong>
-            <a class="button primary" href="#contact">Order Now</a>
-          </article>
-          <article class="shop-card">
-            <span class="package-tag">Premium</span>
-            <h3>Premium Package</h3>
-            <p>Complete option for customers who need the best quality and extra service.</p>
-            <strong class="package-price">฿2,490</strong>
-            <a class="button primary" href="#contact">Order Now</a>
-          </article>
-        </div>
-      </section>
-
-      <span class="anchor-target" id="company-profile"></span>
-      <section class="shop-contact" id="contact">
-        <div>
-          <p class="eyebrow">Contact</p>
-          <h2>Ready to order?</h2>
-          <p>Contact us through LINE or phone. Replace these details with your real shop contact later.</p>
-          <div class="contact-chips">
-            <a href="https://line.me/R/ti/p/@yourshop">LINE: @yourshop</a>
-            <a href="tel:08xxxxxxxx">Phone: 08x-xxx-xxxx</a>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">RPV INDUSTRIAL SUPPLY CO., LTD.</p>
+          <h1>โซลูชันเครื่องขัดผิวและอุปกรณ์สำหรับงานอุตสาหกรรม</h1>
+          <p>
+            เครื่องจักร วัสดุขัด และอุปกรณ์สำหรับเพิ่มคุณภาพผิวชิ้นงาน
+            พร้อมคำแนะนำในการเลือกระบบที่เหมาะสมกับการผลิต
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#products">ดูสินค้าทั้งหมด</a>
+            <a class="button secondary" href="#contact">ปรึกษาการเลือกเครื่อง</a>
           </div>
         </div>
-        <form class="contact-form">
-          <label>
-            Name
-            <input type="text" name="name" placeholder="Your name" required>
+        <div class="hero-visual">
+          <img src="assets/rpv-banner-reference.jpg" alt="ภาพอ้างอิงงานอุตสาหกรรมของ RPV" fetchpriority="high">
+          <div class="hero-note">
+            <strong>16</strong>
+            <span>รายการสินค้าในหน้า Home</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="category-strip" aria-label="หมวดสินค้าหลัก">
+        <div>
+          <strong>Mass Finishing</strong>
+          <span>Polishing machines and media</span>
+        </div>
+        <div>
+          <strong>Blasting Media</strong>
+          <span>Glass beads, steel shot, steel grit</span>
+        </div>
+        <div>
+          <strong>Industrial Equipment</strong>
+          <span>Dryer, separator, portable blaster</span>
+        </div>
+      </section>
+
+      <section class="products-section" id="products">
+        <div class="section-heading">
+          <p class="eyebrow">ผลิตภัณฑ์ของเรา / Our Products</p>
+          <h2>สินค้าหลักของ RPV</h2>
+          <p>แสดงรายการสินค้าที่พบจากข้อมูลเดิมและหมวดที่ยืนยันได้บนหน้า Home โดยตรง เลือกหมวดหรือค้นหาชื่อสินค้าได้ทันที</p>
+        </div>
+
+        <div class="product-tools">
+          <label class="search-box">
+            <span>ค้นหาสินค้า</span>
+            <input type="search" id="productSearch" placeholder="ค้นหาชื่อสินค้า รุ่น หรือหมวด เช่น Steel Shot">
           </label>
-          <label>
-            Phone
-            <input type="tel" name="phone" placeholder="08x-xxx-xxxx" required>
-          </label>
-          <label>
-            Message
-            <textarea name="message" rows="4" placeholder="Tell us what you need..." required></textarea>
-          </label>
-          <button class="button primary" type="submit">Send Message</button>
-          <p class="form-note" role="status"></p>
-        </form>
+          <div class="filter-row" id="categoryFilters" aria-label="Product category filters"></div>
+        </div>
+
+        <div class="product-count" id="productCount" aria-live="polite"></div>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <section class="why-section" id="solutions">
+        <div class="section-heading compact">
+          <p class="eyebrow">Why RPV</p>
+          <h2>เหตุผลที่เลือก RPV</h2>
+        </div>
+        <div class="why-grid">
+          <article>
+            <strong>ให้คำแนะนำตามลักษณะชิ้นงาน</strong>
+            <span>ช่วยเลือกแนวทางเครื่องจักร วัสดุขัด และขั้นตอนที่เหมาะกับงานจริง</span>
+          </article>
+          <article>
+            <strong>มีเครื่องจักรและวัสดุขัดหลายประเภท</strong>
+            <span>รองรับงานขัดผิว พ่นทราย ลบคม ขัดเงา และงานเตรียมผิวโลหะ</span>
+          </article>
+          <article>
+            <strong>ครอบคลุมงานผิวหลายประเภท</strong>
+            <span>มีรายการสำหรับงาน mass finishing, blasting, deburring, polishing และ cleaning</span>
+          </article>
+          <article>
+            <strong>ติดต่อสอบถามได้รวดเร็ว</strong>
+            <span>มีช่องทาง LINE และโทรศัพท์สำหรับส่งข้อมูลชิ้นงานและขอคำแนะนำเบื้องต้น</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="about-section" id="about">
+        <div>
+          <p class="eyebrow">Company Profile</p>
+          <h2>RPV INDUSTRIAL SUPPLY CO., LTD.</h2>
+          <p>
+            บริษัท อาร์พีวี อินดัสเทรียล ซัพพลาย จำกัด จำหน่ายเครื่องจักรอุตสาหกรรม
+            เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง
+          </p>
+        </div>
+        <dl class="company-facts">
+          <div><dt>LINE</dt><dd>@rpvofficial</dd></div>
+          <div><dt>โทรศัพท์</dt><dd>02-194-4346-7</dd></div>
+          <div><dt>มือถือ</dt><dd>086-399-0785</dd></div>
+          <div><dt>ที่อยู่</dt><dd>21/62 หมู่ 3 ถนน 345 ซอยลำโพ 1 ตำบลลำโพ อำเภอบางบัวทอง จังหวัดนนทบุรี 11110</dd></div>
+        </dl>
+      </section>
+
+      <section class="contact-cta" id="contact">
+        <div>
+          <p class="eyebrow">Contact RPV</p>
+          <h2>ไม่แน่ใจว่าควรใช้เครื่องหรือวัสดุขัดแบบใด?</h2>
+          <p>ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยประเมิน</p>
+        </div>
+        <div class="cta-buttons">
+          <a class="button line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">เพิ่ม LINE: @rpvofficial</a>
+          <a class="button secondary" href="tel:021944346">โทร 02-194-4346-7</a>
+          <a class="button secondary" href="tel:0863990785">โทร 086-399-0785</a>
+          <a class="button primary" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">ขอใบเสนอราคา</a>
+        </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p>RPVWEBSITE Online Store</p>
-      <p>© 2026 RPVWEBSITE. All rights reserved.</p>
+      <div class="footer-brand">
+        <span class="brand-mark">RPV</span>
+        <div>
+          <strong>RPV INDUSTRIAL SUPPLY CO., LTD.</strong>
+          <p>จำหน่ายเครื่องจักรอุตสาหกรรม เครื่องขัดผิว วัสดุขัด ชิ้นส่วน และอุปกรณ์ที่เกี่ยวข้อง</p>
+        </div>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <p>21/62 Moo 3, 345 Rd., Soi Lumpo 1, Lumpo, Bangbuathong, Nonthaburi 11110, Thailand</p>
+        <p>Tel: 02-194-4346-7 / Mobile: 086-399-0785 / LINE: @rpvofficial</p>
+      </div>
+      <div>
+        <h3>Quick Links</h3>
+        <a href="#products">Products</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div>
+        <h3>Categories</h3>
+        <p>Polishing Machines, Magnetic Polishing Machines, Polishing Media, Industrial Equipment</p>
+      </div>
+      <p class="copyright">© 2026 RPV Industrial Supply. Privacy Policy required if customer data is collected.</p>
     </footer>
 
-    <script src="data/products.js"></script>
+    <a class="floating-line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener" aria-label="เพิ่ม LINE @rpvofficial">LINE</a>
+
+    <dialog class="product-modal" id="productModal">
+      <button class="modal-close" type="button" aria-label="ปิดหน้าต่างสินค้า">×</button>
+      <div id="modalContent"></div>
+    </dialog>
+
+    <script src="data/rpv-products.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
