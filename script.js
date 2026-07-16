@@ -539,12 +539,14 @@ function closeMobileNav() {
   siteNav?.classList.remove("is-open");
   document.body.classList.remove("nav-open");
   navToggle?.setAttribute("aria-expanded", "false");
+  navToggle?.setAttribute("aria-label", "เปิดเมนู");
 }
 
 navToggle?.addEventListener("click", () => {
   const isOpen = siteNav.classList.toggle("is-open");
   document.body.classList.toggle("nav-open", isOpen);
   navToggle.setAttribute("aria-expanded", String(isOpen));
+  navToggle.setAttribute("aria-label", isOpen ? "ปิดเมนู" : "เปิดเมนู");
 });
 
 siteNav?.addEventListener("click", (event) => {
