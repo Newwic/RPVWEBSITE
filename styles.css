@@ -1632,13 +1632,13 @@ input {
 
   .site-nav {
     position: fixed;
-    top: 0;
+    top: 64px;
     right: 0;
     bottom: 0;
     z-index: 120;
     display: flex;
     width: min(86vw, 320px);
-    padding: 74px 14px 148px;
+    padding: 20px 14px 148px;
     overflow-y: auto;
     border: 0;
     border-left: 1px solid var(--line);
