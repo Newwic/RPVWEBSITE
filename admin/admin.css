@@ -401,6 +401,122 @@
   font-weight: 900;
 }
 
+.admin-layout-builder {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: #f7fbf9;
+  border: 1px dashed #98c7ae;
+  border-radius: 8px;
+}
+
+.admin-layout-head {
+  display: grid;
+  gap: 3px;
+}
+
+.admin-layout-head small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.admin-layout-canvas,
+.admin-layout-mini {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.admin-layout-block {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 76px;
+  padding: 12px;
+  background: #fffef4;
+  border: 1px solid #15a87c;
+  border-radius: 8px;
+}
+
+.admin-layout-block.full,
+.admin-layout-mini .full {
+  grid-column: span 6;
+}
+
+.admin-layout-block.two-third,
+.admin-layout-mini .two-third {
+  grid-column: span 4;
+}
+
+.admin-layout-block.half,
+.admin-layout-mini .half {
+  grid-column: span 3;
+}
+
+.admin-layout-block.third,
+.admin-layout-mini .third {
+  grid-column: span 2;
+}
+
+.admin-layout-block.is-hidden {
+  opacity: 0.52;
+  border-style: dashed;
+}
+
+.admin-layout-block span {
+  color: #16865c;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.admin-layout-block strong {
+  display: block;
+  color: #263947;
+}
+
+.admin-layout-block small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.admin-layout-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 32px);
+  gap: 4px;
+}
+
+.admin-layout-actions button {
+  width: 32px;
+  min-height: 30px;
+  color: #263947;
+  background: #ffffff;
+  border: 1px solid #d8e3ea;
+  border-radius: 6px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.admin-layout-actions button:hover {
+  color: #ffffff;
+  background: #15577e;
+}
+
+.admin-layout-mini {
+  margin-top: 8px;
+}
+
+.admin-layout-mini span {
+  min-height: 34px;
+  padding: 8px;
+  color: #15577e;
+  background: #edf6fb;
+  border: 1px solid #cfe4ef;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .admin-editor-actions.compact {
   justify-content: flex-start;
 }
@@ -844,6 +960,22 @@
 
   .admin-page-manager {
     grid-template-columns: 1fr;
+  }
+
+  .admin-layout-canvas,
+  .admin-layout-mini {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-layout-block.full,
+  .admin-layout-block.two-third,
+  .admin-layout-block.half,
+  .admin-layout-block.third,
+  .admin-layout-mini .full,
+  .admin-layout-mini .two-third,
+  .admin-layout-mini .half,
+  .admin-layout-mini .third {
+    grid-column: 1;
   }
 
   .admin-guide-grid,

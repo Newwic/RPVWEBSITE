@@ -162,6 +162,35 @@ function pageDrafts() {
   return mergedSiteDraft().pages;
 }
 
+function defaultPageLayout(pageId) {
+  if (pageId === "home") {
+    return [
+      { id: "hero", label: "Hero Banner", type: "banner", width: "full", visible: true },
+      { id: "intro", label: "Company Intro", type: "text", width: "half", visible: true },
+      { id: "featured", label: "Featured Products", type: "products", width: "half", visible: true },
+      { id: "contact", label: "Contact CTA", type: "contact", width: "full", visible: true }
+    ];
+  }
+
+  if (pageId === "products") {
+    return [
+      { id: "product-title", label: "Product Header", type: "text", width: "full", visible: true },
+      { id: "filters", label: "Category Filters", type: "tools", width: "third", visible: true },
+      { id: "grid", label: "Product Grid", type: "products", width: "two-third", visible: true }
+    ];
+  }
+
+  return [
+    { id: "page-title", label: "Page Header", type: "text", width: "full", visible: true },
+    { id: "main-content", label: "Main Content", type: "text", width: "two-third", visible: true },
+    { id: "side-info", label: "Side Information", type: "contact", width: "third", visible: true }
+  ];
+}
+
+function pageLayout(page) {
+  return Array.isArray(page?.layout) && page.layout.length ? page.layout : defaultPageLayout(page?.id);
+}
+
 function ensurePageManager() {
   if (!adminDashboard || document.querySelector("#page-manager")) return;
 
@@ -203,6 +232,13 @@ function ensurePageManager() {
             <option value="hidden">Hidden</option>
           </select>
         </label>
+        <div class="admin-layout-builder">
+          <div class="admin-layout-head">
+            <strong>Layout Builder</strong>
+            <small>เลือกบล็อก แล้วย้ายขึ้น ลง ซ้าย ขวา หรือซ่อนได้</small>
+          </div>
+          <div class="admin-layout-canvas" id="layoutCanvas" aria-label="Layout blocks"></div>
+        </div>
         <div class="admin-editor-actions compact">
           <a class="button secondary" id="previewPageLink" href="../index.html" target="_blank" rel="noopener">Preview</a>
           <button class="button primary" type="submit">บันทึก Draft</button>
@@ -236,6 +272,7 @@ function fillPageEditor(pageId = pageDrafts()[0]?.id) {
   const preview = document.querySelector("#previewPageLink");
   if (preview) preview.href = page.path;
   renderPageList(page.id);
+  renderLayoutCanvas(page);
   updateAdminSidePreview("page-manager");
 }
 
@@ -252,6 +289,83 @@ function renderPageList(activeId = document.querySelector("#pageEditorId")?.valu
   `).join("");
 }
 
+function currentEditedPage() {
+  const currentId = readControl("#pageEditorId", "home");
+  return pageDrafts().find((page) => page.id === currentId) || pageDrafts()[0];
+}
+
+function renderLayoutCanvas(page = currentEditedPage()) {
+  const canvas = document.querySelector("#layoutCanvas");
+  if (!canvas || !page) return;
+
+  canvas.innerHTML = pageLayout(page).map((block, index) => `
+    <article class="admin-layout-block ${escapeHtml(block.width)}${block.visible === false ? " is-hidden" : ""}" data-layout-block="${escapeHtml(block.id)}">
+      <div>
+        <span>${escapeHtml(block.type)}</span>
+        <strong>${escapeHtml(block.label)}</strong>
+        <small>${escapeHtml(block.width)}${block.visible === false ? " · hidden" : ""}</small>
+      </div>
+      <div class="admin-layout-actions">
+        <button type="button" title="Up" data-layout-action="up" data-layout-index="${index}">↑</button>
+        <button type="button" title="Down" data-layout-action="down" data-layout-index="${index}">↓</button>
+        <button type="button" title="Left / smaller" data-layout-action="left" data-layout-index="${index}">←</button>
+        <button type="button" title="Right / wider" data-layout-action="right" data-layout-index="${index}">→</button>
+        <button type="button" title="Hide / show" data-layout-action="toggle" data-layout-index="${index}">◐</button>
+        <button type="button" title="Delete" data-layout-action="delete" data-layout-index="${index}">×</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateCurrentPageLayout(updater) {
+  const currentId = readControl("#pageEditorId", "home");
+  const pages = pageDrafts().map((page) => {
+    if (page.id !== currentId) return page;
+    return { ...page, layout: updater([...pageLayout(page)]) };
+  });
+
+  siteDraft = { ...siteDraft, pages };
+  persistSiteDraft();
+  const page = pages.find((item) => item.id === currentId);
+  renderPageList(currentId);
+  renderLayoutCanvas(page);
+  updateAdminSidePreview("page-manager");
+}
+
+function resizeBlockWidth(width, direction) {
+  const order = ["third", "half", "two-third", "full"];
+  const current = Math.max(0, order.indexOf(width));
+  const next = direction === "right"
+    ? Math.min(order.length - 1, current + 1)
+    : Math.max(0, current - 1);
+  return order[next];
+}
+
+function handleLayoutAction(action, index) {
+  updateCurrentPageLayout((layout) => {
+    const block = layout[index];
+    if (!block) return layout;
+
+    if (action === "up" && index > 0) {
+      [layout[index - 1], layout[index]] = [layout[index], layout[index - 1]];
+    }
+    if (action === "down" && index < layout.length - 1) {
+      [layout[index + 1], layout[index]] = [layout[index], layout[index + 1]];
+    }
+    if (action === "left" || action === "right") {
+      layout[index] = { ...block, width: resizeBlockWidth(block.width, action) };
+    }
+    if (action === "toggle") {
+      layout[index] = { ...block, visible: block.visible === false };
+    }
+    if (action === "delete") {
+      layout.splice(index, 1);
+    }
+
+    return layout;
+  });
+}
+
 function saveCurrentPageDraft() {
   const currentId = readControl("#pageEditorId", "home");
   const currentPages = pageDrafts();
@@ -262,7 +376,8 @@ function saveCurrentPageDraft() {
       menuLabel: readControl("#pageMenuLabel", page.menuLabel),
       title: readControl("#pageTitle", page.title),
       description: readControl("#pageDescription", page.description),
-      status: readControl("#pageStatus", page.status)
+      status: readControl("#pageStatus", page.status),
+      layout: pageLayout(page)
     };
   });
 
@@ -286,6 +401,11 @@ function wirePageManager() {
   });
 
   document.querySelector("#savePageDraftButton")?.addEventListener("click", saveCurrentPageDraft);
+  document.querySelector("#layoutCanvas")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-layout-action]");
+    if (!button) return;
+    handleLayoutAction(button.dataset.layoutAction, Number(button.dataset.layoutIndex));
+  });
   fillPageEditor();
 }
 
@@ -361,6 +481,7 @@ function updateAdminSidePreview(sectionId = (window.location.hash || "#dashboard
 
   if (sectionId === "page-manager") {
     const page = pageDrafts().find((item) => item.id === readControl("#pageEditorId", "home")) || pageDrafts()[0];
+    const blocks = pageLayout(page).filter((block) => block.visible !== false);
     adminSidePreview.innerHTML = `
       <p class="admin-kicker">PAGE PREVIEW</p>
       <div class="admin-page-preview">
@@ -368,6 +489,9 @@ function updateAdminSidePreview(sectionId = (window.location.hash || "#dashboard
         <h3>${escapeHtml(readControl("#pageTitle", page?.title || "Page title"))}</h3>
         <p>${escapeHtml(readControl("#pageDescription", page?.description || "Page description"))}</p>
         <strong>${escapeHtml(readControl("#pageMenuLabel", page?.menuLabel || "MENU"))}</strong>
+        <div class="admin-layout-mini">
+          ${blocks.map((block) => `<span class="${escapeHtml(block.width)}">${escapeHtml(block.label)}</span>`).join("")}
+        </div>
       </div>
     `;
     return;
