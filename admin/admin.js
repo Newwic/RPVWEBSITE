@@ -27,8 +27,8 @@ const addProductButton = document.querySelector("#addProductButton");
 const addProductInlineButton = document.querySelector("#addProductInlineButton");
 const exportProductsButton = document.querySelector("#exportProductsButton");
 const clearDraftButton = document.querySelector("#clearDraftButton");
-const adminNavLinks = document.querySelectorAll("[data-admin-nav]");
-const adminSections = document.querySelectorAll("[data-admin-section]");
+let adminNavLinks = document.querySelectorAll("[data-admin-nav]");
+let adminSections = document.querySelectorAll("[data-admin-section]");
 const adminCategoriesList = document.querySelector("#adminCategoriesList");
 const adminMediaGrid = document.querySelector("#adminMediaGrid");
 const openFirstProductEditor = document.querySelector("#openFirstProductEditor");
@@ -90,7 +90,49 @@ const siteDraftDefaults = {
     theme: "rpv-green",
     columns: "4",
     hero: "search"
-  }
+  },
+  pages: [
+    {
+      id: "home",
+      menuLabel: "HOME",
+      title: "RPV Industrial Supply",
+      description: "หน้าแรกสำหรับแนะนำสินค้า เครื่องขัดผิว วัสดุขัด และช่องทางติดต่อ RPV",
+      path: "../index.html",
+      status: "published"
+    },
+    {
+      id: "about",
+      menuLabel: "ABOUT",
+      title: "About RPV",
+      description: "ข้อมูลบริษัท ประสบการณ์ และความเชี่ยวชาญของ RPV",
+      path: "../about.html",
+      status: "published"
+    },
+    {
+      id: "products",
+      menuLabel: "PRODUCTS",
+      title: "Products",
+      description: "รายการสินค้า หมวดสินค้า และรายละเอียดสินค้าอุตสาหกรรม",
+      path: "../products.html",
+      status: "published"
+    },
+    {
+      id: "solutions",
+      menuLabel: "SERVICE",
+      title: "Service",
+      description: "บริการให้คำแนะนำการเลือกเครื่องจักร วัสดุขัด และการแก้ปัญหาผิวงาน",
+      path: "../solutions.html",
+      status: "published"
+    },
+    {
+      id: "contact",
+      menuLabel: "CONTACT",
+      title: "Contact RPV",
+      description: "ข้อมูลติดต่อ เบอร์โทร LINE Email และที่อยู่บริษัท",
+      path: "../contact.html",
+      status: "published"
+    }
+  ]
 };
 
 function loadSiteDraft() {
@@ -107,12 +149,144 @@ function mergedSiteDraft() {
   return {
     home: { ...siteDraftDefaults.home, ...(siteDraft.home || {}) },
     contact: { ...siteDraftDefaults.contact, ...(siteDraft.contact || {}) },
-    appearance: { ...siteDraftDefaults.appearance, ...(siteDraft.appearance || {}) }
+    appearance: { ...siteDraftDefaults.appearance, ...(siteDraft.appearance || {}) },
+    pages: Array.isArray(siteDraft.pages) ? siteDraft.pages : siteDraftDefaults.pages
   };
 }
 
 function persistSiteDraft() {
   localStorage.setItem("rpvSiteDraft", JSON.stringify(siteDraft));
+}
+
+function pageDrafts() {
+  return mergedSiteDraft().pages;
+}
+
+function ensurePageManager() {
+  if (!adminDashboard || document.querySelector("#page-manager")) return;
+
+  const navTarget = document.querySelector('[data-admin-nav="home-page"]');
+  if (navTarget) {
+    const pageNav = document.createElement("a");
+    pageNav.href = "#page-manager";
+    pageNav.dataset.adminNav = "page-manager";
+    pageNav.textContent = "จัดการหน้าเว็บ";
+    navTarget.before(pageNav);
+  }
+
+  const stats = document.querySelector(".admin-stats");
+  const section = document.createElement("section");
+  section.className = "admin-panel";
+  section.id = "page-manager";
+  section.dataset.adminSection = "page-manager";
+  section.hidden = true;
+  section.innerHTML = `
+    <div class="admin-panel-head">
+      <div>
+        <h2>จัดการหน้าเว็บ</h2>
+        <p class="admin-panel-note">เลือกหน้าที่ต้องการแก้ แล้วปรับชื่อเมนู หัวข้อ ข้อความ และสถานะได้ทันที</p>
+      </div>
+      <button class="button secondary" type="button" id="savePageDraftButton">บันทึกหน้าเว็บ Draft</button>
+    </div>
+    <div class="admin-page-manager">
+      <div class="admin-page-list" id="adminPageList" aria-label="รายการหน้าเว็บ"></div>
+      <form class="admin-page-editor" id="adminPageEditor">
+        <input type="hidden" id="pageEditorId">
+        <label>ชื่อเมนู<input type="text" id="pageMenuLabel" required></label>
+        <label>หัวข้อหน้า<input type="text" id="pageTitle" required></label>
+        <label>คำอธิบายหน้า<textarea id="pageDescription" rows="4"></textarea></label>
+        <label>ลิงก์หน้าเว็บ<input type="text" id="pagePath" readonly></label>
+        <label>สถานะหน้า
+          <select id="pageStatus">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="hidden">Hidden</option>
+          </select>
+        </label>
+        <div class="admin-editor-actions compact">
+          <a class="button secondary" id="previewPageLink" href="../index.html" target="_blank" rel="noopener">Preview</a>
+          <button class="button primary" type="submit">บันทึก Draft</button>
+        </div>
+        <p class="admin-action-status" id="pageDraftStatus" role="status"></p>
+      </form>
+    </div>
+  `;
+
+  if (stats) {
+    stats.after(section);
+  } else {
+    adminDashboard.prepend(section);
+  }
+
+  adminNavLinks = document.querySelectorAll("[data-admin-nav]");
+  adminSections = document.querySelectorAll("[data-admin-section]");
+  wirePageManager();
+}
+
+function fillPageEditor(pageId = pageDrafts()[0]?.id) {
+  const page = pageDrafts().find((item) => item.id === pageId) || pageDrafts()[0];
+  if (!page) return;
+
+  setControlValue("#pageEditorId", page.id);
+  setControlValue("#pageMenuLabel", page.menuLabel);
+  setControlValue("#pageTitle", page.title);
+  setControlValue("#pageDescription", page.description);
+  setControlValue("#pagePath", page.path);
+  setControlValue("#pageStatus", page.status);
+  const preview = document.querySelector("#previewPageLink");
+  if (preview) preview.href = page.path;
+  renderPageList(page.id);
+  updateAdminSidePreview("page-manager");
+}
+
+function renderPageList(activeId = document.querySelector("#pageEditorId")?.value) {
+  const list = document.querySelector("#adminPageList");
+  if (!list) return;
+
+  list.innerHTML = pageDrafts().map((page) => `
+    <button class="admin-page-card${page.id === activeId ? " is-active" : ""}" type="button" data-edit-page="${escapeHtml(page.id)}">
+      <span>${escapeHtml(page.menuLabel)}</span>
+      <strong>${escapeHtml(page.title)}</strong>
+      <small>${escapeHtml(page.status)} · ${escapeHtml(page.path.replace("../", ""))}</small>
+    </button>
+  `).join("");
+}
+
+function saveCurrentPageDraft() {
+  const currentId = readControl("#pageEditorId", "home");
+  const currentPages = pageDrafts();
+  const pages = currentPages.map((page) => {
+    if (page.id !== currentId) return page;
+    return {
+      ...page,
+      menuLabel: readControl("#pageMenuLabel", page.menuLabel),
+      title: readControl("#pageTitle", page.title),
+      description: readControl("#pageDescription", page.description),
+      status: readControl("#pageStatus", page.status)
+    };
+  });
+
+  siteDraft = { ...siteDraft, pages };
+  persistSiteDraft();
+  renderPageList(currentId);
+  setStatus(document.querySelector("#pageDraftStatus"), "บันทึกหน้าเว็บ Draft แล้ว");
+  recordRevision(`Saved page draft: ${currentId}`);
+  updateAdminSidePreview("page-manager");
+}
+
+function wirePageManager() {
+  document.querySelector("#adminPageList")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-edit-page]");
+    if (button) fillPageEditor(button.dataset.editPage);
+  });
+
+  document.querySelector("#adminPageEditor")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveCurrentPageDraft();
+  });
+
+  document.querySelector("#savePageDraftButton")?.addEventListener("click", saveCurrentPageDraft);
+  fillPageEditor();
 }
 
 function setControlValue(selector, value) {
@@ -184,6 +358,20 @@ function updateAdminSidePreview(sectionId = (window.location.hash || "#dashboard
 
   const controls = sectionControls(sectionId);
   const values = controls.map((control) => getControlValue(control)).filter(Boolean);
+
+  if (sectionId === "page-manager") {
+    const page = pageDrafts().find((item) => item.id === readControl("#pageEditorId", "home")) || pageDrafts()[0];
+    adminSidePreview.innerHTML = `
+      <p class="admin-kicker">PAGE PREVIEW</p>
+      <div class="admin-page-preview">
+        <small>${escapeHtml(readControl("#pageStatus", page?.status || "published"))}</small>
+        <h3>${escapeHtml(readControl("#pageTitle", page?.title || "Page title"))}</h3>
+        <p>${escapeHtml(readControl("#pageDescription", page?.description || "Page description"))}</p>
+        <strong>${escapeHtml(readControl("#pageMenuLabel", page?.menuLabel || "MENU"))}</strong>
+      </div>
+    `;
+    return;
+  }
 
   if (sectionId === "home-page") {
     adminSidePreview.innerHTML = `
@@ -928,6 +1116,8 @@ clearDraftButton?.addEventListener("click", () => {
   refreshAdminView("ล้าง draft แล้ว รีเฟรชหน้าเว็บหลักเพื่อกลับไปใช้ข้อมูลเดิม");
   recordRevision("Cleared local product draft");
 });
+
+ensurePageManager();
 
 adminNavLinks.forEach((link) => {
   link.addEventListener("click", (event) => {

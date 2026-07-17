@@ -298,6 +298,27 @@ function applyAdminSiteDraft() {
       document.body.classList.add("admin-draft-compact-hero");
     }
   }
+
+  if (Array.isArray(adminSiteDraft.pages)) {
+    const currentFile = location.pathname.split("/").pop() || "index.html";
+
+    adminSiteDraft.pages.forEach((page) => {
+      if (!page || !page.path) return;
+      const pageFile = page.path.split("/").pop();
+      document.querySelectorAll(`.site-nav a[href="${pageFile}"]`).forEach((link) => {
+        link.textContent = page.menuLabel || link.textContent;
+        link.hidden = page.status === "hidden";
+      });
+
+      if (pageFile === currentFile) {
+        if (page.title) document.title = `${page.title} | RPV Industrial Supply`;
+        const heroTitle = document.querySelector(".subpage-hero h1, .search-copy h1");
+        const heroText = document.querySelector(".subpage-hero p:last-child, .search-copy > p");
+        if (heroTitle && page.title) heroTitle.textContent = page.title;
+        if (heroText && page.description) heroText.textContent = page.description;
+      }
+    });
+  }
 }
 
 function t(key) {
