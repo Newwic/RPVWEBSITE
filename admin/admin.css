@@ -410,6 +410,38 @@
   border-radius: 8px;
 }
 
+.admin-block-editor,
+.admin-page-canvas-wrap {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #d8e3ea;
+  border-radius: 8px;
+}
+
+.admin-block-editor[hidden] {
+  display: none;
+}
+
+.admin-block-editor label {
+  display: grid;
+  gap: 6px;
+  color: #15577e;
+  font-weight: 900;
+}
+
+.admin-block-editor input,
+.admin-block-editor select,
+.admin-block-editor textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid #d8e3ea;
+  border-radius: 6px;
+  font: inherit;
+}
+
 .admin-layout-head {
   display: grid;
   gap: 3px;
@@ -462,6 +494,11 @@
 .admin-layout-block.is-hidden {
   opacity: 0.52;
   border-style: dashed;
+}
+
+.admin-layout-block.is-selected {
+  border-color: #15577e;
+  box-shadow: 0 0 0 3px rgba(21, 87, 126, 0.14);
 }
 
 .admin-layout-block span {
@@ -519,6 +556,160 @@
 
 .admin-editor-actions.compact {
   justify-content: flex-start;
+}
+
+.admin-page-canvas {
+  overflow: hidden;
+  background: #f4f7f5;
+  border: 1px solid #d8e3ea;
+  border-radius: 8px;
+}
+
+.admin-web-preview-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  color: #263947;
+  background: #ffffff;
+  border-bottom: 1px solid #d8e3ea;
+}
+
+.admin-web-preview-header strong {
+  color: #15577e;
+  font-size: 13px;
+}
+
+.admin-web-preview-header span {
+  color: #16865c;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.admin-web-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.admin-web-block {
+  display: grid;
+  gap: 8px;
+  min-height: 106px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #d8e3ea;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-web-block.full {
+  grid-column: span 6;
+}
+
+.admin-web-block.two-third {
+  grid-column: span 4;
+}
+
+.admin-web-block.half {
+  grid-column: span 3;
+}
+
+.admin-web-block.third {
+  grid-column: span 2;
+}
+
+.admin-web-block.is-selected {
+  border-color: #15577e;
+  box-shadow: 0 0 0 3px rgba(21, 87, 126, 0.14);
+}
+
+.admin-web-block h3,
+.admin-web-block p {
+  margin: 0;
+}
+
+.admin-web-block h3 {
+  color: #15577e;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.admin-web-block p {
+  color: #6b7a86;
+  font-size: 13px;
+}
+
+.admin-web-block small {
+  color: #16865c;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.admin-web-hero {
+  min-height: 170px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #15577e, #16865c);
+}
+
+.admin-web-hero h3,
+.admin-web-hero p,
+.admin-web-hero small {
+  color: #ffffff;
+}
+
+.admin-web-search {
+  width: min(100%, 420px);
+  padding: 10px 12px;
+  color: #15577e;
+  background: #ffffff;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.admin-web-tools div,
+.admin-web-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.admin-web-tools span,
+.admin-web-buttons span {
+  padding: 7px 9px;
+  color: #15577e;
+  background: #edf6fb;
+  border: 1px solid #cfe4ef;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.admin-web-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.admin-web-product-grid span {
+  min-height: 64px;
+  background: #f7fbf9;
+  border: 1px solid #d8e3ea;
+  border-radius: 6px;
+}
+
+.admin-web-contact {
+  color: #ffffff;
+  background: #15577e;
+}
+
+.admin-web-contact h3,
+.admin-web-contact p,
+.admin-web-contact small {
+  color: #ffffff;
 }
 
 .admin-table-wrap {
@@ -963,7 +1154,8 @@
   }
 
   .admin-layout-canvas,
-  .admin-layout-mini {
+  .admin-layout-mini,
+  .admin-web-preview-grid {
     grid-template-columns: 1fr;
   }
 
@@ -974,8 +1166,16 @@
   .admin-layout-mini .full,
   .admin-layout-mini .two-third,
   .admin-layout-mini .half,
-  .admin-layout-mini .third {
+  .admin-layout-mini .third,
+  .admin-web-block.full,
+  .admin-web-block.two-third,
+  .admin-web-block.half,
+  .admin-web-block.third {
     grid-column: 1;
+  }
+
+  .admin-web-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .admin-guide-grid,

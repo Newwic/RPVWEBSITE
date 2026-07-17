@@ -71,6 +71,7 @@ let adminProducts = [];
 let adminDataMode = "static";
 let adminRevisions = [];
 let siteDraft = loadSiteDraft();
+let selectedLayoutBlockId = "hero";
 
 const siteDraftDefaults = {
   home: {
@@ -165,25 +166,57 @@ function pageDrafts() {
 function defaultPageLayout(pageId) {
   if (pageId === "home") {
     return [
-      { id: "hero", label: "Hero Banner", type: "banner", width: "full", visible: true },
-      { id: "intro", label: "Company Intro", type: "text", width: "half", visible: true },
-      { id: "featured", label: "Featured Products", type: "products", width: "half", visible: true },
-      { id: "contact", label: "Contact CTA", type: "contact", width: "full", visible: true }
+      {
+        id: "hero",
+        label: "Hero Banner",
+        type: "banner",
+        width: "full",
+        visible: true,
+        title: "RPV PRODUCT SEARCH",
+        text: "Search machines, media, models, and product categories."
+      },
+      {
+        id: "categories",
+        label: "Quick Categories",
+        type: "tools",
+        width: "full",
+        visible: true,
+        title: "Choose product category",
+        text: "Filter products directly from the home page."
+      },
+      {
+        id: "featured",
+        label: "Product Grid",
+        type: "products",
+        width: "full",
+        visible: true,
+        title: "Product list",
+        text: "Show featured machines and finishing media."
+      },
+      {
+        id: "contact",
+        label: "Contact CTA",
+        type: "contact",
+        width: "full",
+        visible: true,
+        title: "Contact RPV",
+        text: "Send your part photo or surface problem to our team."
+      }
     ];
   }
 
   if (pageId === "products") {
     return [
-      { id: "product-title", label: "Product Header", type: "text", width: "full", visible: true },
-      { id: "filters", label: "Category Filters", type: "tools", width: "third", visible: true },
-      { id: "grid", label: "Product Grid", type: "products", width: "two-third", visible: true }
+      { id: "product-title", label: "Product Header", type: "text", width: "full", visible: true, title: "Products", text: "All RPV product categories." },
+      { id: "filters", label: "Category Filters", type: "tools", width: "third", visible: true, title: "Filters", text: "Search and category tools." },
+      { id: "grid", label: "Product Grid", type: "products", width: "two-third", visible: true, title: "Product Grid", text: "Product cards." }
     ];
   }
 
   return [
-    { id: "page-title", label: "Page Header", type: "text", width: "full", visible: true },
-    { id: "main-content", label: "Main Content", type: "text", width: "two-third", visible: true },
-    { id: "side-info", label: "Side Information", type: "contact", width: "third", visible: true }
+    { id: "page-title", label: "Page Header", type: "text", width: "full", visible: true, title: "Page Header", text: "Main page heading." },
+    { id: "main-content", label: "Main Content", type: "text", width: "two-third", visible: true, title: "Main Content", text: "Page body content." },
+    { id: "side-info", label: "Side Information", type: "contact", width: "third", visible: true, title: "Side Information", text: "Contact or supporting details." }
   ];
 }
 
@@ -238,6 +271,28 @@ function ensurePageManager() {
             <small>เลือกบล็อก แล้วย้ายขึ้น ลง ซ้าย ขวา หรือซ่อนได้</small>
           </div>
           <div class="admin-layout-canvas" id="layoutCanvas" aria-label="Layout blocks"></div>
+        </div>
+        <div class="admin-block-editor" id="blockEditor" hidden>
+          <strong>Edit selected UI block</strong>
+          <label>Block name<input type="text" id="blockLabel"></label>
+          <label>Block type
+            <select id="blockType">
+              <option value="banner">Hero / Banner</option>
+              <option value="text">Text</option>
+              <option value="tools">Search / Filter</option>
+              <option value="products">Products</option>
+              <option value="contact">Contact CTA</option>
+            </select>
+          </label>
+          <label>Title<input type="text" id="blockTitle"></label>
+          <label>Text<textarea id="blockText" rows="3"></textarea></label>
+        </div>
+        <div class="admin-page-canvas-wrap">
+          <div class="admin-layout-head">
+            <strong>Home UI preview</strong>
+            <small>This is the main page UI inside admin. Changes update here.</small>
+          </div>
+          <div class="admin-page-canvas" id="pageCanvasPreview"></div>
         </div>
         <div class="admin-editor-actions compact">
           <a class="button secondary" id="previewPageLink" href="../index.html" target="_blank" rel="noopener">Preview</a>
@@ -315,6 +370,115 @@ function renderLayoutCanvas(page = currentEditedPage()) {
       </div>
     </article>
   `).join("");
+  canvas.querySelector(`[data-layout-block="${CSS.escape(selectedLayoutBlockId)}"]`)?.classList.add("is-selected");
+  hydrateBlockEditor(page);
+  renderPageCanvasPreview(page);
+}
+
+function currentSelectedBlock(page = currentEditedPage()) {
+  const layout = pageLayout(page);
+  return layout.find((block) => block.id === selectedLayoutBlockId) || layout[0];
+}
+
+function hydrateBlockEditor(page = currentEditedPage()) {
+  const editor = document.querySelector("#blockEditor");
+  const block = currentSelectedBlock(page);
+  if (!editor || !block) return;
+
+  editor.hidden = false;
+  setControlValue("#blockLabel", block.label);
+  setControlValue("#blockType", block.type);
+  setControlValue("#blockTitle", block.title || block.label);
+  setControlValue("#blockText", block.text || "");
+}
+
+function updateSelectedBlock(values) {
+  const currentId = readControl("#pageEditorId", "home");
+  const pages = pageDrafts().map((page) => {
+    if (page.id !== currentId) return page;
+    const layout = pageLayout(page).map((block) => (
+      block.id === selectedLayoutBlockId ? { ...block, ...values } : block
+    ));
+    return { ...page, layout };
+  });
+
+  siteDraft = { ...siteDraft, pages };
+  persistSiteDraft();
+  const page = pages.find((item) => item.id === currentId);
+  renderLayoutCanvas(page);
+  updateAdminSidePreview("page-manager");
+}
+
+function renderPageCanvasPreview(page = currentEditedPage()) {
+  const preview = document.querySelector("#pageCanvasPreview");
+  if (!preview || !page) return;
+
+  const blocks = pageLayout(page).filter((block) => block.visible !== false);
+  preview.innerHTML = `
+    <div class="admin-web-preview-header">
+      <strong>RPV INDUSTRIAL SUPPLY</strong>
+      <span>${escapeHtml(readControl("#pageMenuLabel", page.menuLabel || "HOME"))}</span>
+    </div>
+    <div class="admin-web-preview-grid">
+      ${blocks.map(renderPreviewBlock).join("")}
+    </div>
+  `;
+}
+
+function renderPreviewBlock(block) {
+  const title = escapeHtml(block.title || block.label);
+  const text = escapeHtml(block.text || "");
+  const selected = block.id === selectedLayoutBlockId ? " is-selected" : "";
+
+  if (block.type === "banner") {
+    return `
+      <section class="admin-web-block admin-web-hero ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+        <small>${escapeHtml(block.label)}</small>
+        <h3>${title}</h3>
+        <p>${text}</p>
+        <div class="admin-web-search">Search products, model, category</div>
+      </section>
+    `;
+  }
+
+  if (block.type === "tools") {
+    return `
+      <section class="admin-web-block admin-web-tools ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+        <h3>${title}</h3>
+        <p>${text}</p>
+        <div><span>Machines</span><span>Media</span><span>Parts</span></div>
+      </section>
+    `;
+  }
+
+  if (block.type === "products") {
+    return `
+      <section class="admin-web-block admin-web-products ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+        <h3>${title}</h3>
+        <p>${text}</p>
+        <div class="admin-web-product-grid"><span></span><span></span><span></span><span></span></div>
+      </section>
+    `;
+  }
+
+  if (block.type === "contact") {
+    return `
+      <section class="admin-web-block admin-web-contact ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+        <small>${escapeHtml(block.label)}</small>
+        <h3>${title}</h3>
+        <p>${text}</p>
+        <div class="admin-web-buttons"><span>LINE</span><span>Call</span></div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="admin-web-block ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+      <small>${escapeHtml(block.label)}</small>
+      <h3>${title}</h3>
+      <p>${text}</p>
+    </section>
+  `;
 }
 
 function updateCurrentPageLayout(updater) {
@@ -403,8 +567,37 @@ function wirePageManager() {
   document.querySelector("#savePageDraftButton")?.addEventListener("click", saveCurrentPageDraft);
   document.querySelector("#layoutCanvas")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-layout-action]");
-    if (!button) return;
-    handleLayoutAction(button.dataset.layoutAction, Number(button.dataset.layoutIndex));
+    if (button) {
+      const block = button.closest("[data-layout-block]");
+      if (block) selectedLayoutBlockId = block.dataset.layoutBlock;
+      handleLayoutAction(button.dataset.layoutAction, Number(button.dataset.layoutIndex));
+      return;
+    }
+
+    const block = event.target.closest("[data-layout-block]");
+    if (!block) return;
+    selectedLayoutBlockId = block.dataset.layoutBlock;
+    renderLayoutCanvas(currentEditedPage());
+    updateAdminSidePreview("page-manager");
+  });
+
+  document.querySelector("#pageCanvasPreview")?.addEventListener("click", (event) => {
+    const block = event.target.closest("[data-select-block]");
+    if (!block) return;
+    selectedLayoutBlockId = block.dataset.selectBlock;
+    renderLayoutCanvas(currentEditedPage());
+    updateAdminSidePreview("page-manager");
+  });
+
+  ["#blockLabel", "#blockType", "#blockTitle", "#blockText"].forEach((selector) => {
+    document.querySelector(selector)?.addEventListener("change", () => {
+      updateSelectedBlock({
+        label: readControl("#blockLabel", "Block"),
+        type: readControl("#blockType", "text"),
+        title: readControl("#blockTitle", ""),
+        text: readControl("#blockText", "")
+      });
+    });
   });
   fillPageEditor();
 }
