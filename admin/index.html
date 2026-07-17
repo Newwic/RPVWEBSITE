@@ -13,26 +13,33 @@
     <header class="admin-topbar">
       <a class="admin-brand" href="./" aria-label="RPV Admin">
         <img src="../assets/logoRPV.png" alt="RPV">
-        <span>Admin</span>
+        <span>หน้าแรกระบบจัดการเว็บไซต์</span>
       </a>
       <div class="admin-topbar-actions">
+        <span class="admin-site-chip">rpv.co.th</span>
         <a class="button secondary" href="../index.html" target="_blank" rel="noopener">เปิดหน้าเว็บ</a>
-        <button class="button secondary" id="adminLogout" type="button">Logout</button>
+        <button class="button secondary" id="adminLogout" type="button">ออกจากระบบ</button>
       </div>
     </header>
 
     <main class="admin-shell">
       <aside class="admin-sidebar" aria-label="Admin menu">
-        <a aria-current="page" href="#dashboard" data-admin-nav="dashboard">Dashboard</a>
-        <a href="#products" data-admin-nav="products">Products</a>
-        <a href="#categories" data-admin-nav="categories">Categories</a>
-        <a href="#home-page" data-admin-nav="home-page">Home Page</a>
-        <a href="#contact" data-admin-nav="contact">Contact Information</a>
-        <a href="#media" data-admin-nav="media">Media Library</a>
-        <a href="#appearance" data-admin-nav="appearance">Appearance</a>
-        <a href="#revisions" data-admin-nav="revisions">Revisions</a>
-        <a href="#users" data-admin-nav="users">Users</a>
-        <a href="#settings" data-admin-nav="settings">Settings</a>
+        <div class="admin-sidebar-title">
+          <span>ชื่อเว็บไซต์ของคุณ</span>
+          <strong>RPV Industrial Supply</strong>
+        </div>
+        <p class="admin-menu-group">ตั้งค่าเว็บไซต์</p>
+        <a aria-current="page" href="#dashboard" data-admin-nav="dashboard">หน้าแรกระบบจัดการ</a>
+        <a href="#home-page" data-admin-nav="home-page">สร้างหน้าเพจ</a>
+        <a href="#appearance" data-admin-nav="appearance">เลือกรูปแบบเว็บไซต์</a>
+        <a href="#products" data-admin-nav="products">จัดการเนื้อหาสินค้า</a>
+        <a href="#categories" data-admin-nav="categories">จัดการหมวดสินค้า</a>
+        <a href="#media" data-admin-nav="media">ตั้งค่าแบนเนอร์ / รูปภาพ</a>
+        <a href="#contact" data-admin-nav="contact">ตั้งค่าข้อมูลติดต่อ</a>
+        <p class="admin-menu-group">ตั้งค่าขั้นสูง</p>
+        <a href="#settings" data-admin-nav="settings">ตั้งค่าทั่วไป</a>
+        <a href="#revisions" data-admin-nav="revisions">ประวัติการแก้ไข</a>
+        <a href="#users" data-admin-nav="users">จัดการบัญชีผู้ใช้</a>
       </aside>
 
       <section class="admin-content" aria-labelledby="adminDashboardTitle">
@@ -46,11 +53,11 @@
             <div>
               <p class="admin-kicker">DASHBOARD</p>
               <h1>ภาพรวมระบบหลังบ้าน</h1>
-              <p id="adminModeText">กำลังตรวจสอบแหล่งข้อมูล...</p>
+              <p id="adminModeText">จัดการหน้าเว็บ สินค้า รูปภาพ ข้อมูลติดต่อ และการตั้งค่าหลักของ RPVWEBSITE</p>
             </div>
             <div class="admin-head-actions">
-              <button class="button secondary" id="clearDraftButton" type="button">Clear local draft</button>
-              <button class="button secondary" id="exportProductsButton" type="button">Export data file</button>
+              <button class="button secondary" id="clearDraftButton" type="button">ล้าง Draft</button>
+              <button class="button secondary" id="exportProductsButton" type="button">Export ข้อมูล</button>
               <button class="button primary" id="addProductButton" type="button">เพิ่มสินค้าใหม่</button>
             </div>
           </div>
@@ -362,6 +369,6 @@
 
     <script src="../data/rpv-products.js"></script>
     <script src="config.js?v=20260715-admin-full"></script>
-    <script type="module" src="admin.js?v=20260715-admin-full"></script>
+    <script type="module" src="admin.js?v=20260717-login-fix"></script>
   </body>
 </html>

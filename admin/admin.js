@@ -1,5 +1,11 @@
 const config = window.RPV_ADMIN_CONFIG || {};
 const isConfigured = Boolean(config.supabaseUrl && config.supabaseAnonKey);
+const demoAuth = config.demoAuth || {
+  enabled: true,
+  email: "admin@rpv.co.th",
+  password: "rpvadmin123"
+};
+const isDemoAuthEnabled = Boolean(demoAuth.enabled && demoAuth.email && demoAuth.password);
 
 const loginForm = document.querySelector("#adminLoginForm");
 const loginStatus = document.querySelector("#adminLoginStatus");
@@ -809,6 +815,11 @@ async function bootAdminPage() {
   if (!guardStatus) return;
 
   if (!isConfigured) {
+    if (isDemoAuthEnabled && sessionStorage.getItem("rpvAdminDemoAuth") !== "true") {
+      window.location.href = "login.html";
+      return;
+    }
+
     showFallbackDashboard();
     hydrateSiteDraftControls();
     updateAdminSidePreview((window.location.hash || "#dashboard").slice(1));
@@ -839,14 +850,31 @@ async function bootLoginPage() {
   if (!loginForm) return;
 
   if (!isConfigured) {
-    setStatus(loginStatus, "ยังไม่ได้ตั้งค่า Supabase ใน admin/config.js", true);
+    if (isDemoAuthEnabled) {
+      setStatus(loginStatus, "ใช้บัญชี Demo สำหรับหลังบ้านตัวอย่าง");
+    } else {
+      setStatus(loginStatus, "ยังไม่ได้ตั้งค่า Supabase ใน admin/config.js", true);
+    }
   }
 
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!isConfigured) {
-      setStatus(loginStatus, "ยัง Login ไม่ได้จนกว่าจะตั้งค่า Supabase และ RLS", true);
+      const email = document.querySelector("#adminEmail").value.trim();
+      const password = document.querySelector("#adminPassword").value;
+
+      if (
+        isDemoAuthEnabled &&
+        email.toLowerCase() === String(demoAuth.email).toLowerCase() &&
+        password === demoAuth.password
+      ) {
+        sessionStorage.setItem("rpvAdminDemoAuth", "true");
+        window.location.href = "index.html";
+        return;
+      }
+
+      setStatus(loginStatus, "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง", true);
       return;
     }
 
@@ -873,6 +901,7 @@ async function bootLoginPage() {
 }
 
 logoutButton?.addEventListener("click", async () => {
+  sessionStorage.removeItem("rpvAdminDemoAuth");
   const client = await getClient();
   if (client) await client.auth.signOut();
   window.location.href = "login.html";

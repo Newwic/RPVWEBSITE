@@ -12,33 +12,36 @@
   <body class="admin-page">
     <main class="admin-auth">
       <section class="admin-auth-card" aria-labelledby="adminLoginTitle">
-        <img class="admin-logo" src="../assets/logoRPV.png" alt="RPV">
-        <p class="admin-kicker">RPV ADMIN</p>
-        <h1 id="adminLoginTitle">เข้าสู่ระบบผู้ดูแล</h1>
-        <p>ระบบนี้ใช้สำหรับผู้ดูแลเว็บไซต์เท่านั้น ทุกคำสั่งแก้ไขข้อมูลต้องตรวจสอบสิทธิ์จริงผ่าน Supabase และ RLS</p>
+        <div class="admin-auth-brand">
+          <img class="admin-logo" src="../assets/logoRPV.png" alt="RPV">
+          <div>
+            <p class="admin-kicker">RPV ADMIN</p>
+            <h1 id="adminLoginTitle">ระบบจัดการเว็บไซต์</h1>
+          </div>
+        </div>
+        <p>เข้าสู่ระบบเพื่อจัดการสินค้า หน้าเว็บ แบนเนอร์ เมนู และข้อมูลติดต่อของเว็บไซต์ RPV</p>
 
         <form class="admin-form" id="adminLoginForm">
           <label>
-            Email
-            <input type="email" id="adminEmail" autocomplete="email" required>
+            ชื่อผู้ใช้งาน / Email
+            <input type="email" id="adminEmail" autocomplete="email" placeholder="admin@rpv.co.th" required>
           </label>
           <label>
-            Password
-            <input type="password" id="adminPassword" autocomplete="current-password" required>
+            รหัสผ่าน
+            <input type="password" id="adminPassword" autocomplete="current-password" placeholder="Password" required>
           </label>
-          <button class="button primary" type="submit">Login</button>
+          <button class="button primary admin-login-button" type="submit">เข้าสู่ระบบ</button>
           <p class="admin-status" id="adminLoginStatus" role="status"></p>
         </form>
 
         <div class="admin-note">
-          <strong>ยังไม่พร้อมใช้งานจริงจนกว่าจะตั้งค่า Supabase</strong>
-          <span>ใส่ Supabase URL และ anon key ใน <code>admin/config.js</code> หลังจากเปิด RLS แล้วเท่านั้น</span>
+          <strong>หมายเหตุ</strong>
+          <span>ตอนนี้เป็นระบบหลังบ้านของโปรเจกต์ RPVWEBSITE ถ้าจะบันทึกจริงแบบออนไลน์ต้องเชื่อม Supabase ก่อน</span>
         </div>
       </section>
     </main>
 
     <script src="config.js"></script>
-    <script type="module" src="admin.js"></script>
+    <script type="module" src="admin.js?v=20260717-login-fix"></script>
   </body>
 </html>
-
