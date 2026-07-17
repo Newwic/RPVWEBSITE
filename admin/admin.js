@@ -422,25 +422,83 @@ function renderPageCanvasPreview(page = currentEditedPage()) {
   if (!preview || !page) return;
 
   const blocks = pageLayout(page).filter((block) => block.visible !== false);
+  const body = page?.id === "home"
+    ? renderHomePreviewBlocks(blocks)
+    : blocks.map(renderPreviewBlockV2).join("");
+
   preview.innerHTML = `
-    <div class="admin-web-preview-header">
-      <div class="admin-web-preview-brand">
+    <div class="site-header admin-preview-site-header">
+      <div class="brand admin-web-preview-brand">
         <img src="../assets/logoRPV.png" alt="">
         <span>
           <strong>RPV INDUSTRIAL SUPPLY</strong>
           <small>Surface Finishing Solutions</small>
         </span>
       </div>
-      <nav>
-        <span>${escapeHtml(readControl("#pageMenuLabel", page.menuLabel || "HOME"))}</span>
+      <nav class="site-nav admin-preview-nav">
+        <span aria-current="page">${escapeHtml(readControl("#pageMenuLabel", page.menuLabel || "Home"))}</span>
         <span>Products</span>
         <span>Solutions</span>
+        <span>About Us</span>
         <span>Contact</span>
       </nav>
     </div>
-    <div class="admin-web-preview-body">
-      ${blocks.map(renderPreviewBlock).join("")}
+    <div class="admin-web-preview-body admin-home-preview">
+      ${body}
     </div>
+  `;
+}
+
+function renderHomePreviewBlocks(blocks) {
+  const hero = blocks.find((block) => block.type === "banner");
+  const tools = blocks.find((block) => block.type === "tools");
+  const products = blocks.find((block) => block.type === "products");
+  const contact = blocks.find((block) => block.type === "contact");
+  const extra = blocks.filter((block) => !["banner", "tools", "products", "contact"].includes(block.type));
+
+  return `
+    ${hero ? renderPreviewBlockV2(hero) : ""}
+    ${(tools || products) ? renderProductBrowserPreview(tools, products) : ""}
+    ${extra.map(renderPreviewBlockV2).join("")}
+    ${contact ? renderPreviewBlockV2(contact) : ""}
+  `;
+}
+
+function renderProductBrowserPreview(tools, products) {
+  const selected = [tools, products].some((block) => block?.id === selectedLayoutBlockId) ? " is-selected" : "";
+  const toolsTitle = escapeHtml(tools?.title || "เลือกหมวดสินค้า");
+  const toolsText = escapeHtml(tools?.text || "กดหมวดเพื่อกรองสินค้าในหน้านี้ทันที");
+  const productsTitle = escapeHtml(products?.title || "รายการสินค้า");
+  const productsText = escapeHtml(products?.text || "ค้นหาและเลือกหมวดเพื่อดูสินค้าที่ตรงกับงานของคุณ");
+
+  return `
+    <section class="products-section admin-web-products-combined${selected}">
+      <div class="product-browser">
+        <div class="quick-categories" data-select-block="${escapeHtml(tools?.id || "categories")}">
+          <div class="quick-categories-head">
+            <h2>${toolsTitle}</h2>
+            <p>${toolsText}</p>
+          </div>
+          <div class="filter-row admin-preview-filter-row">
+            <button type="button">All</button>
+            <button type="button">Machines</button>
+            <button type="button">Media</button>
+            <button type="button">Parts</button>
+            <button type="button">Compound</button>
+          </div>
+        </div>
+        <div class="product-list-panel" data-select-block="${escapeHtml(products?.id || "featured")}">
+          <div class="product-panel-head">
+            <div>
+              <strong>${productsTitle}</strong>
+              <span>${productsText}</span>
+            </div>
+            <div class="product-count">16 products</div>
+          </div>
+          <div class="product-grid admin-preview-product-grid">${renderPreviewProducts()}</div>
+        </div>
+      </div>
+    </section>
   `;
 }
 
@@ -518,6 +576,88 @@ function renderPreviewBlock(block) {
   `;
 }
 
+function renderPreviewBlockV2(block) {
+  const title = escapeHtml(block.title || block.label);
+  const text = escapeHtml(block.text || "");
+  const selected = block.id === selectedLayoutBlockId ? " is-selected" : "";
+
+  if (block.type === "banner") {
+    return `
+      <section class="product-search-hero admin-web-block admin-web-hero ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+        <div class="search-hero-inner">
+          <div class="search-copy">
+            <p class="eyebrow">RPV PRODUCT SEARCH</p>
+            <h1>${title}</h1>
+            <p>${text}</p>
+          </div>
+          <label class="search-box hero-search">
+            <span>ค้นหาสินค้า</span>
+            <input type="search" value="Search products, model, category" readonly>
+          </label>
+        </div>
+      </section>
+    `;
+  }
+
+  if (block.type === "tools") {
+    return `
+      <section class="admin-web-block admin-web-tools ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+        <div>
+          <h3>${title}</h3>
+          <p>${text}</p>
+        </div>
+        <div class="admin-web-filter-rail">
+          <span>All</span><span>Machines</span><span>Finishing Media</span><span>Parts</span><span>Compound</span>
+        </div>
+      </section>
+    `;
+  }
+
+  if (block.type === "products") {
+    return `
+      <section class="admin-web-block admin-web-products ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+        <div class="admin-web-product-head">
+          <div>
+            <strong>${title}</strong>
+            <span>${text}</span>
+          </div>
+          <em>16 products</em>
+        </div>
+        <div class="product-grid admin-preview-product-grid">
+          ${renderPreviewProducts()}
+        </div>
+      </section>
+    `;
+  }
+
+  if (block.type === "contact") {
+    return `
+      <section class="contact-cta admin-web-block admin-web-contact ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+        <div class="contact-cta-inner">
+          <div>
+            <p class="eyebrow">CONTACT RPV</p>
+            <h2>${title}</h2>
+            <p>${text}</p>
+          </div>
+          <div class="cta-actions admin-preview-cta-actions">
+            <span class="button line">LINE @rpvofficial</span>
+            <span class="button secondary">โทร 086-399-0785</span>
+            <small class="office-link">สำนักงาน 02-194-4346-7</small>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="admin-web-block ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
+      <small>${escapeHtml(block.label)}</small>
+      <h3>${title}</h3>
+      <p>${text}</p>
+    </section>
+  `;
+}
+
 function renderPreviewProducts() {
   const products = (adminProducts.length ? adminProducts : window.rpvProducts || []).slice(0, 4);
   const fallback = [
@@ -532,11 +672,16 @@ function renderPreviewProducts() {
     const model = product.model || "Model";
     const category = product.category || product.categories?.name_th || "Category";
     return `
-      <article>
-        <figure></figure>
-        <small>${escapeHtml(category)}</small>
-        <strong>${escapeHtml(name)}</strong>
-        <span>${escapeHtml(model)}</span>
+      <article class="product-card">
+        <div class="product-image">
+          <div class="product-placeholder"><span>RPV</span><small>${escapeHtml(category)}</small></div>
+        </div>
+        <div class="product-body">
+          <span class="product-category">${escapeHtml(category)}</span>
+          <h3>${escapeHtml(name)}</h3>
+          <p class="product-model">${escapeHtml(model)}</p>
+          <p class="product-desc">Industrial surface finishing product for RPV workflow preview.</p>
+        </div>
       </article>
     `;
   }).join("");
