@@ -221,7 +221,15 @@ function defaultPageLayout(pageId) {
 }
 
 function pageLayout(page) {
-  return Array.isArray(page?.layout) && page.layout.length ? page.layout : defaultPageLayout(page?.id);
+  const defaults = defaultPageLayout(page?.id);
+  if (!Array.isArray(page?.layout) || !page.layout.length) return defaults;
+
+  const saved = page.layout.map((block) => {
+    const matchingDefault = defaults.find((item) => item.id === block.id) || {};
+    return { ...matchingDefault, ...block };
+  });
+  const missingDefaults = defaults.filter((block) => !saved.some((item) => item.id === block.id));
+  return [...saved, ...missingDefaults];
 }
 
 function ensurePageManager() {
