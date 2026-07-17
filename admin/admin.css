@@ -635,49 +635,85 @@
 
 .admin-page-canvas {
   overflow: hidden;
-  background: #f4f7f5;
+  background: #eef3f0;
   border: 1px solid #d8e3ea;
   border-radius: 8px;
-  min-height: 420px;
+  min-height: 560px;
 }
 
 .admin-web-preview-header {
   display: flex;
-  gap: 12px;
+  gap: 18px;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
+  min-height: 66px;
+  padding: 10px 18px;
   color: #263947;
   background: #ffffff;
   border-bottom: 1px solid #d8e3ea;
 }
 
-.admin-web-preview-header strong {
-  color: #15577e;
-  font-size: 13px;
+.admin-web-preview-brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
 }
 
-.admin-web-preview-header span {
-  color: #16865c;
+.admin-web-preview-brand img {
+  width: 74px;
+  height: auto;
+}
+
+.admin-web-preview-brand span {
+  display: grid;
+  min-width: 0;
+}
+
+.admin-web-preview-brand strong {
+  color: #15577e;
+  font-size: 13px;
+  line-height: 1.15;
+}
+
+.admin-web-preview-brand small {
+  color: #6b7a86;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.admin-web-preview-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.admin-web-preview-header nav span {
+  padding: 6px 8px;
+  color: #263947;
+  background: #f6fafc;
+  border: 1px solid #d8e3ea;
+  border-radius: 999px;
   font-size: 12px;
   font-weight: 900;
 }
 
-.admin-web-preview-grid {
+.admin-web-preview-body {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 10px;
-  padding: 12px;
+  gap: 0;
 }
 
 .admin-web-block {
   display: grid;
-  gap: 8px;
+  gap: 12px;
   min-height: 118px;
-  padding: 14px;
+  padding: 18px;
   background: #ffffff;
-  border: 1px solid #d8e3ea;
-  border-radius: 8px;
+  border: 0;
+  border-bottom: 1px solid #d8e3ea;
+  border-radius: 0;
   cursor: pointer;
 }
 
@@ -698,8 +734,9 @@
 }
 
 .admin-web-block.is-selected {
-  border-color: #15577e;
-  box-shadow: 0 0 0 3px rgba(21, 87, 126, 0.14);
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 0 0 3px rgba(21, 87, 126, 0.24);
 }
 
 .admin-web-block h3,
@@ -708,52 +745,88 @@
 }
 
 .admin-web-block h3 {
-  color: #15577e;
-  font-size: 18px;
-  line-height: 1.25;
+  color: #102f24;
+  font-size: clamp(20px, 2.5vw, 34px);
+  line-height: 1.16;
 }
 
 .admin-web-block p {
   color: #6b7a86;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.55;
 }
 
 .admin-web-block small {
   color: #16865c;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
 }
 
 .admin-web-hero {
-  min-height: 190px;
-  color: #ffffff;
-  background: linear-gradient(135deg, #15577e, #16865c);
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.72fr);
+  align-items: center;
+  min-height: 260px;
+  padding: clamp(22px, 4vw, 38px);
+  color: #102f24;
+  background:
+    linear-gradient(90deg, rgba(234, 247, 241, 0.96), rgba(234, 247, 241, 0.86)),
+    #eaf7f1;
 }
 
 .admin-web-hero h3,
 .admin-web-hero p,
 .admin-web-hero small {
-  color: #ffffff;
+  color: inherit;
+}
+
+.admin-web-hero small {
+  color: #16865c;
+}
+
+.admin-web-hero-copy {
+  display: grid;
+  gap: 10px;
 }
 
 .admin-web-search {
-  width: min(100%, 420px);
-  padding: 10px 12px;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
   color: #15577e;
   background: #ffffff;
+  border: 1px solid #d8e3ea;
   border-radius: 6px;
-  font-size: 12px;
+  box-shadow: 0 16px 36px rgba(24, 33, 29, 0.1);
+  font-size: 13px;
   font-weight: 900;
 }
 
-.admin-web-tools div,
+.admin-web-search input {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  color: #6b7a86;
+  background: #f7fbf9;
+  border: 1px solid #d8e3ea;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.admin-web-tools {
+  grid-template-columns: 190px minmax(0, 1fr);
+  align-items: start;
+  background: #f9fbfa;
+}
+
+.admin-web-filter-rail,
 .admin-web-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.admin-web-tools span,
+.admin-web-filter-rail span,
 .admin-web-buttons span {
   padding: 7px 9px;
   color: #15577e;
@@ -764,22 +837,87 @@
   font-weight: 900;
 }
 
+.admin-web-product-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1px solid #d8e3ea;
+  border-radius: 6px;
+}
+
+.admin-web-product-head strong,
+.admin-web-product-head span {
+  display: block;
+}
+
+.admin-web-product-head strong {
+  color: #102f24;
+  font-size: 20px;
+}
+
+.admin-web-product-head em {
+  color: #16865c;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.admin-web-products {
+  background: #f4f7f5;
+}
+
 .admin-web-product-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  gap: 12px;
+}
+
+.admin-web-product-grid article {
+  display: grid;
+  gap: 7px;
+  min-height: 190px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #d8e3ea;
+  border-radius: 8px;
+}
+
+.admin-web-product-grid figure {
+  min-height: 86px;
+  margin: 0;
+  background:
+    linear-gradient(135deg, rgba(21, 87, 126, 0.12), rgba(22, 134, 92, 0.12)),
+    #f7fbf9;
+  border: 1px solid #d8e3ea;
+  border-radius: 6px;
+}
+
+.admin-web-product-grid small {
+  color: #16865c;
+  font-size: 11px;
+}
+
+.admin-web-product-grid strong {
+  color: #102f24;
+  font-size: 13px;
+  line-height: 1.25;
 }
 
 .admin-web-product-grid span {
-  min-height: 78px;
-  background: #f7fbf9;
-  border: 1px solid #d8e3ea;
-  border-radius: 6px;
+  color: #6b7a86;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .admin-web-contact {
   color: #ffffff;
   background: #15577e;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: center;
+  padding-block: 34px;
 }
 
 .admin-web-contact h3,
@@ -1238,7 +1376,7 @@
 
   .admin-layout-canvas,
   .admin-layout-mini,
-  .admin-web-preview-grid {
+  .admin-web-preview-body {
     grid-template-columns: 1fr;
   }
 
@@ -1259,6 +1397,12 @@
 
   .admin-web-product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-web-hero,
+  .admin-web-tools,
+  .admin-web-contact {
+    grid-template-columns: 1fr;
   }
 
   .admin-guide-grid,

@@ -424,10 +424,21 @@ function renderPageCanvasPreview(page = currentEditedPage()) {
   const blocks = pageLayout(page).filter((block) => block.visible !== false);
   preview.innerHTML = `
     <div class="admin-web-preview-header">
-      <strong>RPV INDUSTRIAL SUPPLY</strong>
-      <span>${escapeHtml(readControl("#pageMenuLabel", page.menuLabel || "HOME"))}</span>
+      <div class="admin-web-preview-brand">
+        <img src="../assets/logoRPV.png" alt="">
+        <span>
+          <strong>RPV INDUSTRIAL SUPPLY</strong>
+          <small>Surface Finishing Solutions</small>
+        </span>
+      </div>
+      <nav>
+        <span>${escapeHtml(readControl("#pageMenuLabel", page.menuLabel || "HOME"))}</span>
+        <span>Products</span>
+        <span>Solutions</span>
+        <span>Contact</span>
+      </nav>
     </div>
-    <div class="admin-web-preview-grid">
+    <div class="admin-web-preview-body">
       ${blocks.map(renderPreviewBlock).join("")}
     </div>
   `;
@@ -441,10 +452,15 @@ function renderPreviewBlock(block) {
   if (block.type === "banner") {
     return `
       <section class="admin-web-block admin-web-hero ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
-        <small>${escapeHtml(block.label)}</small>
-        <h3>${title}</h3>
-        <p>${text}</p>
-        <div class="admin-web-search">Search products, model, category</div>
+        <div class="admin-web-hero-copy">
+          <small>RPV PRODUCT SEARCH</small>
+          <h3>${title}</h3>
+          <p>${text}</p>
+        </div>
+        <label class="admin-web-search">
+          <span>ค้นหาสินค้า</span>
+          <input type="text" value="Search products, model, category" readonly>
+        </label>
       </section>
     `;
   }
@@ -452,9 +468,13 @@ function renderPreviewBlock(block) {
   if (block.type === "tools") {
     return `
       <section class="admin-web-block admin-web-tools ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
-        <h3>${title}</h3>
-        <p>${text}</p>
-        <div><span>Machines</span><span>Media</span><span>Parts</span></div>
+        <div>
+          <h3>${title}</h3>
+          <p>${text}</p>
+        </div>
+        <div class="admin-web-filter-rail">
+          <span>All</span><span>Machines</span><span>Finishing Media</span><span>Parts</span><span>Compound</span>
+        </div>
       </section>
     `;
   }
@@ -462,9 +482,16 @@ function renderPreviewBlock(block) {
   if (block.type === "products") {
     return `
       <section class="admin-web-block admin-web-products ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
-        <h3>${title}</h3>
-        <p>${text}</p>
-        <div class="admin-web-product-grid"><span></span><span></span><span></span><span></span></div>
+        <div class="admin-web-product-head">
+          <div>
+            <strong>${title}</strong>
+            <span>${text}</span>
+          </div>
+          <em>16 products</em>
+        </div>
+        <div class="admin-web-product-grid">
+          ${renderPreviewProducts()}
+        </div>
       </section>
     `;
   }
@@ -472,10 +499,12 @@ function renderPreviewBlock(block) {
   if (block.type === "contact") {
     return `
       <section class="admin-web-block admin-web-contact ${escapeHtml(block.width)}${selected}" data-select-block="${escapeHtml(block.id)}">
-        <small>${escapeHtml(block.label)}</small>
-        <h3>${title}</h3>
-        <p>${text}</p>
-        <div class="admin-web-buttons"><span>LINE</span><span>Call</span></div>
+        <div>
+          <small>CONTACT RPV</small>
+          <h3>${title}</h3>
+          <p>${text}</p>
+        </div>
+        <div class="admin-web-buttons"><span>LINE @rpvofficial</span><span>086-399-0785</span></div>
       </section>
     `;
   }
@@ -487,6 +516,30 @@ function renderPreviewBlock(block) {
       <p>${text}</p>
     </section>
   `;
+}
+
+function renderPreviewProducts() {
+  const products = (adminProducts.length ? adminProducts : window.rpvProducts || []).slice(0, 4);
+  const fallback = [
+    { name_th: "Vibratory Finishing Machine", model: "RPV-MB", category: "Machines" },
+    { name_th: "Ceramic Media", model: "Angle Cut", category: "Media" },
+    { name_th: "Glass Beads", model: "CN Series", category: "Blasting" },
+    { name_th: "Compound", model: "RPV Solution", category: "Chemical" }
+  ];
+
+  return (products.length ? products : fallback).map((product) => {
+    const name = product.name_th || product.nameTh || product.name_en || product.nameEn || "Product";
+    const model = product.model || "Model";
+    const category = product.category || product.categories?.name_th || "Category";
+    return `
+      <article>
+        <figure></figure>
+        <small>${escapeHtml(category)}</small>
+        <strong>${escapeHtml(name)}</strong>
+        <span>${escapeHtml(model)}</span>
+      </article>
+    `;
+  }).join("");
 }
 
 function updateCurrentPageLayout(updater) {
