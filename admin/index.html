@@ -45,7 +45,7 @@
       <section class="admin-content">
         <div class="admin-statusbar" role="status">
           <span id="saveState">Ready</span>
-          <small>โหมดอ่าน/แก้ Draft ในเว็บ local เท่านั้น ไม่แก้ไขข้อมูลบน ITOPPLUS</small>
+          <small>ITOPPLUS เป็นแหล่งดึงข้อมูลสินค้า/รูป ส่วน Admin นี้ใช้แก้เว็บ RPVWEBSITE ของเรา</small>
         </div>
 
         <section class="admin-panel is-active" id="dashboard" data-panel-section>
@@ -245,7 +245,7 @@
             <div>
               <p class="admin-kicker">WEB STAT</p>
               <h1>สถิติเข้าชมเว็บ</h1>
-              <p>ดูยอดเข้าชมแบบกราฟเส้นสไตล์ ITOPPLUS สำหรับตรวจหน้าเว็บ local ก่อนต่อระบบเก็บสถิติจริง</p>
+              <p>ดูยอดเข้าชมเว็บ RPVWEBSITE ถ้าต่อ Supabase แล้วจะรวมข้อมูลจากมือถือและคอมทุกเครื่อง</p>
             </div>
             <button class="button secondary" id="resetAnalyticsButton" type="button">ล้างสถิติ</button>
           </div>
@@ -328,7 +328,7 @@
               <label>สีรอง
                 <input id="settingAccentColor" type="color" value="#f5a623">
               </label>
-              <p class="admin-note">การบันทึกตอนนี้เก็บเป็น Draft ใน browser ก่อน ถ้าจะใช้งานถาวรให้ Export ไฟล์ออกมา</p>
+              <p class="admin-note">ถ้ายังไม่ได้ต่อ Supabase การบันทึกจะเป็น Draft ใน browser ก่อน เมื่อต่อ Supabase แล้วจะบันทึกเข้าเว็บ RPVWEBSITE ของเรา</p>
             </div>
           </div>
         </section>
