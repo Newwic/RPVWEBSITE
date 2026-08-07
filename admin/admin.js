@@ -1,5 +1,6 @@
 const STORAGE_PRODUCTS = "rpvProductsDraft";
 const STORAGE_SITE = "rpvSiteDraft";
+const PRODUCT_PAGE_SIZE = 10;
 
 const pageDefaults = [
   {
@@ -100,6 +101,7 @@ let siteDraft = loadSiteDraft();
 let products = loadProducts();
 let selectedPageId = siteDraft.pages[0]?.id || "home";
 let selectedProductId = products[0]?.id || "";
+let productPage = 1;
 let activeAnalyticsTab = "website";
 let analyticsStats = loadAnalyticsStats();
 let analyticsLoadError = "";
@@ -688,8 +690,12 @@ function renderProducts() {
     const text = [product.nameTh, product.nameEn, product.model, product.category].join(" ").toLowerCase();
     return (!search || text.includes(search)) && (!status || product.status === status);
   });
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PRODUCT_PAGE_SIZE));
+  productPage = Math.min(Math.max(1, productPage), totalPages);
+  const start = (productPage - 1) * PRODUCT_PAGE_SIZE;
+  const pageItems = filtered.slice(start, start + PRODUCT_PAGE_SIZE);
 
-  list.innerHTML = filtered.map((product) => `
+  list.innerHTML = pageItems.map((product) => `
     <article class="admin-product-item${product.id === selectedProductId ? " is-active" : ""}" data-product-id="${escapeAttr(product.id)}">
       <div class="admin-product-thumb">${product.image ? `<img src="${escapeAttr(adminImageSrc(product.image))}" alt="">` : "No image"}</div>
       <div>
@@ -699,6 +705,38 @@ function renderProducts() {
       </div>
     </article>
   `).join("") || `<p class="admin-note">ไม่พบสินค้า</p>`;
+
+  renderProductPagination(filtered.length, totalPages);
+}
+
+function renderProductPagination(totalItems, totalPages) {
+  const pagination = $("#productPagination");
+  if (!pagination) return;
+
+  if (totalItems <= PRODUCT_PAGE_SIZE) {
+    pagination.innerHTML = "";
+    return;
+  }
+
+  const pageButtons = Array.from({ length: totalPages }, (_, index) => index + 1)
+    .map((page) => `
+      <button class="admin-page-button${page === productPage ? " is-active" : ""}" type="button" data-product-page="${page}">
+        ${page}
+      </button>
+    `)
+    .join("");
+
+  const firstItem = (productPage - 1) * PRODUCT_PAGE_SIZE + 1;
+  const lastItem = Math.min(totalItems, productPage * PRODUCT_PAGE_SIZE);
+
+  pagination.innerHTML = `
+    <div class="admin-pagination-summary">แสดง ${firstItem}-${lastItem} จาก ${totalItems} รายการ</div>
+    <div class="admin-pagination-controls">
+      <button class="admin-page-button" type="button" data-product-page="${productPage - 1}" ${productPage <= 1 ? "disabled" : ""}>ก่อนหน้า</button>
+      ${pageButtons}
+      <button class="admin-page-button" type="button" data-product-page="${productPage + 1}" ${productPage >= totalPages ? "disabled" : ""}>ถัดไป</button>
+    </div>
+  `;
 }
 
 function currentProduct() {
@@ -1184,6 +1222,12 @@ document.addEventListener("click", (event) => {
     renderProductForm();
   }
 
+  const productPageButton = event.target.closest("[data-product-page]");
+  if (productPageButton && !productPageButton.disabled) {
+    productPage = Number(productPageButton.dataset.productPage) || 1;
+    renderProducts();
+  }
+
   const copyButton = event.target.closest("[data-copy-image]");
   if (copyButton) {
     navigator.clipboard?.writeText(copyButton.dataset.copyImage);
@@ -1320,8 +1364,14 @@ $("#savePageButton")?.addEventListener("click", () => {
   persistSite();
 });
 
-$("#productSearch")?.addEventListener("input", renderProducts);
-$("#productStatusFilter")?.addEventListener("change", renderProducts);
+$("#productSearch")?.addEventListener("input", () => {
+  productPage = 1;
+  renderProducts();
+});
+$("#productStatusFilter")?.addEventListener("change", () => {
+  productPage = 1;
+  renderProducts();
+});
 
 $("#newProductButton")?.addEventListener("click", () => {
   const id = crypto.randomUUID();
@@ -1341,6 +1391,7 @@ $("#newProductButton")?.addEventListener("click", () => {
     features: []
   });
   selectedProductId = id;
+  productPage = 1;
   renderAll();
 });
 
@@ -1350,6 +1401,7 @@ $("#duplicateProductButton")?.addEventListener("click", () => {
   const copy = { ...product, id: crypto.randomUUID(), nameTh: `${product.nameTh} Copy`, sortOrder: products.length + 1 };
   products.unshift(copy);
   selectedProductId = copy.id;
+  productPage = 1;
   persistProducts();
 });
 

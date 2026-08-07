@@ -553,6 +553,55 @@ textarea {
   box-shadow: 0 0 0 2px rgba(32, 179, 75, 0.12);
 }
 
+.admin-pagination {
+  display: grid;
+  gap: 9px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--admin-line);
+}
+
+.admin-pagination:empty {
+  display: none;
+}
+
+.admin-pagination-summary {
+  color: var(--admin-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.admin-pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.admin-page-button {
+  min-width: 34px;
+  min-height: 32px;
+  padding: 5px 9px;
+  color: #3e4a53;
+  background: linear-gradient(#ffffff, #edf1f4);
+  border: 1px solid #cbd5dd;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.admin-page-button.is-active {
+  color: #fff;
+  background: var(--admin-green);
+  border-color: var(--admin-green-dark);
+}
+
+.admin-page-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
 .admin-product-item strong,
 .admin-media-card strong {
   display: block;
