@@ -136,12 +136,39 @@
     if (error) throw error;
   }
 
+  async function loadSiteDraft() {
+    if (!client) return null;
+    const { data, error } = await client
+      .from("site_settings")
+      .select("setting_value")
+      .eq("setting_key", "siteDraft")
+      .maybeSingle();
+    if (error) throw error;
+    return data?.setting_value || null;
+  }
+
+  async function saveSiteDraft(siteDraft) {
+    if (!client) throw new Error("Supabase ยังไม่ได้ตั้งค่า");
+    const session = await getSession();
+    if (!session) throw new Error("กรุณา login Supabase ก่อนบันทึกออนไลน์");
+
+    const { error } = await client
+      .from("site_settings")
+      .upsert({
+        setting_key: "siteDraft",
+        setting_value: siteDraft || {}
+      }, { onConflict: "setting_key" });
+    if (error) throw error;
+  }
+
   window.rpvSupabase = {
     enabled: hasConfig,
     client,
     getSession,
     signIn,
     loadProducts,
-    saveProducts
+    saveProducts,
+    loadSiteDraft,
+    saveSiteDraft
   };
 })();

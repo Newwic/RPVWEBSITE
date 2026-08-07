@@ -226,6 +226,29 @@ async function hydrateProductsFromSupabase() {
   }
 }
 
+async function hydrateSiteFromSupabase() {
+  if (!window.rpvSupabase?.enabled) return;
+
+  try {
+    const remoteDraft = await window.rpvSupabase.loadSiteDraft();
+    if (!remoteDraft) return;
+
+    siteDraft = {
+      ...siteDraft,
+      ...remoteDraft,
+      pages: Array.isArray(remoteDraft.pages) ? remoteDraft.pages : siteDraft.pages,
+      settings: { ...siteDraft.settings, ...(remoteDraft.settings || {}) },
+      homeCategories: Array.isArray(remoteDraft.homeCategories) ? remoteDraft.homeCategories : siteDraft.homeCategories
+    };
+    localStorage.setItem(STORAGE_SITE, JSON.stringify(siteDraft));
+    setStatus("โหลดหน้าเว็บจาก Supabase แล้ว");
+    renderAll();
+  } catch (error) {
+    console.warn("RPV Supabase site load failed.", error);
+    setStatus(`โหลดหน้าเว็บไม่สำเร็จ: ${error.message}`);
+  }
+}
+
 function normalizeProduct(product, index = 0) {
   const id = product.id || product.slug || crypto.randomUUID();
   return {
@@ -276,7 +299,21 @@ function sortProducts(a, b) {
 function persistSite() {
   localStorage.setItem(STORAGE_SITE, JSON.stringify(siteDraft));
   setStatus("บันทึก Page Draft แล้ว");
+  persistSiteToSupabase();
   renderAll();
+}
+
+async function persistSiteToSupabase() {
+  if (!window.rpvSupabase?.enabled) return;
+
+  try {
+    setStatus("กำลังบันทึกหน้าเว็บไป Supabase...");
+    await window.rpvSupabase.saveSiteDraft(siteDraft);
+    setStatus("บันทึกหน้าเว็บไป Supabase แล้ว");
+  } catch (error) {
+    console.warn("RPV Supabase site save failed.", error);
+    setStatus(`บันทึกหน้าเว็บไม่สำเร็จ: ${error.message}`);
+  }
 }
 
 function persistProducts() {
@@ -1151,5 +1188,6 @@ const initialPanel = (window.location.hash || "#dashboard").slice(1);
 if ($("[data-panel-section]")) {
   switchPanel($(`[data-panel-section]#${CSS.escape(initialPanel)}`) ? initialPanel : "dashboard");
   renderAll();
+  hydrateSiteFromSupabase();
   hydrateProductsFromSupabase();
 }

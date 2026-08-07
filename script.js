@@ -356,7 +356,7 @@ Object.assign(ui.en, {
   mobileCall: "Call 086-399-0785"
 });
 
-const adminSiteDraft = loadAdminSiteDraft();
+let adminSiteDraft = loadAdminSiteDraft();
 
 const canonicalHomeCategoryLinks = [
   "products.html?group=polishing-machines",
@@ -452,11 +452,26 @@ function applyAdminSiteDraft() {
       });
 
       if (pageFile === currentFile) {
-        if (page.title) document.title = `${page.title} | RPV Industrial Supply`;
-        const heroTitle = document.querySelector(".subpage-hero h1, .search-copy h1");
+        if (page.title) {
+          ui.th.title = `${page.title} | RPV Industrial Supply`;
+          ui.en.title = `${page.title} | RPV Industrial Supply`;
+          document.title = ui[currentLanguage]?.title || ui.th.title;
+        }
+        const heroTitle = document.querySelector(".subpage-hero h1, .search-copy h1, .search-copy h2");
         const heroText = document.querySelector(".subpage-hero p:last-child, .search-copy > p");
         if (heroTitle && page.title) heroTitle.textContent = page.title;
         if (heroText && page.description) heroText.textContent = page.description;
+
+        if (pageFile === "products.html") {
+          if (page.title) {
+            ui.th.heroTitle = page.title;
+            ui.en.heroTitle = page.title;
+          }
+          if (page.description) {
+            ui.th.heroText = page.description;
+            ui.en.heroText = page.description;
+          }
+        }
 
         const quoteButton = document.querySelector(".quote-button");
         if (quoteButton && page.ctaText) quoteButton.textContent = page.ctaText;
@@ -478,6 +493,8 @@ function applyAdminSiteDraft() {
         }
 
         if (Array.isArray(page.sections)) {
+          applyPageSectionDraft(page, currentFile);
+
           const hiddenSections = new Set(
             page.sections
               .filter((section) => section.visible === false)
@@ -494,6 +511,53 @@ function applyAdminSiteDraft() {
 
   if (Array.isArray(adminSiteDraft.homeCategories)) {
     applyAdminHomeCategories(adminSiteDraft.homeCategories);
+  }
+}
+
+function applySectionText(root, section) {
+  if (!root || !section) return;
+  const heading = root.querySelector("h2, h3");
+  const text = root.querySelector("p:not(.eyebrow)");
+  if (heading && section.title) heading.textContent = section.title;
+  if (text && section.text) text.textContent = section.text;
+}
+
+function applyPageSectionDraft(page, currentFile) {
+  const visibleSections = page.sections.filter((section) => section.visible !== false);
+
+  if (currentFile === "products.html") {
+    const headerSection = visibleSections.find((section) => section.id === "header") || visibleSections[0];
+    if (headerSection) {
+      ui.th.categoryTitle = headerSection.title;
+      ui.en.categoryTitle = headerSection.title;
+      ui.th.categoryText = headerSection.text;
+      ui.en.categoryText = headerSection.text;
+      applySectionText(document.querySelector(".quick-categories-head"), headerSection);
+    }
+    return;
+  }
+
+  const sectionRoots = [
+    ...document.querySelectorAll(".subpage-section"),
+    ...document.querySelectorAll(".contact-cta .contact-copy")
+  ];
+
+  visibleSections.forEach((section, index) => applySectionText(sectionRoots[index], section));
+}
+
+async function hydrateSiteDraftFromSupabase() {
+  if (!window.rpvSupabase?.enabled) return;
+
+  try {
+    const remoteDraft = await window.rpvSupabase.loadSiteDraft();
+    if (!remoteDraft) return;
+
+    adminSiteDraft = remoteDraft;
+    localStorage.setItem("rpvSiteDraft", JSON.stringify(remoteDraft));
+    applyAdminSiteDraft();
+    applyLanguage();
+  } catch (error) {
+    console.warn("RPV Supabase site draft load failed. Falling back to local/static content.", error);
   }
 }
 
@@ -814,7 +878,7 @@ function applyLanguage() {
   setText(".home-category-tile:nth-child(8) span", t("homeCategorySupport"));
   setText(".mobile-contact-call", t("mobileCall"));
   setText(".search-copy .eyebrow", t("searchEyebrow"));
-  setText(".search-copy h1", t("heroTitle"));
+  setText(".search-copy h1, .search-copy h2", t("heroTitle"));
   setText(".search-copy p:not(.eyebrow)", t("heroText"));
   setText(".quick-categories-head h2", t("categoryTitle"));
   setText(".quick-categories-head p", t("categoryText"));
@@ -1081,4 +1145,5 @@ applyLanguage();
 applySearchFromUrl();
 renderFilters();
 renderProducts();
+hydrateSiteDraftFromSupabase();
 hydrateProductsFromSupabase();

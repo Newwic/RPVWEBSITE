@@ -53,3 +53,16 @@ window.RPV_ADMIN_CONFIG = {
 - `products.html` จะดึงสินค้าจาก Supabase ก่อน
 - ถ้า Supabase ล่ม/ยังไม่ตั้งค่า/ยังไม่มีสินค้า เว็บจะ fallback ใช้ `data/rpv-products.js`
 
+## 5. จัดการหน้าเว็บ
+
+หน้า `admin/index.html#pages` บันทึก draft หน้าเว็บลง `site_settings.setting_key = 'siteDraft'`
+
+หน้าเว็บที่อ่าน draft จาก Supabase:
+
+- `index.html`
+- `products.html`
+- `about.html`
+- `solutions.html`
+- `contact.html`
+
+ถ้ายังไม่ได้ตั้งค่า Supabase หน้าเว็บจะใช้ draft ใน browser (`localStorage`) หรือข้อมูล static เดิมแทน
