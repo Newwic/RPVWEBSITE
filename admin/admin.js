@@ -249,6 +249,34 @@ async function hydrateSiteFromSupabase() {
   }
 }
 
+function enableSiteRealtime() {
+  if (!window.rpvSupabase?.enabled || !window.rpvSupabase.subscribeToSiteDraft) return;
+
+  window.rpvSupabase.subscribeToSiteDraft((remoteDraft) => {
+    if (!remoteDraft) return;
+
+    siteDraft = {
+      ...siteDraft,
+      ...remoteDraft,
+      pages: Array.isArray(remoteDraft.pages) ? remoteDraft.pages : siteDraft.pages,
+      settings: { ...siteDraft.settings, ...(remoteDraft.settings || {}) },
+      homeCategories: Array.isArray(remoteDraft.homeCategories) ? remoteDraft.homeCategories : siteDraft.homeCategories
+    };
+    localStorage.setItem(STORAGE_SITE, JSON.stringify(siteDraft));
+    setStatus("อัปเดตหน้าเว็บแบบ realtime แล้ว");
+    renderAll();
+  });
+}
+
+function enableProductRealtime() {
+  if (!window.rpvSupabase?.enabled || !window.rpvSupabase.subscribeToProducts) return;
+
+  window.rpvSupabase.subscribeToProducts(async () => {
+    await hydrateProductsFromSupabase();
+    setStatus("อัปเดตสินค้าแบบ realtime แล้ว");
+  });
+}
+
 function normalizeProduct(product, index = 0) {
   const id = product.id || product.slug || crypto.randomUUID();
   return {
@@ -1190,4 +1218,6 @@ if ($("[data-panel-section]")) {
   renderAll();
   hydrateSiteFromSupabase();
   hydrateProductsFromSupabase();
+  enableSiteRealtime();
+  enableProductRealtime();
 }

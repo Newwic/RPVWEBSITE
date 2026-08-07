@@ -161,6 +161,49 @@
     if (error) throw error;
   }
 
+  function subscribeToSiteDraft(onChange) {
+    if (!client || typeof onChange !== "function") return null;
+
+    const channel = client
+      .channel("rpv-site-draft-live")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "site_settings",
+          filter: "setting_key=eq.siteDraft"
+        },
+        (payload) => {
+          onChange(payload.new?.setting_value || null, payload);
+        }
+      )
+      .subscribe();
+
+    return () => client.removeChannel(channel);
+  }
+
+  function subscribeToProducts(onChange) {
+    if (!client || typeof onChange !== "function") return null;
+
+    let timer = 0;
+    const notify = (payload) => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => onChange(payload), 250);
+    };
+
+    const channel = client
+      .channel("rpv-products-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "products" }, notify)
+      .on("postgres_changes", { event: "*", schema: "public", table: "categories" }, notify)
+      .subscribe();
+
+    return () => {
+      window.clearTimeout(timer);
+      client.removeChannel(channel);
+    };
+  }
+
   window.rpvSupabase = {
     enabled: hasConfig,
     client,
@@ -169,6 +212,8 @@
     loadProducts,
     saveProducts,
     loadSiteDraft,
-    saveSiteDraft
+    saveSiteDraft,
+    subscribeToSiteDraft,
+    subscribeToProducts
   };
 })();

@@ -561,6 +561,21 @@ async function hydrateSiteDraftFromSupabase() {
   }
 }
 
+function enableSiteDraftRealtime() {
+  if (!window.rpvSupabase?.enabled || !window.rpvSupabase.subscribeToSiteDraft) return;
+
+  window.rpvSupabase.subscribeToSiteDraft((remoteDraft) => {
+    if (!remoteDraft) return;
+
+    adminSiteDraft = remoteDraft;
+    localStorage.setItem("rpvSiteDraft", JSON.stringify(remoteDraft));
+    applyAdminSiteDraft();
+    applyLanguage();
+    renderFilters();
+    renderProducts();
+  });
+}
+
 function applyAdminHomeCategories(categories) {
   const translationKeys = [
     "homeCategoryMachine",
@@ -1015,6 +1030,14 @@ async function hydrateProductsFromSupabase() {
   }
 }
 
+function enableProductsRealtime() {
+  if (!window.rpvSupabase?.enabled || !window.rpvSupabase.subscribeToProducts) return;
+
+  window.rpvSupabase.subscribeToProducts(async () => {
+    await hydrateProductsFromSupabase();
+  });
+}
+
 function openProductModal(product) {
   const name = productName(product);
   const secondaryName = secondaryProductName(product);
@@ -1147,3 +1170,5 @@ renderFilters();
 renderProducts();
 hydrateSiteDraftFromSupabase();
 hydrateProductsFromSupabase();
+enableSiteDraftRealtime();
+enableProductsRealtime();

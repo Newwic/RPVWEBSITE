@@ -275,3 +275,26 @@ on public.revision_history for insert
 to authenticated
 with check (public.is_admin_editor());
 
+do $$
+begin
+  alter publication supabase_realtime add table public.site_settings;
+exception
+  when duplicate_object then null;
+  when undefined_object then null;
+end $$;
+
+do $$
+begin
+  alter publication supabase_realtime add table public.products;
+exception
+  when duplicate_object then null;
+  when undefined_object then null;
+end $$;
+
+do $$
+begin
+  alter publication supabase_realtime add table public.categories;
+exception
+  when duplicate_object then null;
+  when undefined_object then null;
+end $$;
