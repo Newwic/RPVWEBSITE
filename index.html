@@ -8,12 +8,37 @@
     <meta property="og:title" content="RPV Industrial Supply">
     <meta property="og:description" content="โซลูชันเครื่องขัดผิวและอุปกรณ์สำหรับงานอุตสาหกรรม">
     <meta property="og:image" content="assets/rpv-banner-reference.jpg">
+    <meta name="robots" content="index,follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://newwic.github.io/RPVWEBSITE/">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://newwic.github.io/RPVWEBSITE/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260715-r">
     <link rel="shortcut icon" type="image/svg+xml" href="assets/favicon.svg?v=20260715-r">
-    <link rel="stylesheet" href="styles.css?v=20260715-page-ui-fix">
+    <link rel="stylesheet" href="styles.css?v=20260727-itopplus-admin">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "RPV Industrial Supply Co., Ltd.",
+        "url": "https://newwic.github.io/RPVWEBSITE/",
+        "logo": "https://newwic.github.io/RPVWEBSITE/assets/logoRPV.png",
+        "telephone": "086-399-0785",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Bang Bua Thong",
+          "addressRegion": "Nonthaburi",
+          "addressCountry": "TH"
+        },
+        "sameAs": [
+          "https://www.facebook.com/rpv.co.th",
+          "https://line.me/R/ti/p/@rpvofficial"
+        ]
+      }
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -48,41 +73,47 @@
       </div>
     </header>
 
-    <main id="home">
-      <section class="product-search-hero" aria-labelledby="productSearchTitle">
-        <div class="search-hero-inner">
-          <div class="search-copy">
-            <p class="eyebrow">RPV PRODUCT SEARCH</p>
-            <h1 id="productSearchTitle">ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ</h1>
-            <p>ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด</p>
+    <main id="home" class="home-catalog-page">
+      <section class="home-catalog-layout" aria-labelledby="homeCatalogTitle">
+        <aside class="home-info-rail">
+          <div>
+            <p class="eyebrow">RPV INDUSTRIAL SUPPLY</p>
+            <h1 id="homeCatalogTitle">เลือกหมวดสินค้า</h1>
+            <p>เครื่องจักร วัสดุขัด อุปกรณ์ และน้ำยาสำหรับงานขัดผิวอุตสาหกรรม</p>
           </div>
-          <label class="search-box hero-search">
-            <span>ค้นหาสินค้า</span>
-            <input type="search" id="productSearch" placeholder="ค้นหาชื่อสินค้า รุ่น หรือหมวดสินค้า" autocomplete="off">
-          </label>
-        </div>
-      </section>
+          <div class="home-info-list">
+            <a href="tel:0863990785"><strong>โทร</strong><span>086-399-0785</span></a>
+            <a href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener"><strong>LINE</strong><span>@rpvofficial</span></a>
+            <a href="contact.html"><strong>ที่อยู่</strong><span>บางบัวทอง นนทบุรี</span></a>
+          </div>
+          <a class="button line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">สอบถามสินค้า</a>
+        </aside>
 
-      <section class="products-section" id="products">
-        <div class="product-browser">
-          <div class="quick-categories" aria-label="Product category filters">
-            <div class="quick-categories-head">
-              <h2>เลือกหมวดสินค้า</h2>
-              <p>กดหมวดเพื่อกรองสินค้าในหน้านี้ทันที</p>
-            </div>
-            <div class="filter-row" id="categoryFilters"></div>
-          </div>
-
-          <div class="product-list-panel">
-            <div class="product-panel-head">
-              <div>
-                <strong>รายการสินค้า</strong>
-                <span>ค้นหาและเลือกหมวดเพื่อดูสินค้าที่ตรงกับงานของคุณ</span>
-              </div>
-              <div class="product-count" id="productCount" aria-live="polite"></div>
-            </div>
-            <div class="product-grid" id="productGrid"></div>
-          </div>
+        <div class="home-category-grid" aria-label="หมวดสินค้า">
+          <a class="home-category-tile tile-machine" href="products.html">
+            <span>เครื่องขัดผิว</span>
+          </a>
+          <a class="home-category-tile tile-magnetic" href="products.html">
+            <span>เครื่องขัดแม่เหล็ก</span>
+          </a>
+          <a class="home-category-tile tile-ceramic" href="products.html">
+            <span>หินขัดเซรามิก</span>
+          </a>
+          <a class="home-category-tile tile-plastic" href="products.html">
+            <span>หินขัดพลาสติก</span>
+          </a>
+          <a class="home-category-tile tile-steel" href="products.html">
+            <span>วัสดุขัดสแตนเลส</span>
+          </a>
+          <a class="home-category-tile tile-compound" href="products.html">
+            <span>น้ำยาขัดและเคมีภัณฑ์</span>
+          </a>
+          <a class="home-category-tile tile-spare" href="products.html">
+            <span>อะไหล่และอุปกรณ์</span>
+          </a>
+          <a class="home-category-tile tile-support" href="solutions.html">
+            <span>ปรึกษางานขัดผิว</span>
+          </a>
         </div>
       </section>
 
@@ -141,7 +172,7 @@
 
     <div class="mobile-contact-bar" aria-label="Quick contact">
       <a class="mobile-contact-line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">LINE</a>
-      <a class="mobile-contact-call" href="tel:0863990785">Call 086-399-0785</a>
+      <a class="mobile-contact-call" href="tel:0863990785">โทร 086-399-0785</a>
     </div>
 
     <a class="floating-line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener" aria-label="เพิ่ม LINE @rpvofficial">LINE</a>
@@ -151,7 +182,8 @@
       <div id="modalContent"></div>
     </dialog>
 
-    <script src="data/rpv-products.js"></script>
-    <script src="script.js?v=20260717-page-manager"></script>
+    <script src="data/rpv-products.js?v=20260727-itopplus-admin"></script>
+    <script src="analytics.js?v=20260727-seo-stats"></script>
+    <script src="script.js?v=20260727-seo-stats"></script>
   </body>
 </html>

@@ -4,371 +4,318 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
-    <title>RPV Admin</title>
-    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20260715-r">
+    <title>RPV Admin | ระบบจัดการแก้ไขเนื้อหา</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20260727-itopplus-ui">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="admin.css?v=20260717-admin-preview-real-home">
+    <link rel="stylesheet" href="admin.css?v=20260727-analytics-line-ui">
   </head>
   <body class="admin-page">
     <header class="admin-topbar">
+      <button class="admin-menu-button" type="button" aria-label="เมนู">☰</button>
       <a class="admin-brand" href="./" aria-label="RPV Admin">
         <img src="../assets/logoRPV.png" alt="RPV">
-        <span>หน้าแรกระบบจัดการเว็บไซต์</span>
+        <span>
+          <strong>ระบบจัดการแก้ไขเนื้อหา ภายในเว็บไซต์</strong>
+          <small>RPV Industrial Supply</small>
+        </span>
       </a>
       <div class="admin-topbar-actions">
-        <span class="admin-site-chip">rpv.co.th</span>
         <a class="button secondary" href="../index.html" target="_blank" rel="noopener">เปิดหน้าเว็บ</a>
-        <button class="button secondary" id="adminLogout" type="button">ออกจากระบบ</button>
+        <a class="button secondary" href="../admin_backup_before_itopplus_ui_20260727/index.html" target="_blank" rel="noopener">ดู Admin เดิม</a>
+        <button class="button secondary" id="resetDraftButton" type="button">ล้าง Draft</button>
+        <button class="button secondary" id="exportSiteButton" type="button">Export Site</button>
+        <button class="button primary" id="exportProductsButton" type="button">Export Products</button>
       </div>
     </header>
 
-    <main class="admin-shell">
+    <main class="admin-studio">
       <aside class="admin-sidebar" aria-label="Admin menu">
         <div class="admin-sidebar-title">
-          <span>ชื่อเว็บไซต์ของคุณ</span>
-          <strong>RPV Industrial Supply</strong>
+          <span>ITOPPLUS STYLE</span>
+          <strong>RPV Admin</strong>
         </div>
-        <p class="admin-menu-group">ตั้งค่าเว็บไซต์</p>
-        <a aria-current="page" href="#dashboard" data-admin-nav="dashboard">หน้าแรกระบบจัดการ</a>
-        <a href="#home-page" data-admin-nav="home-page">สร้างหน้าเพจ</a>
-        <a href="#appearance" data-admin-nav="appearance">เลือกรูปแบบเว็บไซต์</a>
-        <a href="#products" data-admin-nav="products">จัดการเนื้อหาสินค้า</a>
-        <a href="#categories" data-admin-nav="categories">จัดการหมวดสินค้า</a>
-        <a href="#media" data-admin-nav="media">ตั้งค่าแบนเนอร์ / รูปภาพ</a>
-        <a href="#contact" data-admin-nav="contact">ตั้งค่าข้อมูลติดต่อ</a>
-        <p class="admin-menu-group">ตั้งค่าขั้นสูง</p>
-        <a href="#settings" data-admin-nav="settings">ตั้งค่าทั่วไป</a>
-        <a href="#revisions" data-admin-nav="revisions">ประวัติการแก้ไข</a>
-        <a href="#users" data-admin-nav="users">จัดการบัญชีผู้ใช้</a>
+        <button class="admin-nav is-active" type="button" data-panel="dashboard"><span>▦</span> Dashboard</button>
+        <button class="admin-nav" type="button" data-panel="pages"><span>▤</span> จัดการหน้าเว็บ</button>
+        <button class="admin-nav" type="button" data-panel="products"><span>▣</span> จัดการสินค้า</button>
+        <button class="admin-nav" type="button" data-panel="media"><span>▧</span> รูปภาพ</button>
+        <button class="admin-nav" type="button" data-panel="analytics"><span>▥</span> สถิติ</button>
+        <button class="admin-nav" type="button" data-panel="settings"><span>⚙</span> ตั้งค่า</button>
       </aside>
 
-      <section class="admin-content" aria-labelledby="adminDashboardTitle">
-        <div class="admin-guard" id="adminGuard">
-          <h1 id="adminDashboardTitle">RPV Admin Dashboard</h1>
-          <p id="adminGuardStatus">กำลังตรวจสอบการเข้าสู่ระบบ...</p>
+      <section class="admin-content">
+        <div class="admin-statusbar" role="status">
+          <span id="saveState">Ready</span>
+          <small>โหมดอ่าน/แก้ Draft ในเว็บ local เท่านั้น ไม่แก้ไขข้อมูลบน ITOPPLUS</small>
         </div>
 
-        <div class="admin-dashboard" id="adminDashboard" hidden>
-          <div class="admin-page-head" data-admin-section="dashboard">
+        <section class="admin-panel is-active" id="dashboard" data-panel-section>
+          <div class="admin-page-head">
             <div>
-              <p class="admin-kicker">DASHBOARD</p>
-              <h1>ภาพรวมระบบหลังบ้าน</h1>
-              <p id="adminModeText">จัดการหน้าเว็บ สินค้า รูปภาพ ข้อมูลติดต่อ และการตั้งค่าหลักของ RPVWEBSITE</p>
+              <p class="admin-kicker">OVERVIEW</p>
+              <h1>ภาพรวมระบบจัดการเว็บไซต์</h1>
+              <p>จัดการหน้าเว็บ สินค้า รูปภาพ และข้อมูลติดต่อ พร้อมดูตัวอย่างก่อนนำไปใช้จริง</p>
             </div>
             <div class="admin-head-actions">
-              <button class="button secondary" id="clearDraftButton" type="button">ล้าง Draft</button>
-              <button class="button secondary" id="exportProductsButton" type="button">Export ข้อมูล</button>
-              <button class="button primary" id="addProductButton" type="button">เพิ่มสินค้าใหม่</button>
+              <button class="button primary" type="button" data-panel-jump="pages">แก้หน้าเว็บ</button>
+              <button class="button secondary" type="button" data-panel-jump="products">จัดการสินค้า</button>
             </div>
           </div>
 
-          <section class="admin-mode-banner" id="adminModeBanner" data-admin-section="dashboard" aria-live="polite">
+          <div class="admin-stats" aria-label="Website summary">
+            <article><span id="statPages">0</span><small>หน้าเว็บ</small></article>
+            <article><span id="statProducts">0</span><small>สินค้า</small></article>
+            <article><span id="statImages">0</span><small>รูปที่ใช้งาน</small></article>
+            <article><span id="statDraft">Static</span><small>สถานะข้อมูล</small></article>
+          </div>
+
+          <div class="admin-guide-grid">
+            <article>
+              <strong>จัดการหน้าเว็บ</strong>
+              <p>แก้เมนู หัวข้อ คำอธิบาย ปุ่ม และหมวดหน้าแรก พร้อม preview แบบ real-time</p>
+            </article>
+            <article>
+              <strong>จัดการสินค้า</strong>
+              <p>ค้นหา แก้ชื่อสินค้า หมวด รูป รายละเอียด สถานะ และลำดับการแสดงผล</p>
+            </article>
+            <article>
+              <strong>รูปภาพจาก ITOPPLUS</strong>
+              <p>รูปสินค้าจริงที่นำเข้าจาก admin ถูกเก็บไว้ในโฟลเดอร์ assets/itopplus</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="admin-panel" id="pages" data-panel-section>
+          <div class="admin-page-head">
             <div>
-              <strong>โหมดดูข้อมูลเดิม</strong>
-              <p>ตอนนี้ Admin อ่านข้อมูลจากไฟล์เว็บเดิมก่อน จึงแก้เป็น Draft และ Export ไฟล์ได้ แต่ถ้าต้องการกดบันทึกแล้วขึ้นเว็บอัตโนมัติ ต้องเชื่อม Supabase ก่อน</p>
+              <p class="admin-kicker">PAGE MANAGER</p>
+              <h1>จัดการหน้าเว็บ</h1>
+              <p>เลือกหน้า แก้ข้อความ และดู preview ด้านขวาได้ทันที</p>
             </div>
-            <a class="button secondary" href="../docs/admin-architecture.md" target="_blank" rel="noopener">ดูแผนเชื่อมระบบ</a>
-          </section>
-
-          <div class="admin-stats" data-admin-section="dashboard" aria-label="Product status summary">
-            <article><span id="statProducts">0</span><small>สินค้าทั้งหมด</small></article>
-            <article><span id="statPublished">0</span><small>Published</small></article>
-            <article><span id="statDraft">0</span><small>Draft</small></article>
-            <article><span id="statHidden">0</span><small>Hidden</small></article>
+            <button class="button primary" id="savePageButton" type="button">บันทึก Page Draft</button>
           </div>
 
-          <section class="admin-panel" id="products" data-admin-section="products" hidden>
-            <div class="admin-panel-head">
-              <div>
-                <h2>Products</h2>
-                <p class="admin-panel-note">กด Preview เพื่อดูหน้าเว็บจริง หรือกดแก้ไขหลังเชื่อม Supabase แล้ว</p>
-              </div>
-              <button class="button primary" type="button" id="addProductInlineButton">เพิ่มสินค้าใหม่</button>
-              <div class="admin-filters">
-                <input type="search" id="adminProductSearch" placeholder="ค้นหาชื่อสินค้า หรือรุ่น" aria-label="ค้นหาสินค้า">
-                <select id="adminStatusFilter" aria-label="กรองสถานะสินค้า">
-                  <option value="">ทุกสถานะ</option>
-                  <option value="draft">Draft</option>
+          <div class="admin-editor-layout page-preview-layout">
+            <div class="admin-card">
+              <label>เลือกหน้า
+                <select id="pageSelect"></select>
+              </label>
+              <label>ชื่อเมนู
+                <input id="pageMenuLabel" type="text">
+              </label>
+              <label>หัวข้อใหญ่
+                <input id="pageTitle" type="text">
+              </label>
+              <label>คำอธิบาย
+                <textarea id="pageDescription" rows="4"></textarea>
+              </label>
+              <label>ข้อความปุ่ม
+                <input id="pageCta" type="text">
+              </label>
+              <label>ลิงก์ปุ่ม
+                <input id="pageCtaLink" type="text">
+              </label>
+              <label>สถานะหน้า
+                <select id="pageStatus">
                   <option value="published">Published</option>
+                  <option value="draft">Draft</option>
                   <option value="hidden">Hidden</option>
-                  <option value="archived">Archived</option>
-                </select>
-              </div>
-            </div>
-            <p class="admin-action-status" id="adminActionStatus" role="status"></p>
-            <div class="admin-table-wrap">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>สินค้า</th>
-                    <th>รุ่น</th>
-                    <th>หมวดหมู่</th>
-                    <th>สถานะ</th>
-                    <th>ลำดับ</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody id="adminProductsBody">
-                  <tr>
-                    <td colspan="6">ยังไม่ได้เชื่อมต่อฐานข้อมูล</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="admin-panel" id="edit-guide" data-admin-section="dashboard">
-            <h2>จะแก้ข้อมูลยังไง?</h2>
-            <div class="admin-guide-grid">
-              <article>
-                <strong>1. ตอนนี้เพิ่ม/แก้ Draft ได้</strong>
-                <p>Admin แสดงสินค้าจากเว็บเดิม 16 รายการ และแก้ข้อมูลชั่วคราวในหน้า Admin ได้</p>
-              </article>
-              <article>
-                <strong>2. ถ้าจะใช้กับเว็บจริงตอนนี้</strong>
-                <p>กด Export data file แล้วนำไฟล์ไปแทนที่ <code>data/rpv-products.js</code> จากนั้นค่อย push ขึ้น GitHub</p>
-              </article>
-              <article>
-                <strong>3. หลังเชื่อม Supabase</strong>
-                <p>ปุ่ม Save/Publish จะบันทึกลง Database ได้โดยไม่ต้องแก้ไฟล์หรือ push ทุกครั้ง</p>
-              </article>
-            </div>
-          </section>
-
-          <section class="admin-panel" data-admin-section="dashboard">
-            <h2>สถานะ Phase 1</h2>
-            <ul class="admin-checklist">
-              <li>มีหน้า Admin และ Login แบบ noindex</li>
-              <li>มีเมนูหลังบ้านตามโครงสร้างที่ต้องการ</li>
-              <li>ยังไม่เปิดปุ่มบันทึกจริงจนกว่า Supabase และ RLS พร้อม</li>
-              <li>ไม่มี password, service role key, token หรือ secret ใน frontend</li>
-            </ul>
-          </section>
-
-          <section class="admin-panel" id="categories" data-admin-section="categories" hidden>
-            <div class="admin-panel-head">
-              <div>
-                <h2>Categories</h2>
-                <p class="admin-panel-note">จัดการหมวดหมู่สินค้าที่ใช้กรองหน้า Home/Product</p>
-              </div>
-              <button class="button primary" type="button" id="addCategoryButton">เพิ่มหมวดหมู่</button>
-            </div>
-            <div class="admin-placeholder-grid" id="adminCategoriesList"></div>
-          </section>
-
-          <section class="admin-panel" id="home-page" data-admin-section="home-page" hidden>
-            <div class="admin-panel-head">
-              <div>
-                <h2>Home Page</h2>
-                <p class="admin-panel-note">แก้ข้อความหลักของหน้า Home แบบปลอดภัย ยังเป็น draft ใน Admin จนกว่าจะเชื่อม Supabase</p>
-              </div>
-              <button class="button secondary" type="button" data-save-section="home">บันทึก Draft</button>
-            </div>
-            <div class="admin-editor-grid">
-              <label>หัวข้อ Hero<input type="text" id="homeHeroTitle" value="ค้นหาเครื่องจักรและวัสดุขัดที่เหมาะกับงานของคุณ"></label>
-              <label>ข้อความรอง<input type="text" id="homeHeroText" value="ค้นหาจากชื่อสินค้า รุ่น ประเภทเครื่อง หรือวัสดุขัด"></label>
-              <label>ข้อความ CTA<textarea id="homeCtaText" rows="3">ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ</textarea></label>
-              <label>เปิด/ปิด Section
-                <select id="homeSectionMode">
-                  <option value="all">เปิดทุก Section</option>
-                  <option value="hide-contact">ซ่อน Contact CTA</option>
-                  <option value="hide-footer">ซ่อน Footer</option>
                 </select>
               </label>
-            </div>
-            <p class="admin-action-status" id="homeDraftStatus">แก้แล้วกดบันทึก Draft หน้าเว็บหลักใน browser นี้จะเปลี่ยนหลัง refresh</p>
-          </section>
 
-          <section class="admin-panel" id="contact" data-admin-section="contact" hidden>
-            <div class="admin-panel-head">
-              <div>
-                <h2>Contact Information</h2>
-                <p class="admin-panel-note">ข้อมูลติดต่อที่ใช้ใน Footer และ Contact CTA</p>
+              <div class="admin-home-editor" id="homeCategoryEditor" hidden>
+                <div class="admin-section-toolbar">
+                  <strong>หมวดหน้าแรก</strong>
+                  <span class="admin-note">แก้ชื่อกลางรูป / ลิงก์ / path รูป แล้วดู preview ได้ทันที</span>
+                </div>
+                <div class="admin-home-category-list" id="homeCategoryList"></div>
               </div>
-              <button class="button secondary" type="button" data-save-section="contact">บันทึก Draft</button>
-            </div>
-            <div class="admin-editor-grid">
-              <label>โทรศัพท์สำนักงาน<input type="text" id="contactOffice" value="02-194-4346-7"></label>
-              <label>มือถือ<input type="text" id="contactMobile" value="086-399-0785"></label>
-              <label>LINE<input type="text" id="contactLine" value="@rpvofficial"></label>
-              <label>Email<input type="email" id="contactEmail" value="sales@rpv.co.th"></label>
-              <label>ที่อยู่<textarea id="contactAddress" rows="3">21/62 หมู่ 3 ถ.345 ซ.ลำโพ 1 ต.ลำโพ อ.บางบัวทอง จ.นนทบุรี 11110</textarea></label>
-            </div>
-            <p class="admin-action-status" id="contactDraftStatus">แก้แล้วกดบันทึก Draft หน้าเว็บหลักใน browser นี้จะเปลี่ยนหลัง refresh</p>
-          </section>
 
-          <section class="admin-panel" id="media" data-admin-section="media" hidden>
-            <div class="admin-panel-head">
-              <div>
-                <h2>Media Library</h2>
-                <p class="admin-panel-note">รวมรูปที่ใช้กับสินค้าใน Admin ตอนนี้เป็นรูปจากข้อมูลสินค้าและรูปที่เลือกแบบ draft</p>
+              <div class="admin-section-toolbar">
+                <strong>Sections</strong>
+                <button class="admin-mini-button primary" id="addSectionButton" type="button">เพิ่ม Section</button>
               </div>
-              <button class="button secondary" type="button" id="openFirstProductEditor">เพิ่มรูปผ่านสินค้า</button>
+              <div class="admin-section-list" id="sectionList"></div>
             </div>
-            <div class="admin-media-grid" id="adminMediaGrid"></div>
-          </section>
 
-          <section class="admin-panel" id="appearance" data-admin-section="appearance" hidden>
-            <div class="admin-panel-head">
-              <div>
-                <h2>Appearance</h2>
-                <p class="admin-panel-note">ปรับเฉพาะค่าที่ปลอดภัย ไม่ให้ใส่ HTML/CSS/JavaScript เอง</p>
+            <div class="admin-preview">
+              <div class="admin-preview-head">
+                <strong>Live Preview</strong>
+                <a id="pagePreviewLink" href="../index.html" target="_blank" rel="noopener">เปิดหน้านี้</a>
               </div>
-              <button class="button secondary" type="button" data-save-section="appearance">บันทึก Draft</button>
+              <div class="admin-web-preview" id="pagePreview"></div>
             </div>
-            <div class="admin-editor-grid">
+          </div>
+        </section>
+
+        <section class="admin-panel" id="products" data-panel-section>
+          <div class="admin-page-head">
+            <div>
+              <p class="admin-kicker">CONTENT MANAGER</p>
+              <h1>จัดการสินค้า</h1>
+              <p>ข้อมูลสินค้าจริง 60 รายการจาก ITOPPLUS พร้อมรูปที่ดาวน์โหลดมาไว้ในเว็บ local</p>
+            </div>
+            <button class="button primary" id="newProductButton" type="button">เพิ่มสินค้า</button>
+          </div>
+
+          <div class="admin-products-layout">
+            <div class="admin-card">
+              <div class="admin-filters">
+                <input id="productSearch" type="search" placeholder="ค้นหาสินค้า รุ่น หรือหมวด">
+                <select id="productStatusFilter">
+                  <option value="">ทุกสถานะ</option>
+                  <option value="active">Active</option>
+                  <option value="draft">Draft</option>
+                  <option value="hidden">Hidden</option>
+                </select>
+              </div>
+              <div class="admin-product-list" id="productList"></div>
+            </div>
+
+            <form class="admin-card admin-product-form" id="productForm">
+              <input id="productId" type="hidden">
+              <div class="admin-card-head">
+                <strong id="productFormTitle">แก้สินค้า</strong>
+                <button class="button secondary" id="duplicateProductButton" type="button">คัดลอก</button>
+              </div>
+              <label>ชื่อสินค้า TH
+                <input id="productNameTh" type="text">
+              </label>
+              <label>ชื่อสินค้า EN
+                <input id="productNameEn" type="text">
+              </label>
+              <div class="admin-two-cols">
+                <label>รุ่น / Model
+                  <input id="productModel" type="text">
+                </label>
+                <label>หมวดหมู่
+                  <input id="productCategory" type="text" list="categoryOptions">
+                  <datalist id="categoryOptions"></datalist>
+                </label>
+              </div>
+              <div class="admin-two-cols">
+                <label>สถานะ
+                  <select id="productStatus">
+                    <option value="active">Active</option>
+                    <option value="draft">Draft</option>
+                    <option value="hidden">Hidden</option>
+                  </select>
+                </label>
+                <label>ลำดับ
+                  <input id="productSortOrder" type="number" min="1" step="1">
+                </label>
+              </div>
+              <label>รูปสินค้า
+                <input id="productImage" type="text" placeholder="assets/itopplus/images/example.webp หรือ data:image/...">
+              </label>
+              <label class="admin-file-picker">เลือกรูปจากเครื่อง
+                <input id="productImageFile" type="file" accept="image/png,image/jpeg,image/webp">
+              </label>
+              <label>รายละเอียด TH
+                <textarea id="productDescTh" rows="4"></textarea>
+              </label>
+              <label>รายละเอียด EN
+                <textarea id="productDescEn" rows="4"></textarea>
+              </label>
+              <div class="admin-form-actions">
+                <button class="button danger" id="deleteProductButton" type="button">ซ่อนสินค้า</button>
+                <button class="button primary" type="submit">บันทึก Product Draft</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="admin-panel" id="media" data-panel-section>
+          <div class="admin-page-head">
+            <div>
+              <p class="admin-kicker">IMAGE MANAGER</p>
+              <h1>จัดการรูปภาพ</h1>
+              <p>ดูรูปที่สินค้าใช้อยู่ และคัดลอก path ไปใส่สินค้า/หน้าเว็บ</p>
+            </div>
+          </div>
+          <div class="admin-media-grid" id="mediaGrid"></div>
+        </section>
+
+        <section class="admin-panel" id="analytics" data-panel-section>
+          <div class="admin-page-head">
+            <div>
+              <p class="admin-kicker">WEB STAT</p>
+              <h1>สถิติเข้าชมเว็บ</h1>
+              <p>ดูยอดเข้าชมแบบกราฟเส้นสไตล์ ITOPPLUS สำหรับตรวจหน้าเว็บ local ก่อนต่อระบบเก็บสถิติจริง</p>
+            </div>
+            <button class="button secondary" id="resetAnalyticsButton" type="button">ล้างสถิติ local</button>
+          </div>
+          <div class="admin-stats analytics-stats">
+            <article><span id="trafficViews">0</span><small>Page views</small></article>
+            <article><span id="trafficVisitors">0</span><small>Visitors</small></article>
+            <article><span id="trafficToday">0</span><small>วันนี้</small></article>
+            <article><span id="trafficTopPage">-</span><small>หน้าที่คนดูมากสุด</small></article>
+          </div>
+          <div class="analytics-itop-panel">
+            <div class="analytics-tabs" role="tablist" aria-label="ประเภทสถิติ">
+              <button class="analytics-tab is-active" type="button" data-analytics-tab="website">สถิติการเข้าชมเว็บไซต์</button>
+              <button class="analytics-tab" type="button" data-analytics-tab="device">สถิติอุปกรณ์ที่เข้าชม</button>
+              <button class="analytics-tab" type="button" data-analytics-tab="referrer">สถิติการเข้าชมจากการอ้างอิง</button>
+              <button class="analytics-calendar" type="button" aria-label="เลือกช่วงวันที่">📅</button>
+            </div>
+            <div class="analytics-chart-card">
+              <h2 id="trafficLineTitle">สถิติการเข้าชมเว็บไซต์</h2>
+              <div class="traffic-legend"><span></span><strong id="trafficLineLegend">ผู้เข้าชม</strong></div>
+              <div class="traffic-line-scroll">
+                <div class="traffic-line-chart" id="trafficDailyChart"></div>
+              </div>
+            </div>
+          </div>
+          <div class="admin-products-layout analytics-layout">
+            <div class="admin-card">
+              <div class="admin-card-head"><strong>หน้าที่เข้าชม</strong></div>
+              <div class="admin-table-list" id="trafficPages"></div>
+            </div>
+            <div class="admin-card">
+              <div class="admin-card-head"><strong>รายการล่าสุด</strong></div>
+              <div class="admin-table-list" id="trafficRecent"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-panel" id="settings" data-panel-section>
+          <div class="admin-page-head">
+            <div>
+              <p class="admin-kicker">WEB CONFIG</p>
+              <h1>ตั้งค่าทั่วไป</h1>
+              <p>ข้อมูลติดต่อ สีหลัก และข้อมูลพื้นฐานของเว็บไซต์</p>
+            </div>
+            <button class="button primary" id="saveSettingsButton" type="button">บันทึก Settings Draft</button>
+          </div>
+          <div class="admin-editor-layout settings-layout">
+            <div class="admin-card">
+              <label>เบอร์โทร
+                <input id="settingPhone" type="text">
+              </label>
+              <label>อีเมล
+                <input id="settingEmail" type="email">
+              </label>
+              <label>LINE / ช่องทางติดต่อ
+                <input id="settingLine" type="text">
+              </label>
+              <label>ที่อยู่
+                <textarea id="settingAddress" rows="4"></textarea>
+              </label>
+            </div>
+            <div class="admin-card">
               <label>สีหลัก
-                <select id="appearanceTheme">
-                  <option value="rpv-green">RPV Green</option>
-                  <option value="dark-green">Dark Green</option>
-                </select>
+                <input id="settingPrimaryColor" type="color" value="#1f8e3d">
               </label>
-              <label>จำนวนสินค้า Desktop
-                <select id="appearanceColumns">
-                  <option value="4">4 ใบต่อแถว</option>
-                  <option value="3">3 ใบต่อแถว</option>
-                </select>
+              <label>สีรอง
+                <input id="settingAccentColor" type="color" value="#f5a623">
               </label>
-              <label>รูปแบบ Hero
-                <select id="appearanceHero">
-                  <option value="search">Search Hero</option>
-                  <option value="compact">Compact Hero</option>
-                </select>
-              </label>
+              <p class="admin-note">การบันทึกตอนนี้เก็บเป็น Draft ใน browser ก่อน ถ้าจะใช้งานถาวรให้ Export ไฟล์ออกมา</p>
             </div>
-            <p class="admin-action-status" id="appearanceDraftStatus">แก้แล้วกดบันทึก Draft หน้าเว็บหลักใน browser นี้จะเปลี่ยนหลัง refresh</p>
-          </section>
-
-          <section class="admin-panel" id="revisions" data-admin-section="revisions" hidden>
-            <h2>Revisions</h2>
-            <p class="admin-panel-note">ประวัติการแก้ไขจะแสดงครบหลังเชื่อม Supabase revision_history ตอนนี้แสดงเฉพาะรายการแก้ในรอบนี้</p>
-            <ul class="admin-checklist" id="adminRevisionList">
-              <li>ยังไม่มี revision ในรอบนี้</li>
-            </ul>
-          </section>
-
-          <section class="admin-panel" id="users" data-admin-section="users" hidden>
-            <h2>Users</h2>
-            <p class="admin-panel-note">จัดการ Super Admin, Editor, Viewer หลังเชื่อม Supabase Auth และ admin_profiles</p>
-            <div class="admin-placeholder-grid">
-              <article><strong>Super Admin</strong><p>จัดการทุกอย่างและเพิ่มผู้ดูแลได้</p></article>
-              <article><strong>Editor</strong><p>แก้สินค้า ข้อความ และรูปภาพได้</p></article>
-              <article><strong>Viewer</strong><p>ดูข้อมูลและ Preview ได้ แต่บันทึกไม่ได้</p></article>
-            </div>
-          </section>
-
-          <section class="admin-panel" id="settings" data-admin-section="settings" hidden>
-            <h2>Settings</h2>
-            <p class="admin-panel-note">สถานะระบบหลังบ้านและการเชื่อมต่อ</p>
-            <ul class="admin-checklist">
-              <li id="settingDataMode">Data mode: Static fallback</li>
-              <li>Admin page: noindex,nofollow</li>
-              <li>Service role key: ไม่อยู่ใน Frontend</li>
-              <li>GitHub: ใช้เก็บ source code ต่อไป</li>
-            </ul>
-          </section>
-        </div>
+          </div>
+        </section>
       </section>
     </main>
 
-    <dialog class="admin-editor-dialog" id="productEditorDialog">
-      <form class="admin-editor" id="productEditorForm" method="dialog">
-        <div class="admin-editor-head">
-          <div>
-            <p class="admin-kicker">PRODUCT EDITOR</p>
-            <h2 id="productEditorTitle">แก้ไขสินค้า</h2>
-            <p>บันทึกในโหมด Static จะเป็น draft ในหน้า Admin ก่อน ต้อง Export ไฟล์เพื่อเอาไปใช้กับเว็บจริง</p>
-          </div>
-          <button class="button secondary" id="closeProductEditor" type="button">ปิด</button>
-        </div>
-
-        <input type="hidden" id="productId">
-
-        <div class="admin-editor-grid">
-          <label>
-            ชื่อสินค้า ภาษาไทย
-            <input type="text" id="productNameTh" required>
-          </label>
-          <label>
-            ชื่อสินค้า English
-            <input type="text" id="productNameEn">
-          </label>
-          <label>
-            Slug
-            <input type="text" id="productSlug" required>
-          </label>
-          <label>
-            รุ่น
-            <input type="text" id="productModel">
-          </label>
-          <label>
-            หมวดหมู่
-            <input type="text" id="productCategory" list="categorySuggestions" required>
-          </label>
-          <label>
-            สถานะ
-            <select id="productStatus">
-              <option value="published">Published</option>
-              <option value="draft">Draft</option>
-              <option value="hidden">Hidden</option>
-              <option value="archived">Archived</option>
-            </select>
-          </label>
-          <label>
-            ลำดับ
-            <input type="number" id="productSortOrder" min="1" step="1">
-          </label>
-          <label>
-            รูปสินค้า URL/path
-            <input type="text" id="productImage" placeholder="assets/product-name.webp">
-          </label>
-        </div>
-
-        <div class="admin-media-picker">
-          <div>
-            <strong>เลือกรูปจากเครื่อง</strong>
-            <p>รองรับ JPG, PNG, WebP ขนาดไม่เกิน 5 MB ในโหมด Static รูปจะถูกเก็บไปกับไฟล์ Export</p>
-            <input type="file" id="productImageFile" accept="image/jpeg,image/png,image/webp">
-          </div>
-          <figure class="admin-image-preview">
-            <img id="productImagePreview" alt="">
-            <figcaption id="productImageCaption">ยังไม่มีรูปสินค้า</figcaption>
-          </figure>
-        </div>
-
-        <div class="admin-editor-grid wide">
-          <label>
-            คำอธิบายสั้น ภาษาไทย
-            <textarea id="productDescTh" rows="3"></textarea>
-          </label>
-          <label>
-            Short description English
-            <textarea id="productDescEn" rows="3"></textarea>
-          </label>
-          <label>
-            Keywords / Features คั่นด้วย comma
-            <input type="text" id="productFeatures" placeholder="Deburring, Polishing">
-          </label>
-          <label class="admin-checkbox">
-            <input type="checkbox" id="productFeatured">
-            เลือกเป็นสินค้าแนะนำ
-          </label>
-        </div>
-
-        <datalist id="categorySuggestions"></datalist>
-
-        <p class="admin-action-status" id="editorStatus" role="status"></p>
-        <div class="admin-editor-actions">
-          <button class="button secondary" id="archiveProductButton" type="button">ซ่อนสินค้า</button>
-          <button class="button danger" id="deleteProductButton" type="button">ลบสินค้า</button>
-          <button class="button secondary" id="duplicateProductButton" type="button">Duplicate</button>
-          <button class="button primary" id="saveProductButton" type="submit">บันทึก Draft</button>
-        </div>
-      </form>
-    </dialog>
-
-    <script src="../data/rpv-products.js"></script>
-    <script src="config.js?v=20260715-admin-full"></script>
-    <script type="module" src="admin.js?v=20260717-admin-preview-real-home"></script>
+    <script src="../data/rpv-products.js?v=20260727-itopplus-ui"></script>
+    <script src="admin.js?v=20260727-analytics-line-ui"></script>
   </body>
 </html>

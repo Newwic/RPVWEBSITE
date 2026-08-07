@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Products | RPV Industrial Supply</title>
     <meta name="description" content="รายการสินค้า RPV Industrial Supply เครื่องจักร วัสดุขัด และอุปกรณ์สำหรับงานเตรียมผิว">
+    <meta name="robots" content="index,follow">
+    <meta property="og:title" content="Products | RPV Industrial Supply">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://newwic.github.io/RPVWEBSITE/products.html">
+    <meta property="og:image" content="assets/rpv-banner-reference.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://newwic.github.io/RPVWEBSITE/products.html">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260715-r">
-    <link rel="stylesheet" href="styles.css?v=20260715-page-ui-fix">
+    <link rel="stylesheet" href="styles.css?v=20260727-itopplus-admin">
   </head>
   <body>
     <header class="site-header">
@@ -35,32 +42,6 @@
     </header>
 
     <main>
-      <section class="subpage-hero">
-        <p class="eyebrow">PRODUCTS</p>
-        <h1>สินค้าทั้งหมด</h1>
-        <p>ค้นหาเครื่องจักร วัสดุขัด และอุปกรณ์อุตสาหกรรมที่เหมาะกับงานของคุณ</p>
-      </section>
-
-      <section class="subpage-section page-intro-band">
-        <div class="page-intro-grid">
-          <article>
-            <span>01</span>
-            <h2>ค้นหาจากงานจริง</h2>
-            <p>พิมพ์ชื่อสินค้า รุ่น หมวดสินค้า หรือคำที่เกี่ยวกับงาน เช่น deburring, polishing, media เพื่อกรองรายการทันที</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h2>เลือกหมวดให้เร็ว</h2>
-            <p>หมวดสินค้าถูกวางไว้ใกล้รายการสินค้า เพื่อให้ลูกค้ากดเลือกและเห็นสินค้าที่เกี่ยวข้องโดยไม่ต้องเปลี่ยนหน้า</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h2>สอบถามผ่าน LINE</h2>
-            <p>เมื่อเจอสินค้าที่สนใจ สามารถส่งรูปชิ้นงานและรายละเอียดให้ทีมงานช่วยแนะนำต่อได้ทันที</p>
-          </article>
-        </div>
-      </section>
-
       <section class="product-search-hero compact-page-search" aria-labelledby="productSearchTitle">
         <div class="search-hero-inner">
           <div class="search-copy">
@@ -72,23 +53,20 @@
             <span>ค้นหาสินค้า</span>
             <input type="search" id="productSearch" placeholder="ค้นหาชื่อสินค้า รุ่น หรือหมวดสินค้า" autocomplete="off">
           </label>
-        </div>
-      </section>
-
-      <section class="products-section" id="products">
-        <div class="product-browser">
-          <div class="quick-categories" aria-label="Product category filters">
+          <div class="quick-categories hero-categories" aria-label="Product category filters">
             <div class="quick-categories-head">
               <h2>เลือกหมวดสินค้า</h2>
               <p>กดหมวดเพื่อกรองสินค้าในหน้านี้ทันที</p>
             </div>
             <div class="filter-row" id="categoryFilters"></div>
           </div>
+        </div>
+      </section>
+
+      <section class="products-section" id="products">
+        <div class="product-browser">
           <div class="product-list-panel">
-            <div class="product-panel-head">
-              <div><strong>รายการสินค้า</strong><span>เลือกสินค้าแล้วสอบถามผ่าน LINE ได้ทันที</span></div>
-              <div class="product-count" id="productCount" aria-live="polite"></div>
-            </div>
+            <div class="product-count visually-hidden" id="productCount" aria-live="polite"></div>
             <div class="product-grid" id="productGrid"></div>
           </div>
         </div>
@@ -143,11 +121,12 @@
 
     <div class="mobile-contact-bar" aria-label="Quick contact">
       <a class="mobile-contact-line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">LINE</a>
-      <a class="mobile-contact-call" href="tel:0863990785">Call 086-399-0785</a>
+      <a class="mobile-contact-call" href="tel:0863990785">โทร 086-399-0785</a>
     </div>
     <a class="floating-line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener" aria-label="เพิ่ม LINE @rpvofficial">LINE</a>
     <dialog class="product-modal" id="productModal"><button class="modal-close" type="button" aria-label="ปิดหน้าต่างสินค้า">×</button><div id="modalContent"></div></dialog>
-    <script src="data/rpv-products.js"></script>
-    <script src="script.js?v=20260717-page-manager"></script>
+    <script src="data/rpv-products.js?v=20260727-itopplus-admin"></script>
+    <script src="analytics.js?v=20260727-seo-stats"></script>
+    <script src="script.js?v=20260727-seo-stats"></script>
   </body>
 </html>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">Aluminum Oxide</title>
+  <desc id="desc">Brown / White</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#10241d" flood-opacity=".18"/>
+    </filter>
+  </defs>
+  <rect width="720" height="520" rx="36" fill="url(#bg)"/>
+  <circle cx="94" cy="78" r="58" fill="#b8c0cc" opacity=".18"/>
+  <circle cx="626" cy="92" r="88" fill="#5b677a" opacity=".08"/>
+  <g filter="url(#shadow)">
+    <path d="M190 174l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M238 174l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M286 174l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M334 174l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M382 174l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M430 174l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M478 174l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M526 174l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M190 232l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M238 232l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M286 232l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M334 232l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M382 232l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M430 232l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M478 232l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M526 232l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M190 290l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M238 290l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M286 290l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M334 290l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M382 290l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M430 290l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M478 290l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M526 290l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/><path d="M190 348l20-24 32 13-5 39-38 10z" fill="#f8fafc" stroke="#5b677a" stroke-width="5"/><path d="M238 348l20-24 32 13-5 39-38 10z" fill="#b8c0cc" stroke="#5b677a" stroke-width="5"/>
+  </g>
+  <rect x="54" y="398" width="612" height="72" rx="20" fill="#ffffff" opacity=".92"/>
+  <text x="84" y="430" fill="#14342b" font-family="Arial, sans-serif" font-size="28" font-weight="700">Aluminum Oxide</text>
+  <text x="84" y="458" fill="#64746d" font-family="Arial, sans-serif" font-size="18">Brown / White</text>
+  <text x="635" y="454" text-anchor="end" fill="#5b677a" font-family="Arial, sans-serif" font-size="20" font-weight="700">RPV</text>
+</svg>

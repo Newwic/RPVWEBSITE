@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /admin_backup_before_itopplus_ui_20260727/
 
 Sitemap: https://newwic.github.io/RPVWEBSITE/sitemap.xml

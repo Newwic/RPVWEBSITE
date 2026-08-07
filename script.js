@@ -12,7 +12,36 @@ const languageButtons = document.querySelectorAll("[data-lang]");
 function loadAdminProductDraft() {
   try {
     const draft = JSON.parse(localStorage.getItem("rpvProductsDraft") || "null");
-    return Array.isArray(draft) ? draft : null;
+    if (!Array.isArray(draft)) return null;
+
+    const staticProducts = window.rpvProducts || [];
+    const staticById = new Map(staticProducts.map((product) => [product.id, product]));
+    const draftById = new Map(draft.map((product) => [product.id, product]));
+    const mergeProduct = (staticProduct) => {
+      const product = draftById.get(staticProduct.id);
+      if (!product) return staticProduct;
+
+      const savedImage = product.image || product.image_url || "";
+      const isGeneratedPlaceholder = savedImage.startsWith("assets/products/") && savedImage.endsWith(".svg");
+      const isOldImportedImage = savedImage.startsWith("assets/products/");
+      const shouldUseStaticImage = !savedImage || savedImage === "assets/nylon-shot-sample.svg" || isGeneratedPlaceholder || isOldImportedImage;
+      const image = shouldUseStaticImage ? staticProduct.image || "" : savedImage;
+      return {
+        ...staticProduct,
+        ...product,
+        image,
+        gallery: shouldUseStaticImage ? staticProduct.gallery || (image ? [image] : []) : product.gallery || (image ? [image] : [])
+      };
+    };
+
+    if (staticProducts.length > 40) {
+      return staticProducts.map(mergeProduct);
+    }
+
+    const draftIds = new Set(draft.map((product) => product.id).filter(Boolean));
+    const mergedDraft = draft.map((product) => (staticById.has(product.id) ? mergeProduct(staticById.get(product.id)) : product));
+    const newStaticProducts = staticProducts.filter((product) => !draftIds.has(product.id));
+    return [...mergedDraft, ...newStaticProducts];
   } catch {
     return null;
   }
@@ -226,6 +255,42 @@ const ui = {
   }
 };
 
+Object.assign(ui.th, {
+  homeCatalogTitle: "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e2b\u0e21\u0e27\u0e14\u0e2a\u0e34\u0e19\u0e04\u0e49\u0e32",
+  homeCatalogText: "\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e08\u0e31\u0e01\u0e23 \u0e27\u0e31\u0e2a\u0e14\u0e38\u0e02\u0e31\u0e14 \u0e2d\u0e38\u0e1b\u0e01\u0e23\u0e13\u0e4c \u0e41\u0e25\u0e30\u0e19\u0e49\u0e33\u0e22\u0e32\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e07\u0e32\u0e19\u0e02\u0e31\u0e14\u0e1c\u0e34\u0e27\u0e2d\u0e38\u0e15\u0e2a\u0e32\u0e2b\u0e01\u0e23\u0e23\u0e21",
+  homeInfoPhone: "\u0e42\u0e17\u0e23",
+  homeInfoAddress: "\u0e17\u0e35\u0e48\u0e2d\u0e22\u0e39\u0e48",
+  homeInfoLocation: "\u0e1a\u0e32\u0e07\u0e1a\u0e31\u0e27\u0e17\u0e2d\u0e07 \u0e19\u0e19\u0e17\u0e1a\u0e38\u0e23\u0e35",
+  homeAskProduct: "\u0e2a\u0e2d\u0e1a\u0e16\u0e32\u0e21\u0e2a\u0e34\u0e19\u0e04\u0e49\u0e32",
+  homeCategoryMachine: "\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e02\u0e31\u0e14\u0e1c\u0e34\u0e27",
+  homeCategoryMagnetic: "\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e02\u0e31\u0e14\u0e41\u0e21\u0e48\u0e40\u0e2b\u0e25\u0e47\u0e01",
+  homeCategoryCeramic: "\u0e2b\u0e34\u0e19\u0e02\u0e31\u0e14\u0e40\u0e0b\u0e23\u0e32\u0e21\u0e34\u0e01",
+  homeCategoryPlastic: "\u0e2b\u0e34\u0e19\u0e02\u0e31\u0e14\u0e1e\u0e25\u0e32\u0e2a\u0e15\u0e34\u0e01",
+  homeCategorySteel: "\u0e27\u0e31\u0e2a\u0e14\u0e38\u0e02\u0e31\u0e14\u0e2a\u0e41\u0e15\u0e19\u0e40\u0e25\u0e2a",
+  homeCategoryCompound: "\u0e19\u0e49\u0e33\u0e22\u0e32\u0e02\u0e31\u0e14\u0e41\u0e25\u0e30\u0e40\u0e04\u0e21\u0e35\u0e20\u0e31\u0e13\u0e11\u0e4c",
+  homeCategorySpare: "\u0e2d\u0e30\u0e44\u0e2b\u0e25\u0e48\u0e41\u0e25\u0e30\u0e2d\u0e38\u0e1b\u0e01\u0e23\u0e13\u0e4c",
+  homeCategorySupport: "\u0e1b\u0e23\u0e36\u0e01\u0e29\u0e32\u0e07\u0e32\u0e19\u0e02\u0e31\u0e14\u0e1c\u0e34\u0e27",
+  mobileCall: "\u0e42\u0e17\u0e23 086-399-0785"
+});
+
+Object.assign(ui.en, {
+  homeCatalogTitle: "Product Categories",
+  homeCatalogText: "Machines, polishing media, equipment, and compounds for industrial surface finishing.",
+  homeInfoPhone: "Call",
+  homeInfoAddress: "Address",
+  homeInfoLocation: "Bang Bua Thong, Nonthaburi",
+  homeAskProduct: "Ask About Products",
+  homeCategoryMachine: "Polishing Machines",
+  homeCategoryMagnetic: "Magnetic Polishing",
+  homeCategoryCeramic: "Ceramic Media",
+  homeCategoryPlastic: "Plastic Media",
+  homeCategorySteel: "Stainless Steel Media",
+  homeCategoryCompound: "Compounds and Chemicals",
+  homeCategorySpare: "Parts and Equipment",
+  homeCategorySupport: "Surface Finishing Advice",
+  mobileCall: "Call 086-399-0785"
+});
+
 const adminSiteDraft = loadAdminSiteDraft();
 
 function applyAdminSiteDraft() {
@@ -306,7 +371,7 @@ function applyAdminSiteDraft() {
       if (!page || !page.path) return;
       const pageFile = page.path.split("/").pop();
       document.querySelectorAll(`.site-nav a[href="${pageFile}"]`).forEach((link) => {
-        link.textContent = page.menuLabel || link.textContent;
+        link.textContent = page.menuLabel || page.label || link.textContent;
         link.hidden = page.status === "hidden";
       });
 
@@ -316,9 +381,74 @@ function applyAdminSiteDraft() {
         const heroText = document.querySelector(".subpage-hero p:last-child, .search-copy > p");
         if (heroTitle && page.title) heroTitle.textContent = page.title;
         if (heroText && page.description) heroText.textContent = page.description;
+
+        const quoteButton = document.querySelector(".quote-button");
+        if (quoteButton && page.ctaText) quoteButton.textContent = page.ctaText;
+        if (quoteButton && page.ctaLink) quoteButton.href = page.ctaLink;
+
+        if (pageFile === "index.html") {
+          if (page.title) {
+            ui.th.homeCatalogTitle = page.title;
+            ui.en.homeCatalogTitle = page.title;
+          }
+          if (page.description) {
+            ui.th.homeCatalogText = page.description;
+            ui.en.homeCatalogText = page.description;
+          }
+          if (page.ctaText) {
+            ui.th.homeAskProduct = page.ctaText;
+            ui.en.homeAskProduct = page.ctaText;
+          }
+        }
+
+        if (Array.isArray(page.sections)) {
+          const hiddenSections = new Set(
+            page.sections
+              .filter((section) => section.visible === false)
+              .map((section) => section.id)
+          );
+
+          if (hiddenSections.has("categories")) document.querySelector(".quick-categories")?.setAttribute("hidden", "");
+          if (hiddenSections.has("products") || hiddenSections.has("grid")) document.querySelector(".product-list-panel")?.setAttribute("hidden", "");
+          if (hiddenSections.has("contact") || hiddenSections.has("contact-info")) document.querySelector(".contact-cta")?.setAttribute("hidden", "");
+        }
       }
     });
   }
+
+  if (Array.isArray(adminSiteDraft.homeCategories)) {
+    applyAdminHomeCategories(adminSiteDraft.homeCategories);
+  }
+}
+
+function applyAdminHomeCategories(categories) {
+  const translationKeys = [
+    "homeCategoryMachine",
+    "homeCategoryMagnetic",
+    "homeCategoryCeramic",
+    "homeCategoryPlastic",
+    "homeCategorySteel",
+    "homeCategoryCompound",
+    "homeCategorySpare",
+    "homeCategorySupport"
+  ];
+
+  categories.forEach((category, index) => {
+    const tile = document.querySelector(`.home-category-tile:nth-child(${index + 1})`);
+    if (!tile || !category) return;
+    const key = translationKeys[index];
+    if (key && category.title) {
+      ui.th[key] = category.title;
+      ui.en[key] = category.title;
+    }
+    if (category.link) {
+      tile.href = category.link.replace(/^\.\.\//, "");
+    }
+    if (category.image) {
+      const image = category.image.replace(/^\.\.\//, "");
+      tile.style.backgroundImage = `linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)), url("${image}")`;
+    }
+  });
 }
 
 function t(key) {
@@ -409,6 +539,35 @@ function applyLanguage() {
   setText('.site-nav a[href="solutions.html"]', t("navSolutions"));
   setText('.site-nav a[href="about.html"]', t("navAbout"));
   setText('.site-nav a[href="contact.html"]', t("navContact"));
+  setText('[data-i18n="homeCatalogTitle"]', t("homeCatalogTitle"));
+  setText('[data-i18n="homeCatalogText"]', t("homeCatalogText"));
+  setText('[data-i18n="homeInfoPhone"]', t("homeInfoPhone"));
+  setText('[data-i18n="homeInfoAddress"]', t("homeInfoAddress"));
+  setText('[data-i18n="homeInfoLocation"]', t("homeInfoLocation"));
+  setText('[data-i18n="homeAskProduct"]', t("homeAskProduct"));
+  setText('[data-i18n="homeCategoryMachine"]', t("homeCategoryMachine"));
+  setText('[data-i18n="homeCategoryMagnetic"]', t("homeCategoryMagnetic"));
+  setText('[data-i18n="homeCategoryCeramic"]', t("homeCategoryCeramic"));
+  setText('[data-i18n="homeCategoryPlastic"]', t("homeCategoryPlastic"));
+  setText('[data-i18n="homeCategorySteel"]', t("homeCategorySteel"));
+  setText('[data-i18n="homeCategoryCompound"]', t("homeCategoryCompound"));
+  setText('[data-i18n="homeCategorySpare"]', t("homeCategorySpare"));
+  setText('[data-i18n="homeCategorySupport"]', t("homeCategorySupport"));
+  setText(".home-info-rail h1", t("homeCatalogTitle"));
+  setText(".home-info-rail > div:first-child p:not(.eyebrow)", t("homeCatalogText"));
+  setText(".home-info-list a:nth-child(1) strong", t("homeInfoPhone"));
+  setText(".home-info-list a:nth-child(3) strong", t("homeInfoAddress"));
+  setText(".home-info-list a:nth-child(3) span", t("homeInfoLocation"));
+  setText(".home-info-rail .button.line", t("homeAskProduct"));
+  setText(".home-category-tile:nth-child(1) span", t("homeCategoryMachine"));
+  setText(".home-category-tile:nth-child(2) span", t("homeCategoryMagnetic"));
+  setText(".home-category-tile:nth-child(3) span", t("homeCategoryCeramic"));
+  setText(".home-category-tile:nth-child(4) span", t("homeCategoryPlastic"));
+  setText(".home-category-tile:nth-child(5) span", t("homeCategorySteel"));
+  setText(".home-category-tile:nth-child(6) span", t("homeCategoryCompound"));
+  setText(".home-category-tile:nth-child(7) span", t("homeCategorySpare"));
+  setText(".home-category-tile:nth-child(8) span", t("homeCategorySupport"));
+  setText(".mobile-contact-call", t("mobileCall"));
   setText(".search-copy .eyebrow", t("searchEyebrow"));
   setText(".search-copy h1", t("heroTitle"));
   setText(".search-copy p:not(.eyebrow)", t("heroText"));
@@ -569,6 +728,11 @@ navToggle?.addEventListener("click", () => {
   navToggle.setAttribute("aria-expanded", String(isOpen));
   navToggle.setAttribute("aria-label", isOpen ? "ปิดเมนู" : "เปิดเมนู");
 });
+
+navToggle?.addEventListener("touchend", (event) => {
+  event.preventDefault();
+  navToggle.click();
+}, { passive: false });
 
 siteNav?.addEventListener("click", (event) => {
   if (event.target.matches("a")) {
