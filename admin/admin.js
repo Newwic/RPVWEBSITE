@@ -102,6 +102,7 @@ let selectedPageId = siteDraft.pages[0]?.id || "home";
 let selectedProductId = products[0]?.id || "";
 let activeAnalyticsTab = "website";
 let analyticsStats = loadAnalyticsStats();
+let analyticsLoadError = "";
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -280,6 +281,7 @@ function enableProductRealtime() {
 
 async function hydrateAnalyticsFromSupabase({ silent = false } = {}) {
   if (!window.rpvSupabase?.enabled || !window.rpvSupabase.loadAnalytics) {
+    analyticsLoadError = "Supabase config is empty.";
     analyticsStats = { ...loadAnalyticsStats(), source: "Local browser" };
     renderAnalytics();
     return;
@@ -287,11 +289,13 @@ async function hydrateAnalyticsFromSupabase({ silent = false } = {}) {
 
   try {
     const remoteStats = await window.rpvSupabase.loadAnalytics({ limit: 1000 });
+    analyticsLoadError = "";
     analyticsStats = remoteStats || { ...loadAnalyticsStats(), source: "Local browser" };
     renderAnalytics();
     if (!silent) setStatus("โหลดสถิติรวมจาก Supabase แล้ว");
   } catch (error) {
     console.warn("RPV Supabase analytics load failed.", error);
+    analyticsLoadError = error.message || "Supabase analytics load failed.";
     analyticsStats = { ...loadAnalyticsStats(), source: "Local browser" };
     renderAnalytics();
     if (!silent) setStatus(`โหลดสถิติ Supabase ไม่สำเร็จ: ${error.message}`);
@@ -412,6 +416,7 @@ function renderAll() {
   renderProductForm();
   renderMedia();
   renderAnalytics();
+  renderSupabaseSetupStatus();
   renderSettings();
 }
 
@@ -801,6 +806,71 @@ function renderAnalytics() {
       </div>
     `).join("") || `<p class="admin-note">ยังไม่มีรายการล่าสุด</p>`;
   }
+
+  renderSupabaseSetupStatus();
+}
+
+function renderSupabaseSetupStatus() {
+  const card = $("#analyticsSetupCard");
+  if (!card) return;
+
+  const config = window.RPV_ADMIN_CONFIG || {};
+  const hasUrl = Boolean(config.supabaseUrl);
+  const hasKey = Boolean(config.supabaseAnonKey);
+  const hasClientLibrary = Boolean(window.supabase?.createClient);
+  const isEnabled = Boolean(window.rpvSupabase?.enabled);
+  const usingSupabaseStats = (analyticsStats?.source || "") === "Supabase";
+  const title = $("#analyticsSetupTitle");
+  const message = $("#analyticsSetupMessage");
+  const steps = $("#analyticsSetupSteps");
+
+  card.classList.toggle("is-ready", isEnabled && usingSupabaseStats);
+
+  if (!hasUrl || !hasKey) {
+    if (title) title.textContent = "ยังไม่ได้ต่อ Supabase";
+    if (message) message.textContent = "ตอนนี้สถิติเป็น Local browser จึงเห็นเฉพาะเครื่องที่เปิด admin ไม่รวมมือถือ/คอมเครื่องอื่น";
+    if (steps) steps.innerHTML = [
+      "สร้างหรือเปิด Supabase project",
+      "Run SQL: supabase/001_admin_schema.sql",
+      "ใส่ Project URL และ anon public key ใน admin/config.js",
+      "สร้าง admin user แล้วเพิ่มใน admin_profiles",
+      "Push GitHub แล้วเปิดเว็บจากมือถืออีกครั้ง"
+    ].map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+    return;
+  }
+
+  if (!hasClientLibrary || !isEnabled) {
+    if (title) title.textContent = "โหลด Supabase client ไม่สำเร็จ";
+    if (message) message.textContent = "มี config แล้ว แต่ browser ยังสร้าง Supabase client ไม่ได้ ให้ตรวจ CDN หรือค่า URL/key";
+    if (steps) steps.innerHTML = [
+      "เช็กว่าอินเทอร์เน็ตเปิด CDN @supabase/supabase-js ได้",
+      "ตรวจ supabaseUrl ว่าขึ้นต้นด้วย https:// และลงท้าย .supabase.co",
+      "ตรวจ anon public key ว่าไม่ใช่ service role key"
+    ].map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+    return;
+  }
+
+  if (!usingSupabaseStats) {
+    if (title) title.textContent = "Supabase ต่อแล้ว แต่ admin ยังอ่านสถิติรวมไม่ได้";
+    if (message) message.textContent = analyticsLoadError
+      ? `Error: ${analyticsLoadError}`
+      : "มักเกิดจากยังไม่ได้ Run SQL ล่าสุด, ยังไม่ได้ login admin, หรือ admin_profiles/RLS ยังไม่อนุญาตให้อ่าน analytics_events";
+    if (steps) steps.innerHTML = [
+      "Run SQL: supabase/001_admin_schema.sql อีกครั้ง",
+      "Login ด้วย Supabase Auth ในหน้า admin/login.html",
+      "เพิ่ม user id ของนิวในตาราง admin_profiles เป็น super_admin หรือ editor",
+      "เปิดหน้าเว็บจากมือถือ แล้วกลับมาดู admin #analytics"
+    ].map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+    return;
+  }
+
+  if (title) title.textContent = "Supabase realtime analytics พร้อมใช้งาน";
+  if (message) message.textContent = "สถิติหน้านี้เป็นข้อมูลรวมจากฐานข้อมูลกลางแล้ว มือถือและคอมจะนับรวมกัน";
+  if (steps) steps.innerHTML = [
+    "เปิดเว็บจากมือถือหรือเครื่องอื่น",
+    "รอ 1-3 วินาทีหรือกด refresh admin ถ้าหน้ายังไม่ขยับ",
+    "ถ้าไม่ขึ้น ให้เช็ก Network/Console ว่ามี RLS error หรือไม่"
+  ].map((step) => `<li>${escapeHtml(step)}</li>`).join("");
 }
 
 function renderDailyChart(daily) {
