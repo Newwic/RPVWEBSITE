@@ -56,7 +56,7 @@ function loadAdminSiteDraft() {
   }
 }
 
-const products = (loadAdminProductDraft() || window.rpvProducts || [])
+let products = (loadAdminProductDraft() || window.rpvProducts || [])
   .filter((product) => product.status === "active")
   .sort((a, b) => a.sortOrder - b.sortOrder);
 
@@ -934,6 +934,23 @@ function renderProducts() {
   });
 }
 
+async function hydrateProductsFromSupabase() {
+  if (!window.rpvSupabase?.enabled) return;
+
+  try {
+    const remoteProducts = await window.rpvSupabase.loadProducts();
+    if (!remoteProducts?.length) return;
+
+    products = remoteProducts
+      .filter((product) => product.status === "active")
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+    renderFilters();
+    renderProducts();
+  } catch (error) {
+    console.warn("RPV Supabase product load failed. Falling back to static products.", error);
+  }
+}
+
 function openProductModal(product) {
   const name = productName(product);
   const secondaryName = secondaryProductName(product);
@@ -1064,3 +1081,4 @@ applyLanguage();
 applySearchFromUrl();
 renderFilters();
 renderProducts();
+hydrateProductsFromSupabase();

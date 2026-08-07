@@ -105,6 +105,41 @@ let activeAnalyticsTab = "website";
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 
+async function handleAdminLogin(event) {
+  event.preventDefault();
+  const status = $("#adminLoginStatus");
+  const email = readValue("#adminEmail");
+  const password = readValue("#adminPassword");
+  const demo = window.RPV_ADMIN_CONFIG?.demoAuth;
+
+  const setLoginStatus = (message) => {
+    if (status) status.textContent = message;
+  };
+
+  if (window.rpvSupabase?.enabled) {
+    try {
+      setLoginStatus("กำลังเข้าสู่ระบบ Supabase...");
+      await window.rpvSupabase.signIn(email, password);
+      window.location.href = "index.html#products";
+    } catch (error) {
+      setLoginStatus(`เข้าสู่ระบบไม่สำเร็จ: ${error.message}`);
+    }
+    return;
+  }
+
+  if (demo?.enabled && email === demo.email && password === demo.password) {
+    localStorage.setItem("rpvAdminDemoSession", "1");
+    window.location.href = "index.html#products";
+    return;
+  }
+
+  setLoginStatus("ยังไม่ได้ตั้งค่า Supabase หรือข้อมูล demo ไม่ถูกต้อง");
+}
+
+if ($("#adminLoginForm")) {
+  $("#adminLoginForm").addEventListener("submit", handleAdminLogin);
+}
+
 function loadSiteDraft() {
   let saved = {};
   try {
@@ -170,6 +205,27 @@ function loadProducts() {
   }
 }
 
+async function hydrateProductsFromSupabase() {
+  if (!window.rpvSupabase?.enabled) return;
+
+  try {
+    const remoteProducts = await window.rpvSupabase.loadProducts({ includeHidden: true });
+    if (!remoteProducts?.length) {
+      setStatus("Supabase พร้อมใช้งาน แต่ยังไม่มีสินค้าในฐานข้อมูล");
+      return;
+    }
+
+    products = remoteProducts.map(normalizeProduct).sort(sortProducts);
+    selectedProductId = products[0]?.id || "";
+    localStorage.setItem(STORAGE_PRODUCTS, JSON.stringify(products.map(productForWebsite)));
+    setStatus("โหลดสินค้าจาก Supabase แล้ว");
+    renderAll();
+  } catch (error) {
+    console.warn("RPV Supabase admin load failed.", error);
+    setStatus(`โหลด Supabase ไม่สำเร็จ: ${error.message}`);
+  }
+}
+
 function normalizeProduct(product, index = 0) {
   const id = product.id || product.slug || crypto.randomUUID();
   return {
@@ -227,7 +283,21 @@ function persistProducts() {
   products = products.sort(sortProducts);
   localStorage.setItem(STORAGE_PRODUCTS, JSON.stringify(products.map(productForWebsite)));
   setStatus("บันทึก Product Draft แล้ว");
+  persistProductsToSupabase();
   renderAll();
+}
+
+async function persistProductsToSupabase() {
+  if (!window.rpvSupabase?.enabled) return;
+
+  try {
+    setStatus("กำลังบันทึกสินค้าไป Supabase...");
+    await window.rpvSupabase.saveProducts(products.map(productForWebsite));
+    setStatus("บันทึกสินค้าไป Supabase แล้ว");
+  } catch (error) {
+    console.warn("RPV Supabase product save failed.", error);
+    setStatus(`บันทึก Supabase ไม่สำเร็จ: ${error.message}`);
+  }
 }
 
 function setStatus(message) {
@@ -255,7 +325,11 @@ function renderStats() {
   $("#statPages").textContent = siteDraft.pages.length;
   $("#statProducts").textContent = products.length;
   $("#statImages").textContent = uniqueImages().length;
-  $("#statDraft").textContent = localStorage.getItem(STORAGE_SITE) || localStorage.getItem(STORAGE_PRODUCTS) ? "Draft" : "Static";
+  if (window.rpvSupabase?.enabled) {
+    $("#statDraft").textContent = "Supabase";
+  } else {
+    $("#statDraft").textContent = localStorage.getItem(STORAGE_SITE) || localStorage.getItem(STORAGE_PRODUCTS) ? "Draft" : "Static";
+  }
 }
 
 function renderPageSelect() {
@@ -1074,5 +1148,8 @@ $(".analytics-calendar")?.addEventListener("click", () => {
 });
 
 const initialPanel = (window.location.hash || "#dashboard").slice(1);
-switchPanel($(`[data-panel-section]#${CSS.escape(initialPanel)}`) ? initialPanel : "dashboard");
-renderAll();
+if ($("[data-panel-section]")) {
+  switchPanel($(`[data-panel-section]#${CSS.escape(initialPanel)}`) ? initialPanel : "dashboard");
+  renderAll();
+  hydrateProductsFromSupabase();
+}

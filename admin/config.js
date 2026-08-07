@@ -5,11 +5,11 @@ window.RPV_ADMIN_CONFIG = {
   supabaseUrl: "",
   supabaseAnonKey: "",
 
-  // Demo login for the static GitHub Pages admin preview only.
-  // This is not real production security because frontend code is public.
+  // Keep demo login disabled for production GitHub Pages.
+  // Frontend code is public, so real access must use Supabase Auth + RLS.
   demoAuth: {
-    enabled: true,
-    email: "admin@rpv.co.th",
-    password: "rpvadmin123"
+    enabled: false,
+    email: "",
+    password: ""
   }
 };
