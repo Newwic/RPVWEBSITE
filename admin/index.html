@@ -7,7 +7,7 @@
     <title>RPV Admin | ระบบจัดการแก้ไขเนื้อหา</title>
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20260727-itopplus-ui">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="admin.css?v=20260727-analytics-line-ui">
+    <link rel="stylesheet" href="admin.css?v=20260807-analytics-db-ui">
   </head>
   <body class="admin-page">
     <header class="admin-topbar">
@@ -242,13 +242,20 @@
               <h1>สถิติเข้าชมเว็บ</h1>
               <p>ดูยอดเข้าชมแบบกราฟเส้นสไตล์ ITOPPLUS สำหรับตรวจหน้าเว็บ local ก่อนต่อระบบเก็บสถิติจริง</p>
             </div>
-            <button class="button secondary" id="resetAnalyticsButton" type="button">ล้างสถิติ local</button>
+            <button class="button secondary" id="resetAnalyticsButton" type="button">ล้างสถิติ</button>
           </div>
-          <div class="admin-stats analytics-stats">
-            <article><span id="trafficViews">0</span><small>Page views</small></article>
-            <article><span id="trafficVisitors">0</span><small>Visitors</small></article>
-            <article><span id="trafficToday">0</span><small>วันนี้</small></article>
-            <article><span id="trafficTopPage">-</span><small>หน้าที่คนดูมากสุด</small></article>
+          <div class="analytics-overview">
+            <article class="analytics-source-card">
+              <small>แหล่งข้อมูล</small>
+              <strong id="trafficSource">Local browser</strong>
+              <span>Supabase = รวมทุกเครื่อง / Local = เฉพาะเครื่องนี้</span>
+            </article>
+            <div class="admin-stats analytics-stats">
+              <article><span id="trafficViews">0</span><small>Page views</small></article>
+              <article><span id="trafficVisitors">0</span><small>Visitors</small></article>
+              <article><span id="trafficToday">0</span><small>วันนี้</small></article>
+              <article><span id="trafficTopPage">-</span><small>หน้าที่คนดูมากสุด</small></article>
+            </div>
           </div>
           <div class="analytics-itop-panel">
             <div class="analytics-tabs" role="tablist" aria-label="ประเภทสถิติ">
@@ -317,8 +324,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js?v=20260807-supabase"></script>
-    <script src="../rpv-supabase.js?v=20260807-realtime"></script>
+    <script src="../rpv-supabase.js?v=20260807-analytics-db"></script>
     <script src="../data/rpv-products.js?v=20260727-itopplus-ui"></script>
-    <script src="admin.js?v=20260807-realtime"></script>
+    <script src="admin.js?v=20260807-analytics-db"></script>
   </body>
 </html>

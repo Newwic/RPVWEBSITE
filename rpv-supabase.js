@@ -161,6 +161,115 @@
     if (error) throw error;
   }
 
+  async function recordPageView(event = {}) {
+    if (!client) return false;
+
+    const page = event.page || location.pathname.split("/").pop() || "index.html";
+    const referrer = event.referrer || "direct";
+    const userAgent = event.userAgent || navigator.userAgent || "";
+    const deviceType = event.deviceType || detectDevice(userAgent);
+    const visitorId = event.visitorId || "";
+
+    const { error } = await client
+      .from("analytics_events")
+      .insert({
+        page,
+        title: event.title || document.title || page,
+        referrer,
+        visitor_id: visitorId,
+        device_type: deviceType,
+        user_agent: userAgent
+      });
+
+    if (error) throw error;
+    return true;
+  }
+
+  async function loadAnalytics({ limit = 500 } = {}) {
+    if (!client) return null;
+
+    const { data, error } = await client
+      .from("analytics_events")
+      .select("page,title,referrer,visitor_id,device_type,user_agent,created_at")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return buildAnalyticsStats(data || []);
+  }
+
+  async function resetAnalytics() {
+    if (!client) throw new Error("Supabase ยังไม่ได้ตั้งค่า");
+    const session = await getSession();
+    if (!session) throw new Error("กรุณา login Supabase ก่อนล้างสถิติ");
+
+    const { error } = await client
+      .from("analytics_events")
+      .delete()
+      .not("id", "is", null);
+
+    if (error) throw error;
+  }
+
+  function subscribeToAnalytics(onChange) {
+    if (!client || typeof onChange !== "function") return null;
+
+    let timer = 0;
+    const notify = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(onChange, 350);
+    };
+
+    const channel = client
+      .channel("rpv-analytics-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "analytics_events" }, notify)
+      .subscribe();
+
+    return () => {
+      window.clearTimeout(timer);
+      client.removeChannel(channel);
+    };
+  }
+
+  function buildAnalyticsStats(rows) {
+    const stats = { totalViews: 0, visitors: [], pages: {}, daily: {}, referrers: {}, recent: [], source: "Supabase" };
+    const visitors = new Set();
+
+    rows.forEach((row) => {
+      const time = row.created_at || new Date().toISOString();
+      const day = time.slice(0, 10);
+      const page = row.page || "index.html";
+      const referrer = row.referrer || "direct";
+      const visitorId = row.visitor_id || "";
+
+      stats.totalViews += 1;
+      stats.pages[page] = (stats.pages[page] || 0) + 1;
+      stats.daily[day] = (stats.daily[day] || 0) + 1;
+      stats.referrers[referrer] = (stats.referrers[referrer] || 0) + 1;
+      if (visitorId) visitors.add(visitorId);
+      stats.recent.push({
+        page,
+        title: row.title || page,
+        referrer,
+        visitorId,
+        time,
+        userAgent: row.user_agent || "",
+        deviceType: row.device_type || detectDevice(row.user_agent || "")
+      });
+    });
+
+    stats.visitors = [...visitors];
+    return stats;
+  }
+
+  function detectDevice(userAgent = "") {
+    const agent = String(userAgent).toLowerCase();
+    if (/ipad|tablet/.test(agent)) return "Tablet";
+    if (/mobile|android|iphone/.test(agent)) return "Mobile";
+    if (agent) return "Desktop";
+    return "Other";
+  }
+
   function subscribeToSiteDraft(onChange) {
     if (!client || typeof onChange !== "function") return null;
 
@@ -213,7 +322,11 @@
     saveProducts,
     loadSiteDraft,
     saveSiteDraft,
+    recordPageView,
+    loadAnalytics,
+    resetAnalytics,
     subscribeToSiteDraft,
-    subscribeToProducts
+    subscribeToProducts,
+    subscribeToAnalytics
   };
 })();

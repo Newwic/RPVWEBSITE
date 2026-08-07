@@ -66,3 +66,11 @@ window.RPV_ADMIN_CONFIG = {
 - `contact.html`
 
 ถ้ายังไม่ได้ตั้งค่า Supabase หน้าเว็บจะใช้ draft ใน browser (`localStorage`) หรือข้อมูล static เดิมแทน
+
+## 6. Website analytics
+
+หน้าเว็บ public จะบันทึก page view ลง `analytics_events` เมื่อใส่ Supabase config แล้ว
+
+- `Supabase` = สถิติรวมจากทุกเครื่องและมือถือ
+- `Local browser` = ยังไม่ได้ต่อ Supabase หรือโหลดฐานข้อมูลไม่สำเร็จ จึงเห็นเฉพาะเครื่องนี้
+- ถ้ามือถือเข้าเว็บแล้วตัวเลขไม่ขึ้น ให้ตรวจว่า run SQL ล่าสุดแล้ว และ `admin/config.js` มี `supabaseUrl` กับ `supabaseAnonKey`

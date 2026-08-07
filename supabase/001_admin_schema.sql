@@ -98,6 +98,23 @@ create table if not exists public.revision_history (
   changed_at timestamptz not null default now()
 );
 
+create table if not exists public.analytics_events (
+  id uuid primary key default gen_random_uuid(),
+  page text not null,
+  title text,
+  referrer text not null default 'direct',
+  visitor_id text,
+  device_type text not null default 'Other' check (device_type in ('Desktop', 'Mobile', 'Tablet', 'Other')),
+  user_agent text,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists analytics_events_created_at_idx
+on public.analytics_events (created_at desc);
+
+create index if not exists analytics_events_page_idx
+on public.analytics_events (page);
+
 create or replace function public.touch_updated_at()
 returns trigger
 language plpgsql
@@ -160,6 +177,7 @@ alter table public.product_images enable row level security;
 alter table public.site_content enable row level security;
 alter table public.site_settings enable row level security;
 alter table public.revision_history enable row level security;
+alter table public.analytics_events enable row level security;
 
 drop policy if exists "admins can read admin profiles" on public.admin_profiles;
 create policy "admins can read admin profiles"
@@ -275,6 +293,24 @@ on public.revision_history for insert
 to authenticated
 with check (public.is_admin_editor());
 
+drop policy if exists "public can insert analytics events" on public.analytics_events;
+create policy "public can insert analytics events"
+on public.analytics_events for insert
+to anon, authenticated
+with check (true);
+
+drop policy if exists "admins can read analytics events" on public.analytics_events;
+create policy "admins can read analytics events"
+on public.analytics_events for select
+to authenticated
+using (public.is_admin_viewer());
+
+drop policy if exists "editors can delete analytics events" on public.analytics_events;
+create policy "editors can delete analytics events"
+on public.analytics_events for delete
+to authenticated
+using (public.is_admin_editor());
+
 do $$
 begin
   alter publication supabase_realtime add table public.site_settings;
@@ -294,6 +330,14 @@ end $$;
 do $$
 begin
   alter publication supabase_realtime add table public.categories;
+exception
+  when duplicate_object then null;
+  when undefined_object then null;
+end $$;
+
+do $$
+begin
+  alter publication supabase_realtime add table public.analytics_events;
 exception
   when duplicate_object then null;
   when undefined_object then null;

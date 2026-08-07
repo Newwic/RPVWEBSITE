@@ -101,6 +101,7 @@ let products = loadProducts();
 let selectedPageId = siteDraft.pages[0]?.id || "home";
 let selectedProductId = products[0]?.id || "";
 let activeAnalyticsTab = "website";
+let analyticsStats = loadAnalyticsStats();
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -274,6 +275,34 @@ function enableProductRealtime() {
   window.rpvSupabase.subscribeToProducts(async () => {
     await hydrateProductsFromSupabase();
     setStatus("อัปเดตสินค้าแบบ realtime แล้ว");
+  });
+}
+
+async function hydrateAnalyticsFromSupabase({ silent = false } = {}) {
+  if (!window.rpvSupabase?.enabled || !window.rpvSupabase.loadAnalytics) {
+    analyticsStats = { ...loadAnalyticsStats(), source: "Local browser" };
+    renderAnalytics();
+    return;
+  }
+
+  try {
+    const remoteStats = await window.rpvSupabase.loadAnalytics({ limit: 1000 });
+    analyticsStats = remoteStats || { ...loadAnalyticsStats(), source: "Local browser" };
+    renderAnalytics();
+    if (!silent) setStatus("โหลดสถิติรวมจาก Supabase แล้ว");
+  } catch (error) {
+    console.warn("RPV Supabase analytics load failed.", error);
+    analyticsStats = { ...loadAnalyticsStats(), source: "Local browser" };
+    renderAnalytics();
+    if (!silent) setStatus(`โหลดสถิติ Supabase ไม่สำเร็จ: ${error.message}`);
+  }
+}
+
+function enableAnalyticsRealtime() {
+  if (!window.rpvSupabase?.enabled || !window.rpvSupabase.subscribeToAnalytics) return;
+
+  window.rpvSupabase.subscribeToAnalytics(() => {
+    hydrateAnalyticsFromSupabase({ silent: true });
   });
 }
 
@@ -661,7 +690,7 @@ function renderMedia() {
 }
 
 function renderAnalytics() {
-  const stats = loadAnalyticsStats();
+  const stats = analyticsStats || loadAnalyticsStats();
   const today = new Date().toISOString().slice(0, 10);
   const pageEntries = Object.entries(stats.pages || {}).sort((a, b) => b[1] - a[1]);
   const topPage = pageEntries[0]?.[0] || "-";
@@ -671,6 +700,7 @@ function renderAnalytics() {
   setText("#trafficVisitors", Array.isArray(stats.visitors) ? stats.visitors.length : 0);
   setText("#trafficToday", stats.daily?.[today] || 0);
   setText("#trafficTopPage", topPage);
+  setText("#trafficSource", stats.source || "Local browser");
 
   const pages = $("#trafficPages");
   if (pages) {
@@ -681,7 +711,7 @@ function renderAnalytics() {
           <span>${count}</span>
         </div>
       `).join("")
-      : `<p class="admin-note">ยังไม่มีข้อมูลเข้าชมใน browser นี้</p>`;
+      : `<p class="admin-note">ยังไม่มีข้อมูลเข้าชม ถ้าใช้ Supabase ให้ตรวจว่า run SQL และใส่ config แล้ว</p>`;
   }
 
   const recent = $("#trafficRecent");
@@ -690,7 +720,7 @@ function renderAnalytics() {
       <div class="admin-table-row">
         <div>
           <strong>${escapeHtml(item.page || "-")}</strong>
-          <small>${escapeHtml(formatDateTime(item.time))} / ${escapeHtml(item.referrer || "direct")}</small>
+          <small>${escapeHtml(formatDateTime(item.time))} / ${escapeHtml(item.deviceType || detectDevice(item.userAgent || ""))} / ${escapeHtml(item.referrer || "direct")}</small>
         </div>
         <span>view</span>
       </div>
@@ -745,11 +775,8 @@ function buildDailyTrafficSeries(daily) {
 function buildDeviceTrafficSeries(recent) {
   const counts = { Desktop: 0, Mobile: 0, Tablet: 0, Other: 0 };
   recent.forEach((item) => {
-    const agent = String(item.userAgent || "").toLowerCase();
-    if (/ipad|tablet/.test(agent)) counts.Tablet += 1;
-    else if (/mobile|android|iphone/.test(agent)) counts.Mobile += 1;
-    else if (agent) counts.Desktop += 1;
-    else counts.Other += 1;
+    const device = item.deviceType || detectDevice(item.userAgent || "");
+    counts[counts[device] === undefined ? "Other" : device] += 1;
   });
   return Object.entries(counts)
     .filter(([, value]) => value > 0)
@@ -843,10 +870,11 @@ function loadAnalyticsStats() {
       pages: stats.pages && typeof stats.pages === "object" ? stats.pages : {},
       daily: stats.daily && typeof stats.daily === "object" ? stats.daily : {},
       referrers: stats.referrers && typeof stats.referrers === "object" ? stats.referrers : {},
-      recent: Array.isArray(stats.recent) ? stats.recent : []
+      recent: Array.isArray(stats.recent) ? stats.recent : [],
+      source: "Local browser"
     };
   } catch {
-    return { totalViews: 0, visitors: [], pages: {}, daily: {}, referrers: {}, recent: [] };
+    return { totalViews: 0, visitors: [], pages: {}, daily: {}, referrers: {}, recent: [], source: "Local browser" };
   }
 }
 
@@ -980,6 +1008,14 @@ function escapeCssUrl(value) {
 function shorten(value, max) {
   const text = String(value || "");
   return text.length > max ? `${text.slice(0, max - 3)}...` : text;
+}
+
+function detectDevice(userAgent = "") {
+  const agent = String(userAgent).toLowerCase();
+  if (/ipad|tablet/.test(agent)) return "Tablet";
+  if (/mobile|android|iphone/.test(agent)) return "Mobile";
+  if (agent) return "Desktop";
+  return "Other";
 }
 
 document.addEventListener("click", (event) => {
@@ -1194,11 +1230,21 @@ $("#saveSettingsButton")?.addEventListener("click", saveSettings);
 $("#exportProductsButton")?.addEventListener("click", exportProducts);
 $("#exportSiteButton")?.addEventListener("click", exportSite);
 $("#resetDraftButton")?.addEventListener("click", resetDrafts);
-$("#resetAnalyticsButton")?.addEventListener("click", () => {
-  if (!window.confirm("ล้างสถิติเข้าชม local ใน browser นี้ใช่ไหม?")) return;
-  localStorage.removeItem("rpvAnalyticsStats");
-  renderAnalytics();
-  setStatus("ล้างสถิติ local แล้ว");
+$("#resetAnalyticsButton")?.addEventListener("click", async () => {
+  if (!window.confirm("ล้างสถิติเข้าชมทั้งหมดใช่ไหม? ถ้า Supabase เปิดอยู่จะล้างข้อมูลสถิติรวม")) return;
+  try {
+    if (window.rpvSupabase?.enabled && window.rpvSupabase.resetAnalytics) {
+      await window.rpvSupabase.resetAnalytics();
+      analyticsStats = { totalViews: 0, visitors: [], pages: {}, daily: {}, referrers: {}, recent: [], source: "Supabase" };
+    } else {
+      localStorage.removeItem("rpvAnalyticsStats");
+      analyticsStats = { ...loadAnalyticsStats(), source: "Local browser" };
+    }
+    renderAnalytics();
+    setStatus("ล้างสถิติแล้ว");
+  } catch (error) {
+    setStatus(`ล้างสถิติไม่สำเร็จ: ${error.message}`);
+  }
 });
 
 $$(".analytics-tab").forEach((button) => {
@@ -1218,6 +1264,8 @@ if ($("[data-panel-section]")) {
   renderAll();
   hydrateSiteFromSupabase();
   hydrateProductsFromSupabase();
+  hydrateAnalyticsFromSupabase({ silent: true });
   enableSiteRealtime();
   enableProductRealtime();
+  enableAnalyticsRealtime();
 }

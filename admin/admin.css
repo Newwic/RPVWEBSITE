@@ -860,6 +860,40 @@ textarea {
   width: 100%;
 }
 
+.analytics-overview {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 2fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.analytics-overview .analytics-stats {
+  margin-bottom: 0;
+}
+
+.analytics-source-card {
+  display: grid;
+  align-content: center;
+  gap: 7px;
+  padding: 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #263238, #1f8e3d);
+  border: 1px solid #187632;
+  border-radius: 4px;
+  box-shadow: var(--admin-shadow);
+}
+
+.analytics-source-card small,
+.analytics-source-card span {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 800;
+}
+
+.analytics-source-card strong {
+  font-size: 28px;
+  line-height: 1;
+}
+
 .analytics-stats #trafficTopPage {
   font-size: 18px;
   line-height: 1.2;
@@ -868,17 +902,18 @@ textarea {
 
 .analytics-itop-panel {
   overflow: hidden;
-  margin: 18px 0;
+  margin: 12px 0;
   background: #fff;
   border: 1px solid #d5d5d5;
-  border-radius: 2px;
+  border-radius: 4px;
+  box-shadow: var(--admin-shadow);
 }
 
 .analytics-tabs {
   display: grid;
-  grid-template-columns: repeat(3, minmax(150px, 180px)) 1fr;
+  grid-template-columns: repeat(3, minmax(160px, 1fr)) 58px;
   align-items: stretch;
-  background: #5b5b5b;
+  background: #3d464e;
 }
 
 .analytics-tab,
@@ -899,7 +934,7 @@ textarea {
 }
 
 .analytics-tab.is-active {
-  background: #08b789;
+  background: var(--admin-green);
 }
 
 .analytics-calendar {
@@ -909,11 +944,12 @@ textarea {
 }
 
 .analytics-chart-card {
-  margin: 5px;
+  margin: 0;
   padding: 18px 22px 14px;
   background: #fff;
-  border: 1px solid #dfdfdf;
-  border-radius: 4px;
+  border: 0;
+  border-top: 1px solid #dfdfdf;
+  border-radius: 0;
 }
 
 .analytics-chart-card h2 {
@@ -1003,7 +1039,7 @@ textarea {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   align-items: center;
-  padding: 9px 10px;
+  padding: 11px 12px;
   background: #fbfcfd;
   border: 1px solid var(--admin-line);
   border-radius: 4px;
@@ -1126,7 +1162,8 @@ textarea {
 @media (max-width: 1180px) {
   .admin-editor-layout,
   .admin-products-layout,
-  .settings-layout {
+  .settings-layout,
+  .analytics-overview {
     grid-template-columns: 1fr;
   }
 
