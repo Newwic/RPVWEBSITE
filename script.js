@@ -60,11 +60,31 @@ const products = (loadAdminProductDraft() || window.rpvProducts || [])
   .filter((product) => product.status === "active")
   .sort((a, b) => a.sortOrder - b.sortOrder);
 
+const urlParams = new URLSearchParams(window.location.search);
 let currentCategory = "All";
-const urlLanguage = new URLSearchParams(window.location.search).get("lang");
+let currentCategoryGroup = null;
+const urlLanguage = urlParams.get("lang");
 let currentLanguage = ["th", "en"].includes(urlLanguage)
   ? urlLanguage
   : localStorage.getItem("rpvLanguage") || "th";
+
+const categoryGroups = {
+  "polishing-machines": [
+    "1.เครื่องขัดแบบเขย่า (Vibratory Machine)",
+    "2.เครื่องขัดแบบจานหมุน (Centrifugal Disc Machine)",
+    "3.เครื่องขัดแบบถังกลิ้ง (Rotary/Single Barrel)",
+    "4.เครื่องอบแห้ง (Dryer Machine)",
+    "5.เครื่องขัดโลหะ ยี่ห้อ Roto Finish - USA (Mass Finishing System)",
+    "6.เครื่องแยกชิ้นงาน (Vibratory Separator)",
+    "8.เครื่องขัดเงาแผ่นแสตนเลส (8K Mirror Polishing)"
+  ],
+  "media-compound": [
+    "7.หินขัดและน้ำยาขัด (Media & Compound)"
+  ],
+  "other-products": [
+    "3.3 สินค้าอื่นๆ / Other Products"
+  ]
+};
 
 const categoryText = {
   th: {
@@ -495,6 +515,55 @@ function uniqueCategories() {
   return ["All", ...new Set(products.map((product) => product.category))];
 }
 
+function applyCategoryFromUrl() {
+  const requestedGroup = urlParams.get("group");
+  const requestedCategory = urlParams.get("category") || urlParams.get("cat");
+
+  if (requestedGroup && categoryGroups[requestedGroup]) {
+    currentCategoryGroup = new Set(categoryGroups[requestedGroup]);
+    return;
+  }
+
+  if (!requestedCategory) {
+    return;
+  }
+
+  const normalizedCategory = requestedCategory.trim().toLowerCase();
+  const matchedCategory = uniqueCategories().find((category) => category.toLowerCase() === normalizedCategory);
+
+  if (matchedCategory) {
+    currentCategory = matchedCategory;
+    currentCategoryGroup = null;
+  }
+}
+
+function applySearchFromUrl() {
+  const requestedSearch = urlParams.get("search") || urlParams.get("q");
+
+  if (productSearch && requestedSearch) {
+    productSearch.value = requestedSearch.trim();
+  }
+}
+
+function updateCategoryUrl(category) {
+  if (!window.history?.replaceState) {
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  params.delete("group");
+
+  if (category === "All") {
+    params.delete("category");
+  } else {
+    params.set("category", category);
+  }
+
+  const query = params.toString();
+  const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash || ""}`;
+  window.history.replaceState(null, "", nextUrl);
+}
+
 function productMatchesSearch(product, keyword) {
   const text = [
     productName(product),
@@ -513,7 +582,9 @@ function filteredProducts() {
   const keyword = productSearch?.value.trim() || "";
 
   return products.filter((product) => {
-    const categoryMatch = currentCategory === "All" || product.category === currentCategory;
+    const categoryMatch = currentCategoryGroup
+      ? currentCategoryGroup.has(product.category)
+      : currentCategory === "All" || product.category === currentCategory;
     const searchMatch = keyword === "" || productMatchesSearch(product, keyword);
     return categoryMatch && searchMatch;
   });
@@ -615,6 +686,8 @@ function renderFilters() {
 
     button.addEventListener("click", () => {
       currentCategory = category;
+      currentCategoryGroup = null;
+      updateCategoryUrl(category);
       renderFilters();
       renderProducts();
     });
@@ -808,7 +881,9 @@ productModal?.addEventListener("click", (event) => {
   }
 });
 
+applyCategoryFromUrl();
 applyAdminSiteDraft();
 applyLanguage();
+applySearchFromUrl();
 renderFilters();
 renderProducts();
