@@ -467,7 +467,7 @@ function renderHomeCategoryEditor(page) {
 
   list.innerHTML = siteDraft.homeCategories.map((category, index) => `
     <article class="admin-home-category-item" data-home-category-id="${escapeAttr(category.id)}">
-      <div class="admin-home-category-thumb"><img src="${escapeAttr(category.image || "../assets/rpv-banner-reference.jpg")}" alt=""></div>
+      <div class="admin-home-category-thumb"><img src="${escapeAttr(adminImageSrc(category.image || "../assets/rpv-banner-reference.jpg"))}" alt=""></div>
       <div>
         <label>ชื่อกลางรูป
           <input type="text" data-home-category-field="title" value="${escapeAttr(category.title)}">
@@ -569,7 +569,7 @@ function renderHomeCatalogPreview(page) {
         </aside>
         <div class="admin-home-category-grid">
           ${siteDraft.homeCategories.map((category) => `
-            <a class="admin-home-category-tile" href="${escapeAttr(category.link || "#")}" style="background-image: linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)), url('${escapeCssUrl(category.image || "../assets/rpv-banner-reference.jpg")}')">
+            <a class="admin-home-category-tile" href="${escapeAttr(category.link || "#")}" style="background-image: linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)), url('${escapeCssUrl(adminImageSrc(category.image || "../assets/rpv-banner-reference.jpg"))}')">
               <span data-preview-home-category="${escapeAttr(category.id)}" contenteditable="true">${escapeHtml(category.title)}</span>
             </a>
           `).join("")}
@@ -611,7 +611,7 @@ function renderProducts() {
 
   list.innerHTML = filtered.map((product) => `
     <article class="admin-product-item${product.id === selectedProductId ? " is-active" : ""}" data-product-id="${escapeAttr(product.id)}">
-      <div class="admin-product-thumb">${product.image ? `<img src="${escapeAttr(product.image)}" alt="">` : "No image"}</div>
+      <div class="admin-product-thumb">${product.image ? `<img src="${escapeAttr(adminImageSrc(product.image))}" alt="">` : "No image"}</div>
       <div>
         <strong>${escapeHtml(product.nameTh || product.nameEn || "Untitled product")}</strong>
         <div class="admin-product-meta">${escapeHtml(product.model || "-")} / ${escapeHtml(product.category || "-")}</div>
@@ -681,7 +681,7 @@ function renderMedia() {
   const images = uniqueImages();
   grid.innerHTML = images.map((image) => `
     <article class="admin-media-card">
-      <div class="admin-media-thumb"><img src="${escapeAttr(image)}" alt=""></div>
+      <div class="admin-media-thumb"><img src="${escapeAttr(adminImageSrc(image))}" alt=""></div>
       <strong>${escapeHtml(shorten(image, 42))}</strong>
       <small>${image.startsWith("data:") ? "Draft upload" : "Asset path"}</small>
       <button class="admin-mini-button primary" type="button" data-copy-image="${escapeAttr(image)}">Copy path</button>
@@ -1005,6 +1005,13 @@ function escapeCssUrl(value) {
   return String(value || "").replaceAll("\\", "\\\\").replaceAll("'", "\\'");
 }
 
+function adminImageSrc(value) {
+  const src = String(value || "").trim();
+  if (!src) return "";
+  if (/^(?:data:|https?:|blob:|\/|\.\.\/|\.[/\\])/i.test(src)) return src;
+  return `../${src.replace(/^\/+/, "")}`;
+}
+
 function shorten(value, max) {
   const text = String(value || "");
   return text.length > max ? `${text.slice(0, max - 3)}...` : text;
@@ -1086,7 +1093,7 @@ $("#homeCategoryList")?.addEventListener("input", (event) => {
   if (!category) return;
   category[field] = event.target.value;
   const thumb = item.querySelector(".admin-home-category-thumb img");
-  if (thumb && field === "image") thumb.src = category.image || "../assets/rpv-banner-reference.jpg";
+  if (thumb && field === "image") thumb.src = adminImageSrc(category.image || "../assets/rpv-banner-reference.jpg");
   renderPagePreview(currentPage());
 });
 
@@ -1109,7 +1116,7 @@ $("#homeCategoryList")?.addEventListener("change", async (event) => {
   const pathInput = item.querySelector('[data-home-category-field="image"]');
   if (pathInput) pathInput.value = category.image;
   const thumb = item.querySelector(".admin-home-category-thumb img");
-  if (thumb) thumb.src = category.image;
+  if (thumb) thumb.src = adminImageSrc(category.image);
   renderPagePreview(currentPage());
   setStatus("โหลดรูปหมวดแล้ว");
 });
