@@ -75,8 +75,7 @@ const categoryGroups = {
     "2.เครื่องขัดแบบจานหมุน (Centrifugal Disc Machine)",
     "3.เครื่องขัดแบบถังกลิ้ง (Rotary/Single Barrel)",
     "4.เครื่องอบแห้ง (Dryer Machine)",
-    "5.เครื่องขัดโลหะ ยี่ห้อ Roto Finish - USA (Mass Finishing System)",
-    "6.เครื่องแยกชิ้นงาน (Vibratory Separator)"
+    "5.เครื่องขัดโลหะ ยี่ห้อ Roto Finish - USA (Mass Finishing System)"
   ],
   "media-compound": [
     "7.หินขัดและน้ำยาขัด (Media & Compound)"
