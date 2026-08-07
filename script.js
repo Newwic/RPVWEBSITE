@@ -483,8 +483,82 @@ function setText(selector, value) {
   }
 }
 
+function hasThaiText(value = "") {
+  return /[\u0E00-\u0E7F]/.test(value);
+}
+
+function textInParentheses(value = "") {
+  const matches = [...value.matchAll(/\(([^)]+)\)/g)].map((match) => match[1].trim());
+  return matches.length ? matches[matches.length - 1] : "";
+}
+
+function englishCategoryLabel(category = "") {
+  if (categoryText.en[category]) return categoryText.en[category];
+
+  const parenthetical = textInParentheses(category);
+  if (parenthetical) return parenthetical;
+
+  const slashParts = category.split("/");
+  const englishPart = slashParts.find((part) => !hasThaiText(part));
+  return englishPart?.trim() || category.replace(/^\d+(\.\d+)?\s*/, "").trim();
+}
+
+function cleanEnglishProductText(value = "") {
+  return value
+    .replace(/\s*รุ่น\s*/g, " model ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function englishProductName(product) {
+  const candidates = [
+    product.nameEn,
+    textInParentheses(product.nameTh),
+    textInParentheses(product.model),
+    englishCategoryLabel(product.category)
+  ];
+  const name = candidates
+    .map(cleanEnglishProductText)
+    .find((candidate) => candidate && !hasThaiText(candidate));
+
+  return name || t("productPlaceholder");
+}
+
+function englishProductSummary(product) {
+  const category = englishCategoryLabel(product.category).toLowerCase();
+  const name = englishProductName(product);
+
+  if (category.includes("service")) {
+    return `${name} service for industrial surface finishing, blasting, repair, or maintenance work.`;
+  }
+  if (category.includes("blasting")) {
+    return `${name} for surface preparation, cleaning, rust removal, and industrial blasting applications.`;
+  }
+  if (category.includes("abrasive")) {
+    return `${name} blasting abrasive for cleaning, deburring, surface preparation, and finishing work.`;
+  }
+  if (category.includes("media") || category.includes("compound")) {
+    return `${name} for mass finishing, deburring, polishing, cleaning, and surface improvement.`;
+  }
+  if (category.includes("dryer")) {
+    return `${name} for drying workpieces after washing or mass finishing processes.`;
+  }
+  if (category.includes("separator")) {
+    return `${name} for separating workpieces from media after finishing processes.`;
+  }
+  if (category.includes("polishing") || category.includes("finishing") || category.includes("barrel")) {
+    return `${name} for deburring, edge rounding, polishing, and industrial mass finishing work.`;
+  }
+
+  return `${name} for industrial surface finishing, preparation, cleaning, or related production work.`;
+}
+
 function categoryLabel(category) {
-  return categoryText[currentLanguage]?.[category] || category;
+  if (currentLanguage === "en") {
+    return englishCategoryLabel(category);
+  }
+
+  return categoryText.th?.[category] || category;
 }
 
 function productName(product) {
@@ -492,7 +566,7 @@ function productName(product) {
     return product.nameTh || productThai[product.id]?.name || product.nameEn;
   }
 
-  return product.nameEn || productThai[product.id]?.name || product.nameTh;
+  return englishProductName(product);
 }
 
 function secondaryProductName(product) {
@@ -500,7 +574,7 @@ function secondaryProductName(product) {
     return product.nameEn || "";
   }
 
-  return productThai[product.id]?.name || "";
+  return "";
 }
 
 function productDescription(product) {
@@ -508,7 +582,26 @@ function productDescription(product) {
     return product.shortDescriptionTh || productThai[product.id]?.description || product.shortDescriptionEn;
   }
 
-  return product.shortDescriptionEn || productThai[product.id]?.description || product.shortDescriptionTh;
+  const englishDescription = product.shortDescriptionEn || "";
+  if (englishDescription && !hasThaiText(englishDescription)) {
+    return englishDescription;
+  }
+
+  return englishProductSummary(product);
+}
+
+function productFeatures(product) {
+  if (currentLanguage === "th") {
+    return product.features || [];
+  }
+
+  const name = productName(product);
+  const category = categoryLabel(product.category);
+  return [
+    `Product group: ${category}`,
+    `Suitable for industrial production and surface finishing work`,
+    `Contact RPV for model selection, sizing, and quotation for ${name}`
+  ];
 }
 
 function uniqueCategories() {
@@ -600,6 +693,7 @@ function updateLanguageButtons() {
 
 function applyLanguage() {
   document.documentElement.lang = currentLanguage;
+  document.title = t("title");
   modalClose?.setAttribute("aria-label", t("closeModal"));
   updateLanguageButtons();
 
@@ -762,6 +856,7 @@ function openProductModal(product) {
   const name = productName(product);
   const secondaryName = secondaryProductName(product);
   const description = productDescription(product);
+  const features = productFeatures(product);
   const modelText = product.model ? ` / ${product.model}` : "";
 
   modalContent.innerHTML = `
@@ -774,7 +869,7 @@ function openProductModal(product) {
         <p>${description}</p>
         <h3>${t("modalFeatures")}</h3>
         <ul class="feature-list modal-features">
-          ${product.features.map((feature) => `<li>${feature}</li>`).join("")}
+          ${features.map((feature) => `<li>${feature}</li>`).join("")}
         </ul>
         <h3>${t("modalMore")}</h3>
         <p>${t("modalNote")}</p>
