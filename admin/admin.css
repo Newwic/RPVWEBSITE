@@ -816,6 +816,46 @@ textarea {
   margin-top: 10px;
 }
 
+.admin-web-product-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-web-product-search {
+  flex: 0 0 210px;
+  padding: 9px 11px;
+  color: var(--admin-muted);
+  background: #f5f8f9;
+  border: 1px solid var(--admin-line);
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.admin-web-category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.admin-web-category-pills span {
+  padding: 6px 9px;
+  color: var(--admin-muted);
+  background: #f3f7f5;
+  border: 1px solid var(--admin-line);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.admin-web-category-pills .is-current {
+  color: #fff;
+  background: var(--admin-green);
+  border-color: var(--admin-green);
+}
+
 .admin-web-product-grid article {
   min-width: 0;
   padding: 9px;

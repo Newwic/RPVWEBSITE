@@ -513,6 +513,11 @@ function renderPagePreview(page) {
     return;
   }
 
+  if (page.id === "products") {
+    renderProductsPagePreview(page);
+    return;
+  }
+
   const navItems = siteDraft.pages
     .filter((item) => item.status !== "hidden")
     .map((item) => `<span class="${item.id === page.id ? "is-current" : ""}">${escapeHtml(item.label)}</span>`)
@@ -534,6 +539,57 @@ function renderPagePreview(page) {
         <p data-preview-field="description" contenteditable="true">${escapeHtml(page.description)}</p>
       </section>
       ${page.sections.filter((section) => section.visible !== false).map(previewSectionMarkup).join("")}
+    </main>
+  `;
+}
+
+function renderProductsPagePreview(page) {
+  const navItems = siteDraft.pages
+    .filter((item) => item.status !== "hidden")
+    .map((item) => `<span class="${item.id === page.id ? "is-current" : ""}">${escapeHtml(item.label)}</span>`)
+    .join("");
+  const activeProducts = products
+    .filter((product) => product.status !== "hidden")
+    .sort(sortProducts)
+    .slice(0, 8);
+  const categories = [...new Set(products.map((product) => product.category).filter(Boolean))]
+    .slice(0, 8);
+
+  $("#pagePreview").innerHTML = `
+    <header class="admin-web-site-header">
+      <div class="admin-web-brand">
+        <img src="../assets/logoRPV.png" alt="RPV">
+        <span><strong>RPV INDUSTRIAL SUPPLY</strong><small>Surface Finishing Solutions</small></span>
+      </div>
+      <nav>${navItems}</nav>
+      <span class="admin-web-quote" data-preview-field="ctaText" contenteditable="true">${escapeHtml(page.ctaText || "สอบถามราคา")}</span>
+    </header>
+    <main>
+      <section class="admin-web-home-hero admin-web-products-hero">
+        <p class="admin-web-eyebrow">${escapeHtml(page.label || "Products")}</p>
+        <h2 data-preview-field="title" contenteditable="true">${escapeHtml(page.title || "Products")}</h2>
+        <p data-preview-field="description" contenteditable="true">${escapeHtml(page.description || "")}</p>
+      </section>
+      <section class="admin-web-product-panel">
+        <div class="admin-web-product-head">
+          <div>
+            <h3 data-preview-section-field="title" data-preview-products-section="header" contenteditable="true">${escapeHtml(productPreviewSection("header")?.title || "สินค้าทั้งหมด")}</h3>
+            <p data-preview-section-field="text" data-preview-products-section="header" contenteditable="true">${escapeHtml(productPreviewSection("header")?.text || "เลือกหมวดและค้นหาสินค้าที่ต้องการ")}</p>
+          </div>
+          <div class="admin-web-product-search">ค้นหาสินค้า รุ่น หรือหมวด</div>
+        </div>
+        <div class="admin-web-category-pills">
+          <span class="is-current">ทั้งหมด</span>
+          ${categories.map((category) => `<span>${escapeHtml(category)}</span>`).join("")}
+        </div>
+        <div class="admin-web-product-grid">
+          ${activeProducts.map(previewProductCardMarkup).join("")}
+        </div>
+      </section>
+      ${page.sections
+        .filter((section) => section.visible !== false && !["header", "grid"].includes(section.id))
+        .map(previewSectionMarkup)
+        .join("")}
     </main>
   `;
 }
@@ -576,6 +632,25 @@ function renderHomeCatalogPreview(page) {
         </div>
       </section>
     </main>
+  `;
+}
+
+function productPreviewSection(id) {
+  const page = currentPage();
+  return page?.sections?.find((section) => section.id === id);
+}
+
+function previewProductCardMarkup(product) {
+  const name = product.nameTh || product.nameEn || "Untitled product";
+  const image = product.image ? adminImageSrc(product.image) : "";
+  return `
+    <article>
+      <div class="admin-web-product-image">
+        ${image ? `<img src="${escapeAttr(image)}" alt="">` : "<span>No image</span>"}
+      </div>
+      <strong>${escapeHtml(name)}</strong>
+      <p>${escapeHtml(product.category || "-")}</p>
+    </article>
   `;
 }
 
@@ -1145,6 +1220,14 @@ $("#pagePreview")?.addEventListener("input", (event) => {
 
   const sectionField = event.target.closest("[data-preview-section-field]");
   if (!sectionField) return;
+  if (sectionField.dataset.previewProductsSection) {
+    const section = page.sections.find((entry) => entry.id === sectionField.dataset.previewProductsSection);
+    if (!section) return;
+    section[sectionField.dataset.previewSectionField] = sectionField.textContent.trim();
+    renderSections(page);
+    return;
+  }
+
   const sectionNode = sectionField.closest("[data-preview-section]");
   const section = page.sections.find((entry) => entry.id === sectionNode?.dataset.previewSection);
   if (!section) return;
