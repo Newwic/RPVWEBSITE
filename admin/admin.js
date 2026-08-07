@@ -694,14 +694,21 @@ function renderProducts() {
   productPage = Math.min(Math.max(1, productPage), totalPages);
   const start = (productPage - 1) * PRODUCT_PAGE_SIZE;
   const pageItems = filtered.slice(start, start + PRODUCT_PAGE_SIZE);
+  setText("#productCountText", `${filtered.length} รายการ`);
 
-  list.innerHTML = pageItems.map((product) => `
+  list.innerHTML = pageItems.map((product, index) => `
     <article class="admin-product-item${product.id === selectedProductId ? " is-active" : ""}" data-product-id="${escapeAttr(product.id)}">
+      <span class="admin-product-index">${start + index + 1}</span>
       <div class="admin-product-thumb">${product.image ? `<img src="${escapeAttr(adminImageSrc(product.image))}" alt="">` : "No image"}</div>
-      <div>
-        <strong>${escapeHtml(product.nameTh || product.nameEn || "Untitled product")}</strong>
-        <div class="admin-product-meta">${escapeHtml(product.model || "-")} / ${escapeHtml(product.category || "-")}</div>
-        <span class="admin-badge ${escapeAttr(product.status)}">${escapeHtml(product.status)}</span>
+      <div class="admin-product-summary">
+        <div class="admin-product-title-row">
+          <strong>${escapeHtml(product.nameTh || product.nameEn || "Untitled product")}</strong>
+          <span class="admin-badge ${escapeAttr(product.status)}">${escapeHtml(product.status)}</span>
+        </div>
+        <div class="admin-product-meta">
+          <span>${escapeHtml(product.model || "No model")}</span>
+          <span>${escapeHtml(product.category || "No category")}</span>
+        </div>
       </div>
     </article>
   `).join("") || `<p class="admin-note">ไม่พบสินค้า</p>`;

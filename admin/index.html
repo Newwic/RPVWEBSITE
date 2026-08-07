@@ -7,7 +7,7 @@
     <title>RPV Admin | ระบบจัดการแก้ไขเนื้อหา</title>
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20260727-itopplus-ui">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="admin.css?v=20260807-product-pagination">
+    <link rel="stylesheet" href="admin.css?v=20260807-product-list-polish">
   </head>
   <body class="admin-page">
     <header class="admin-topbar">
@@ -159,6 +159,10 @@
 
           <div class="admin-products-layout">
             <div class="admin-card">
+              <div class="admin-card-head admin-product-list-head">
+                <strong>รายการสินค้า</strong>
+                <span id="productCountText">0 รายการ</span>
+              </div>
               <div class="admin-filters">
                 <input id="productSearch" type="search" placeholder="ค้นหาสินค้า รุ่น หรือหมวด">
                 <select id="productStatusFilter">
@@ -335,6 +339,6 @@
     <script src="config.js?v=20260807-supabase"></script>
     <script src="../rpv-supabase.js?v=20260807-analytics-db"></script>
     <script src="../data/rpv-products.js?v=20260727-itopplus-ui"></script>
-    <script src="admin.js?v=20260807-product-pagination"></script>
+    <script src="admin.js?v=20260807-product-list-polish"></script>
   </body>
 </html>
