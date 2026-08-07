@@ -74,14 +74,29 @@ const categoryGroups = {
     "1.เครื่องขัดแบบเขย่า (Vibratory Machine)",
     "2.เครื่องขัดแบบจานหมุน (Centrifugal Disc Machine)",
     "3.เครื่องขัดแบบถังกลิ้ง (Rotary/Single Barrel)",
-    "4.เครื่องอบแห้ง (Dryer Machine)",
     "5.เครื่องขัดโลหะ ยี่ห้อ Roto Finish - USA (Mass Finishing System)"
+  ],
+  "special-polishing": [
+    "8.เครื่องขัดเงาแผ่นแสตนเลส (8K Mirror Polishing)"
+  ],
+  "blasting-system": [
+    "1.เครื่องพ่นทราย และอุปกรณ์ (Blasting System)"
+  ],
+  "blasting-abrasives": [
+    "2.ทรายพ่นทุกชนิด ทุกประเภท (All Kind of Blasting Abrasives)"
   ],
   "media-compound": [
     "7.หินขัดและน้ำยาขัด (Media & Compound)"
   ],
+  "dryer-separator": [
+    "4.เครื่องอบแห้ง (Dryer Machine)",
+    "6.เครื่องแยกชิ้นงาน (Vibratory Separator)"
+  ],
   "other-products": [
     "3.3 สินค้าอื่นๆ / Other Products"
+  ],
+  "services": [
+    "บริการ /Service"
   ]
 };
 
@@ -313,13 +328,13 @@ Object.assign(ui.th, {
   homeInfoLocation: "\u0e1a\u0e32\u0e07\u0e1a\u0e31\u0e27\u0e17\u0e2d\u0e07 \u0e19\u0e19\u0e17\u0e1a\u0e38\u0e23\u0e35",
   homeAskProduct: "\u0e2a\u0e2d\u0e1a\u0e16\u0e32\u0e21\u0e2a\u0e34\u0e19\u0e04\u0e49\u0e32",
   homeCategoryMachine: "\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e02\u0e31\u0e14\u0e1c\u0e34\u0e27",
-  homeCategoryMagnetic: "\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e02\u0e31\u0e14\u0e41\u0e21\u0e48\u0e40\u0e2b\u0e25\u0e47\u0e01",
-  homeCategoryCeramic: "\u0e2b\u0e34\u0e19\u0e02\u0e31\u0e14\u0e40\u0e0b\u0e23\u0e32\u0e21\u0e34\u0e01",
-  homeCategoryPlastic: "\u0e2b\u0e34\u0e19\u0e02\u0e31\u0e14\u0e1e\u0e25\u0e32\u0e2a\u0e15\u0e34\u0e01",
-  homeCategorySteel: "\u0e27\u0e31\u0e2a\u0e14\u0e38\u0e02\u0e31\u0e14\u0e2a\u0e41\u0e15\u0e19\u0e40\u0e25\u0e2a",
-  homeCategoryCompound: "\u0e19\u0e49\u0e33\u0e22\u0e32\u0e02\u0e31\u0e14\u0e41\u0e25\u0e30\u0e40\u0e04\u0e21\u0e35\u0e20\u0e31\u0e13\u0e11\u0e4c",
-  homeCategorySpare: "\u0e2d\u0e30\u0e44\u0e2b\u0e25\u0e48\u0e41\u0e25\u0e30\u0e2d\u0e38\u0e1b\u0e01\u0e23\u0e13\u0e4c",
-  homeCategorySupport: "\u0e1b\u0e23\u0e36\u0e01\u0e29\u0e32\u0e07\u0e32\u0e19\u0e02\u0e31\u0e14\u0e1c\u0e34\u0e27",
+  homeCategoryMagnetic: "\u0e41\u0e21\u0e48\u0e40\u0e2b\u0e25\u0e47\u0e01 / 8K",
+  homeCategoryCeramic: "\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e1e\u0e48\u0e19\u0e17\u0e23\u0e32\u0e22",
+  homeCategoryPlastic: "\u0e17\u0e23\u0e32\u0e22\u0e1e\u0e48\u0e19 / \u0e40\u0e21\u0e47\u0e14\u0e02\u0e31\u0e14",
+  homeCategorySteel: "\u0e2b\u0e34\u0e19\u0e02\u0e31\u0e14 / \u0e19\u0e49\u0e33\u0e22\u0e32",
+  homeCategoryCompound: "\u0e2d\u0e1a\u0e41\u0e2b\u0e49\u0e07 / \u0e41\u0e22\u0e01\u0e0a\u0e34\u0e49\u0e19\u0e07\u0e32\u0e19",
+  homeCategorySpare: "\u0e2a\u0e34\u0e19\u0e04\u0e49\u0e32\u0e2d\u0e37\u0e48\u0e19\u0e46",
+  homeCategorySupport: "\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23",
   mobileCall: "\u0e42\u0e17\u0e23 086-399-0785"
 });
 
@@ -331,17 +346,28 @@ Object.assign(ui.en, {
   homeInfoLocation: "Bang Bua Thong, Nonthaburi",
   homeAskProduct: "Ask About Products",
   homeCategoryMachine: "Polishing Machines",
-  homeCategoryMagnetic: "Magnetic Polishing",
-  homeCategoryCeramic: "Ceramic Media",
-  homeCategoryPlastic: "Plastic Media",
-  homeCategorySteel: "Stainless Steel Media",
-  homeCategoryCompound: "Compounds and Chemicals",
-  homeCategorySpare: "Parts and Equipment",
-  homeCategorySupport: "Surface Finishing Advice",
+  homeCategoryMagnetic: "Magnetic / 8K",
+  homeCategoryCeramic: "Blasting Machines",
+  homeCategoryPlastic: "Blasting Abrasives",
+  homeCategorySteel: "Media / Compound",
+  homeCategoryCompound: "Dryers / Separators",
+  homeCategorySpare: "Other Products",
+  homeCategorySupport: "Services",
   mobileCall: "Call 086-399-0785"
 });
 
 const adminSiteDraft = loadAdminSiteDraft();
+
+const canonicalHomeCategoryLinks = [
+  "products.html?group=polishing-machines",
+  "products.html?group=special-polishing",
+  "products.html?group=blasting-system",
+  "products.html?group=blasting-abrasives",
+  "products.html?group=media-compound",
+  "products.html?group=dryer-separator",
+  "products.html?group=other-products",
+  "products.html?group=services"
+];
 
 function applyAdminSiteDraft() {
   if (!adminSiteDraft) return;
@@ -492,7 +518,10 @@ function applyAdminHomeCategories(categories) {
       ui.en[key] = category.title;
     }
     if (category.link) {
-      tile.href = category.link.replace(/^\.\.\//, "");
+      const link = category.link.replace(/^\.\.\//, "");
+      tile.href = link === "products.html" || link === "solutions.html"
+        ? canonicalHomeCategoryLinks[index] || link
+        : link;
     }
     if (category.image) {
       const image = category.image.replace(/^\.\.\//, "");

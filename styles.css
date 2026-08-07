@@ -457,34 +457,58 @@ input {
 }
 
 .tile-machine {
+  background-image:
+    linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)),
+    url("assets/itopplus/images/Screenshot2024-06-18133652z-z181602969884-934d1b8a39.webp");
   background-position: center 45%;
 }
 
 .tile-magnetic {
+  background-image:
+    linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)),
+    url("assets/rpv-watermarked/rpv-MagneticPolishingz-z418977855235-91289e9807.webp");
   background-position: 58% 42%;
 }
 
 .tile-ceramic {
+  background-image:
+    linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)),
+    url("assets/itopplus/images/image-Photoroom-6-z-z449893161938-e7edeee5f2.png");
   background-position: 42% 50%;
 }
 
 .tile-plastic {
+  background-image:
+    linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)),
+    url("assets/itopplus/images/GBSandz-z1506707535607-3ac278e469.webp");
   background-position: 65% 56%;
 }
 
 .tile-steel {
+  background-image:
+    linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)),
+    url("assets/itopplus/images/PolishingMediaz-z119638418684-8589fbfcdd.webp");
   background-position: 30% 52%;
 }
 
 .tile-compound {
+  background-image:
+    linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)),
+    url("assets/rpv-watermarked/rpv-Separatorz-z1628959849741-fbcea81c51.webp");
   background-position: 72% 48%;
 }
 
 .tile-spare {
+  background-image:
+    linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)),
+    url("assets/itopplus/images/BowlFeederz-z705132466308-d9974ce643.webp");
   background-position: 48% 60%;
 }
 
 .tile-support {
+  background-image:
+    linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)),
+    url("assets/itopplus/images/ServiceRepairz-z1108734234555-def29d64e2.webp");
   background-position: center 38%;
 }
 

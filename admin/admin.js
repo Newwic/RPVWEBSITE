@@ -86,14 +86,14 @@ const defaultSettings = {
 };
 
 const homeCategoryDefaults = [
-  { id: "machine", title: "เครื่องขัดผิว", link: "products.html", image: "../assets/itopplus/images/Screenshot2024-06-18133652z-z181602969884-934d1b8a39.webp" },
-  { id: "blasting", title: "เครื่องพ่นทราย", link: "products.html", image: "../assets/itopplus/images/image-Photoroom-6-z-z449893161938-e7edeee5f2.png" },
-  { id: "abrasive", title: "ทรายพ่นและเม็ดขัด", link: "products.html", image: "../assets/itopplus/images/GBSandz-z1506707535607-3ac278e469.webp" },
-  { id: "media", title: "หินขัดและน้ำยา", link: "products.html", image: "../assets/itopplus/images/PolishingMediaz-z119638418684-8589fbfcdd.webp" },
-  { id: "service", title: "บริการงานขัดและซ่อม", link: "products.html", image: "../assets/itopplus/images/ServiceRepairz-z1108734234555-def29d64e2.webp" },
-  { id: "spare", title: "อะไหล่และอุปกรณ์", link: "products.html", image: "../assets/itopplus/images/Air-AbrasiveConsumptionz-z1497020210445-9df9109e77.webp" },
-  { id: "other", title: "สินค้าอื่นๆ", link: "products.html", image: "../assets/itopplus/images/BowlFeederz-z705132466308-d9974ce643.webp" },
-  { id: "support", title: "ปรึกษางานผิวโลหะ", link: "solutions.html", image: "../assets/rpv-banner-reference.jpg" }
+  { id: "machine", title: "เครื่องขัดผิว", link: "products.html?group=polishing-machines", image: "../assets/itopplus/images/Screenshot2024-06-18133652z-z181602969884-934d1b8a39.webp" },
+  { id: "special", title: "แม่เหล็ก / 8K", link: "products.html?group=special-polishing", image: "../assets/rpv-watermarked/rpv-MagneticPolishingz-z418977855235-91289e9807.webp" },
+  { id: "blasting", title: "เครื่องพ่นทราย", link: "products.html?group=blasting-system", image: "../assets/itopplus/images/image-Photoroom-6-z-z449893161938-e7edeee5f2.png" },
+  { id: "abrasive", title: "ทรายพ่น / เม็ดขัด", link: "products.html?group=blasting-abrasives", image: "../assets/itopplus/images/GBSandz-z1506707535607-3ac278e469.webp" },
+  { id: "media", title: "หินขัด / น้ำยา", link: "products.html?group=media-compound", image: "../assets/itopplus/images/PolishingMediaz-z119638418684-8589fbfcdd.webp" },
+  { id: "dryer", title: "อบแห้ง / แยกชิ้นงาน", link: "products.html?group=dryer-separator", image: "../assets/rpv-watermarked/rpv-Separatorz-z1628959849741-fbcea81c51.webp" },
+  { id: "other", title: "สินค้าอื่นๆ", link: "products.html?group=other-products", image: "../assets/itopplus/images/BowlFeederz-z705132466308-d9974ce643.webp" },
+  { id: "service", title: "บริการ", link: "products.html?group=services", image: "../assets/itopplus/images/ServiceRepairz-z1108734234555-def29d64e2.webp" }
 ];
 
 let siteDraft = loadSiteDraft();
