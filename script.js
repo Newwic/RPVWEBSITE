@@ -604,6 +604,17 @@ function productFeatures(product) {
   ];
 }
 
+function productImageSource(product) {
+  if (!product.image) return "";
+
+  if (product.image.startsWith("assets/itopplus/images/")) {
+    const fileName = product.image.split("/").pop();
+    return `assets/rpv-watermarked/rpv-${fileName}`;
+  }
+
+  return product.image;
+}
+
 function uniqueCategories() {
   return ["All", ...new Set(products.map((product) => product.category))];
 }
@@ -794,7 +805,8 @@ function imageMarkup(product) {
   const name = productName(product);
 
   if (product.image) {
-    return `<img src="${product.image}" alt="${name}" loading="lazy">`;
+    const image = productImageSource(product);
+    return `<img src="${image}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='${product.image}'">`;
   }
 
   return `
