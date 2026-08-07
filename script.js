@@ -63,6 +63,7 @@ const products = (loadAdminProductDraft() || window.rpvProducts || [])
 const urlParams = new URLSearchParams(window.location.search);
 let currentCategory = "All";
 let currentCategoryGroup = null;
+let currentProductGroup = null;
 const urlLanguage = urlParams.get("lang");
 let currentLanguage = ["th", "en"].includes(urlLanguage)
   ? urlLanguage
@@ -75,14 +76,44 @@ const categoryGroups = {
     "3.เครื่องขัดแบบถังกลิ้ง (Rotary/Single Barrel)",
     "4.เครื่องอบแห้ง (Dryer Machine)",
     "5.เครื่องขัดโลหะ ยี่ห้อ Roto Finish - USA (Mass Finishing System)",
-    "6.เครื่องแยกชิ้นงาน (Vibratory Separator)",
-    "8.เครื่องขัดเงาแผ่นแสตนเลส (8K Mirror Polishing)"
+    "6.เครื่องแยกชิ้นงาน (Vibratory Separator)"
   ],
   "media-compound": [
     "7.หินขัดและน้ำยาขัด (Media & Compound)"
   ],
   "other-products": [
     "3.3 สินค้าอื่นๆ / Other Products"
+  ]
+};
+
+const productGroups = {
+  "magnetic-polishing": [
+    "magnetic-polishing-machine-12"
+  ],
+  "ceramic-media": [
+    "ceramic-beads-37",
+    "media-47"
+  ],
+  "plastic-media": [
+    "urea-41",
+    "melamine-42",
+    "polycarbonate-43",
+    "nylonpolyamide-44"
+  ],
+  "steel-media": [
+    "carbon-steel-cut-wire-24",
+    "stainless-steel-cut-wire-25",
+    "steel-grit-29",
+    "steel-shot-30",
+    "vulkan-grittal-31",
+    "vulkan-chronital-32"
+  ],
+  "spare-equipment": [
+    "spare-part-pressure-blast-14",
+    "spare-part-suction-blast-15",
+    "vibratory-feeder-system-21",
+    "filter-sand-gravel-22",
+    "abrasive-paper-abrasive-wheel-23"
   ]
 };
 
@@ -625,6 +656,13 @@ function applyCategoryFromUrl() {
 
   if (requestedGroup && categoryGroups[requestedGroup]) {
     currentCategoryGroup = new Set(categoryGroups[requestedGroup]);
+    currentProductGroup = null;
+    return;
+  }
+
+  if (requestedGroup && productGroups[requestedGroup]) {
+    currentProductGroup = new Set(productGroups[requestedGroup]);
+    currentCategoryGroup = null;
     return;
   }
 
@@ -638,6 +676,7 @@ function applyCategoryFromUrl() {
   if (matchedCategory) {
     currentCategory = matchedCategory;
     currentCategoryGroup = null;
+    currentProductGroup = null;
   }
 }
 
@@ -686,9 +725,11 @@ function filteredProducts() {
   const keyword = productSearch?.value.trim() || "";
 
   return products.filter((product) => {
-    const categoryMatch = currentCategoryGroup
-      ? currentCategoryGroup.has(product.category)
-      : currentCategory === "All" || product.category === currentCategory;
+    const categoryMatch = currentProductGroup
+      ? currentProductGroup.has(product.id)
+      : currentCategoryGroup
+        ? currentCategoryGroup.has(product.category)
+        : currentCategory === "All" || product.category === currentCategory;
     const searchMatch = keyword === "" || productMatchesSearch(product, keyword);
     return categoryMatch && searchMatch;
   });
@@ -792,6 +833,7 @@ function renderFilters() {
     button.addEventListener("click", () => {
       currentCategory = category;
       currentCategoryGroup = null;
+      currentProductGroup = null;
       updateCategoryUrl(category);
       renderFilters();
       renderProducts();
