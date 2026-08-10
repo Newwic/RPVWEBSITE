@@ -226,6 +226,35 @@ input {
   border-color: #06c755;
 }
 
+a[href*="line.me"] {
+  transition: transform 200ms ease, color 200ms ease;
+}
+
+a[href*="line.me"]:hover,
+a[href*="line.me"]:focus-visible {
+  transform: translateY(-3px) scale(1.025);
+}
+
+.button.line:hover,
+.button.line:focus-visible,
+.mobile-contact-line:hover,
+.mobile-contact-line:focus-visible {
+  box-shadow: 0 10px 22px rgba(6, 199, 85, .24);
+}
+
+.contact-qr,
+.footer-qr,
+.brand-logo {
+  transition: transform 240ms ease, box-shadow 240ms ease;
+}
+
+.contact-qr:hover,
+.footer-qr:hover,
+.brand-logo:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 10px 22px rgba(24, 33, 29, .16);
+}
+
 .button.detail {
   color: var(--green-dark);
   background: var(--green-soft);
@@ -1223,6 +1252,20 @@ input {
   border-radius: 999px;
   box-shadow: var(--shadow);
   font-weight: 900;
+  animation: line-float 3.6s ease-in-out infinite;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.floating-line:hover,
+.floating-line:focus-visible {
+  animation-play-state: paused;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 14px 28px rgba(6, 199, 85, .28);
+}
+
+@keyframes line-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 .mobile-contact-bar {
