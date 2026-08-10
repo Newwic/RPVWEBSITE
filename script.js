@@ -1003,6 +1003,18 @@ function renderFilters() {
 
     categoryFilters.appendChild(button);
   });
+
+  initHoverLabels(categoryFilters);
+}
+
+function initHoverLabels(root = document) {
+  root.querySelectorAll("a[href], button, [role=\"button\"]").forEach((element) => {
+    const label = element.getAttribute("aria-label")
+      || element.getAttribute("title")
+      || element.textContent.replace(/\s+/g, " ").trim();
+    if (!label || label === "×") return;
+    element.dataset.hoverLabel = label.length > 70 ? `${label.slice(0, 67)}...` : label;
+  });
 }
 
 function imageMarkup(product) {
@@ -1066,6 +1078,8 @@ function renderProducts() {
 
     productGrid.appendChild(card);
   });
+
+  initHoverLabels(productGrid);
 }
 
 async function hydrateProductsFromSupabase() {
@@ -1230,6 +1244,7 @@ applyLanguage();
 applySearchFromUrl();
 renderFilters();
 renderProducts();
+initHoverLabels();
 hydrateSiteDraftFromSupabase();
 hydrateProductsFromSupabase();
 enableSiteDraftRealtime();
