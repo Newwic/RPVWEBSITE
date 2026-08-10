@@ -7,6 +7,14 @@ const productCount = document.querySelector("#productCount");
 const productModal = document.querySelector("#productModal");
 const modalContent = document.querySelector("#modalContent");
 const modalClose = document.querySelector(".modal-close");
+const imageViewer = document.querySelector("#imageViewer");
+const imageViewerClose = document.querySelector("#imageViewerClose");
+const imageViewerStage = document.querySelector("#imageViewerStage");
+const imageViewerImage = document.querySelector("#imageViewerImage");
+const imageZoomOut = document.querySelector("#imageZoomOut");
+const imageZoomIn = document.querySelector("#imageZoomIn");
+const imageZoomReset = document.querySelector("#imageZoomReset");
+const imageZoomLevel = document.querySelector("#imageZoomLevel");
 const promoPopup = document.querySelector("#promoPopup");
 const promoCloseButtons = document.querySelectorAll("[data-promo-close]");
 const languageButtons = document.querySelectorAll("[data-lang]");
@@ -1138,6 +1146,103 @@ function hideImageZoom(image) {
   activeImageZoom = null;
 }
 
+let imageViewerScale = 1;
+let imageViewerOffsetX = 0;
+let imageViewerOffsetY = 0;
+let imageViewerPointer = null;
+
+function updateImageViewer() {
+  if (!imageViewerImage) return;
+
+  imageViewerImage.style.transform = `translate3d(${imageViewerOffsetX}px, ${imageViewerOffsetY}px, 0) scale(${imageViewerScale})`;
+  imageViewerImage.classList.toggle("is-zoomed", imageViewerScale > 1);
+
+  if (imageZoomLevel) {
+    imageZoomLevel.textContent = `${Math.round(imageViewerScale * 100)}%`;
+  }
+}
+
+function setImageViewerScale(nextScale) {
+  imageViewerScale = clampNumber(nextScale, 1, 4);
+
+  if (imageViewerScale === 1) {
+    imageViewerOffsetX = 0;
+    imageViewerOffsetY = 0;
+  }
+
+  updateImageViewer();
+}
+
+function resetImageViewer() {
+  imageViewerScale = 1;
+  imageViewerOffsetX = 0;
+  imageViewerOffsetY = 0;
+  updateImageViewer();
+}
+
+function openImageViewer(image) {
+  if (!imageViewer || !imageViewerImage || !image?.src) return;
+
+  imageViewerImage.src = image.currentSrc || image.src;
+  imageViewerImage.alt = image.alt || "Product image";
+  resetImageViewer();
+
+  if (!imageViewer.open) {
+    imageViewer.showModal();
+  }
+}
+
+function closeImageViewer() {
+  if (imageViewer?.open) imageViewer.close();
+  imageViewerPointer = null;
+  resetImageViewer();
+}
+
+imageViewerClose?.addEventListener("click", closeImageViewer);
+imageViewer?.addEventListener("click", (event) => {
+  if (event.target === imageViewer) closeImageViewer();
+});
+imageZoomIn?.addEventListener("click", () => setImageViewerScale(imageViewerScale + 0.25));
+imageZoomOut?.addEventListener("click", () => setImageViewerScale(imageViewerScale - 0.25));
+imageZoomReset?.addEventListener("click", resetImageViewer);
+
+imageViewerStage?.addEventListener("wheel", (event) => {
+  if (!imageViewer?.open) return;
+  event.preventDefault();
+  setImageViewerScale(imageViewerScale + (event.deltaY < 0 ? 0.25 : -0.25));
+}, { passive: false });
+
+imageViewerImage?.addEventListener("pointerdown", (event) => {
+  if (imageViewerScale <= 1) return;
+
+  imageViewerPointer = {
+    id: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    originX: imageViewerOffsetX,
+    originY: imageViewerOffsetY
+  };
+  imageViewerImage.setPointerCapture?.(event.pointerId);
+  imageViewerImage.classList.add("is-dragging");
+});
+
+imageViewerImage?.addEventListener("pointermove", (event) => {
+  if (!imageViewerPointer || imageViewerPointer.id !== event.pointerId) return;
+
+  imageViewerOffsetX = imageViewerPointer.originX + event.clientX - imageViewerPointer.startX;
+  imageViewerOffsetY = imageViewerPointer.originY + event.clientY - imageViewerPointer.startY;
+  updateImageViewer();
+});
+
+function stopImageViewerDrag(event) {
+  if (!imageViewerPointer || imageViewerPointer.id !== event.pointerId) return;
+  imageViewerPointer = null;
+  imageViewerImage?.classList.remove("is-dragging");
+}
+
+imageViewerImage?.addEventListener("pointerup", stopImageViewerDrag);
+imageViewerImage?.addEventListener("pointercancel", stopImageViewerDrag);
+
 function initImageZoom(root = document) {
   root.querySelectorAll(".product-image img[data-image-zoom]").forEach((image) => {
     if (image.dataset.zoomBound === "true") return;
@@ -1146,6 +1251,22 @@ function initImageZoom(root = document) {
     image.addEventListener("mousemove", (event) => updateImageZoom(image, event));
     image.addEventListener("mouseleave", () => hideImageZoom(image));
     image.addEventListener("error", () => hideImageZoom(image));
+
+    if (image.closest(".modal-image")) {
+      image.setAttribute("role", "button");
+      image.setAttribute("tabindex", "0");
+      image.setAttribute("aria-label", `${image.alt || "Product image"} - zoom`);
+      image.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openImageViewer(image);
+      });
+      image.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        openImageViewer(image);
+      });
+    }
   });
 }
 
