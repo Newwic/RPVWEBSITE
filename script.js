@@ -861,7 +861,7 @@ function applyLanguage() {
   setText(".quote-button", t("quoteButton"));
   setText(".brand small", t("brandSubtitle"));
   setText('.site-nav a[href="index.html"]', t("navHome"));
-  setText('.site-nav a[href="products.html"]', t("navProducts"));
+  setText('.nav-dropdown-toggle .nav-label', t("navProducts"));
   setText('.site-nav a[href="solutions.html"]', t("navSolutions"));
   setText('.site-nav a[href="about.html"]', t("navAbout"));
   setText('.site-nav a[href="contact.html"]', t("navContact"));
