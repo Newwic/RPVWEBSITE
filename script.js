@@ -1383,20 +1383,26 @@ function openProductModal(product) {
   modalContent.innerHTML = `
     <div class="modal-layout">
       <div class="product-image modal-image">
+        <span class="modal-image-label">RPV.CO.TH <i>PRODUCT VIEW</i></span>
         ${imageMarkup(product)}
         <button class="image-zoom-trigger" type="button" aria-label="${t("zoomImage")}">⌕ <span>${t("zoomImage")}</span></button>
       </div>
-      <div>
+      <div class="modal-copy">
+        <p class="modal-kicker">RPV PRODUCT DETAIL</p>
         <span class="product-category">${categoryLabel(product.category)}</span>
         <h2>${name}</h2>
         <p class="product-en">${secondaryName}${modelText}</p>
-        <p>${description}</p>
+        <div class="modal-facts" aria-label="Product information">
+          <div><span>GROUP</span><strong>${categoryLabel(product.category)}</strong></div>
+          <div><span>MODEL</span><strong>${product.model || "-"}</strong></div>
+        </div>
+        <p class="modal-description">${description}</p>
         <h3>${t("modalFeatures")}</h3>
         <ul class="feature-list modal-features">
           ${features.map((feature) => `<li>${feature}</li>`).join("")}
         </ul>
         <h3>${t("modalMore")}</h3>
-        <p>${t("modalNote")}</p>
+        <p class="modal-note">${t("modalNote")}</p>
         <div class="modal-actions">
           <a class="button line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener">${t("addLine")}</a>
           <a class="button secondary" href="tel:021944346">${t("callOffice")}</a>
