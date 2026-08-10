@@ -288,7 +288,8 @@ const ui = {
     modalMore: "ข้อมูลเพิ่มเติม",
     modalNote: "ยังไม่มีสเปกรายละเอียดหรือราคาที่ตรวจสอบครบถ้วน จึงแสดงเป็น “สอบถามราคา” เพื่อหลีกเลี่ยงข้อมูลผิดพลาด",
     addLine: "เพิ่ม LINE",
-    closeModal: "ปิดหน้าต่างสินค้า"
+    closeModal: "ปิดหน้าต่างสินค้า",
+    zoomImage: "ขยายรูป"
   },
   en: {
     title: "RPV Industrial Supply | Surface Finishing Machines and Industrial Equipment",
@@ -334,7 +335,8 @@ const ui = {
     modalMore: "More Information",
     modalNote: "Detailed specifications or verified pricing are not yet available, so this item is shown as “Ask for Price” to avoid inaccurate information.",
     addLine: "Add LINE",
-    closeModal: "Close product dialog"
+    closeModal: "Close product dialog",
+    zoomImage: "Zoom image"
   }
 };
 
@@ -1380,7 +1382,10 @@ function openProductModal(product) {
 
   modalContent.innerHTML = `
     <div class="modal-layout">
-      <div class="product-image modal-image">${imageMarkup(product)}</div>
+      <div class="product-image modal-image">
+        ${imageMarkup(product)}
+        <button class="image-zoom-trigger" type="button" aria-label="${t("zoomImage")}">⌕ <span>${t("zoomImage")}</span></button>
+      </div>
       <div>
         <span class="product-category">${categoryLabel(product.category)}</span>
         <h2>${name}</h2>
@@ -1400,6 +1405,14 @@ function openProductModal(product) {
     </div>
   `;
   initImageZoom(modalContent);
+  const modalImage = modalContent.querySelector(".modal-image");
+  const modalImageElement = modalImage?.querySelector("img");
+  const imageZoomTrigger = modalImage?.querySelector(".image-zoom-trigger");
+  imageZoomTrigger?.addEventListener("click", () => openImageViewer(modalImageElement));
+  modalImage?.addEventListener("click", (event) => {
+    if (event.target !== modalImage) return;
+    openImageViewer(modalImageElement);
+  });
   productModal.showModal();
 }
 
