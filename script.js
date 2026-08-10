@@ -666,7 +666,7 @@ function applyAdminHomeCategories(categories) {
         : link;
     }
     if (category.image) {
-      const image = category.image.replace(/^\.\.\//, "");
+      const image = watermarkedAssetPath(category.image);
       tile.style.backgroundImage = `linear-gradient(180deg, rgba(13, 36, 29, 0.08), rgba(13, 36, 29, 0.58)), url("${image}")`;
     }
   });
@@ -805,15 +805,25 @@ function productFeatures(product) {
   ];
 }
 
-function productImageSource(product) {
-  if (!product.image) return "";
+function watermarkedAssetPath(value) {
+  const source = String(value || "").trim();
+  if (!source) return "";
 
-  if (product.image.startsWith("assets/itopplus/images/")) {
-    const fileName = product.image.split("/").pop();
-    return `assets/rpv-watermarked/rpv-${fileName}`;
+  const normalized = source.replace(/^\.\.\//, "");
+  if (normalized.startsWith("assets/itopplus/images/")) {
+    const fileName = normalized.split("/").pop();
+    return `assets/rpv-watermarked-pattern/rpv-${fileName}`;
   }
 
-  return product.image;
+  if (normalized.startsWith("assets/rpv-watermarked/")) {
+    return normalized.replace("assets/rpv-watermarked/", "assets/rpv-watermarked-pattern/");
+  }
+
+  return normalized;
+}
+
+function productImageSource(product) {
+  return watermarkedAssetPath(product?.image);
 }
 
 function uniqueCategories() {
