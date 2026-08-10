@@ -394,6 +394,44 @@ a.button {
   margin-top: 12px;
 }
 
+.promo-image-editor {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px;
+  background: #f7faf8;
+  border: 1px dashed #aebbc4;
+  border-radius: 4px;
+}
+
+.promo-image-preview {
+  display: grid;
+  min-height: 160px;
+  place-items: center;
+  overflow: hidden;
+  background: #e7edf1;
+  border: 1px solid #d6e0e6;
+  border-radius: 4px;
+}
+
+.promo-image-preview[hidden] {
+  display: none;
+}
+
+.promo-image-preview img {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+}
+
+.promo-image-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .admin-check {
   display: inline-flex;
   align-items: center;

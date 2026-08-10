@@ -86,14 +86,7 @@ const defaultSettings = {
   accentColor: "#f5a623",
   promo: {
     enabled: true,
-    eyebrow: "RPV PROMOTION",
-    title: "โปรโมชั่นพิเศษสำหรับงานขัดผิว",
-    text: "สอบถามเครื่องจักร วัสดุขัด และโซลูชันที่เหมาะกับชิ้นงานของคุณ พร้อมรับข้อเสนอพิเศษจากทีม RPV",
     image: "assets/rpv-banner-reference.jpg",
-    primaryText: "ติดต่อขอราคา",
-    primaryLink: "https://line.me/R/ti/p/@rpvofficial",
-    secondaryText: "ดูสินค้าทั้งหมด",
-    secondaryLink: "products.html",
     delay: 700
   }
 };
@@ -1110,15 +1103,24 @@ function renderSettings() {
   setValue("#settingAccentColor", settings.accentColor || "#f5a623");
   const promoEnabled = $("#settingPromoEnabled");
   if (promoEnabled) promoEnabled.checked = promo.enabled !== false;
-  setValue("#settingPromoEyebrow", promo.eyebrow);
-  setValue("#settingPromoTitle", promo.title);
-  setValue("#settingPromoText", promo.text);
-  setValue("#settingPromoImage", promo.image);
-  setValue("#settingPromoPrimaryText", promo.primaryText);
-  setValue("#settingPromoPrimaryLink", promo.primaryLink);
-  setValue("#settingPromoSecondaryText", promo.secondaryText);
-  setValue("#settingPromoSecondaryLink", promo.secondaryLink);
   setValue("#settingPromoDelay", promo.delay);
+
+  const preview = $("#settingPromoImagePreview");
+  const previewImage = $("#settingPromoImagePreviewImage");
+  const removeButton = $("#removePromoImageButton");
+  const status = $("#settingPromoImageStatus");
+  const image = String(promo.image || "").trim();
+  if (preview) preview.hidden = !image;
+  if (previewImage) {
+    previewImage.src = image ? adminImageSrc(image) : "";
+    previewImage.alt = image.startsWith("data:") ? "รูปโปรโมชั่นที่อัปโหลดใหม่" : "รูปโปรโมชั่นปัจจุบัน";
+  }
+  if (removeButton) removeButton.disabled = !image;
+  if (status) {
+    status.textContent = image
+      ? (image.startsWith("data:") ? "มีรูปใหม่รอบันทึกแทนรูปเก่า" : `รูปปัจจุบัน: ${shorten(image, 70)}`)
+      : "ยังไม่มีรูปโปรโมชั่น — Popup จะไม่แสดง";
+  }
 }
 
 function saveSettings() {
@@ -1135,16 +1137,8 @@ function saveSettings() {
     primaryColor: readValue("#settingPrimaryColor"),
     accentColor: readValue("#settingAccentColor"),
     promo: {
-      ...currentPromo,
       enabled: promoEnabled ? promoEnabled.checked : currentPromo.enabled,
-      eyebrow: readValue("#settingPromoEyebrow"),
-      title: readValue("#settingPromoTitle"),
-      text: readValue("#settingPromoText"),
-      image: readValue("#settingPromoImage"),
-      primaryText: readValue("#settingPromoPrimaryText"),
-      primaryLink: readValue("#settingPromoPrimaryLink"),
-      secondaryText: readValue("#settingPromoSecondaryText"),
-      secondaryLink: readValue("#settingPromoSecondaryLink"),
+      image: String(currentPromo.image || "").trim(),
       delay: Number.isFinite(promoDelay) ? Math.min(10000, Math.max(0, promoDelay)) : currentPromo.delay
     }
   };
@@ -1198,6 +1192,36 @@ function readImageFile(file) {
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
     reader.readAsDataURL(file);
+  });
+}
+
+async function readPromoImageFile(file) {
+  const source = await readImageFile(file);
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => {
+      const maxWidth = 1800;
+      const maxHeight = 1400;
+      const scale = Math.min(1, maxWidth / image.naturalWidth, maxHeight / image.naturalHeight);
+      const width = Math.max(1, Math.round(image.naturalWidth * scale));
+      const height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext("2d");
+      context.drawImage(image, 0, 0, width, height);
+
+      let optimized = source;
+      try {
+        const webp = canvas.toDataURL("image/webp", 0.88);
+        if (webp.startsWith("data:image/webp") && webp.length < source.length) optimized = webp;
+      } catch {
+        // Keep the original data URL when this browser cannot export WebP.
+      }
+      resolve(optimized);
+    };
+    image.onerror = () => resolve(source);
+    image.src = source;
   });
 }
 
@@ -1500,6 +1524,61 @@ $("#productImageFile")?.addEventListener("change", async (event) => {
   }
   $("#productImage").value = await readImageFile(file);
   setStatus("โหลดรูปสินค้าแล้ว");
+});
+
+$("#settingPromoImageFile")?.addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    window.alert("รองรับเฉพาะ JPG, PNG หรือ WebP");
+    event.target.value = "";
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    window.alert("รูปใหญ่เกิน 10MB กรุณาส่งออกจาก Canva ให้เล็กลงก่อน");
+    event.target.value = "";
+    return;
+  }
+
+  try {
+    const settings = mergeSettings(siteDraft.settings);
+    const image = await readPromoImageFile(file);
+    if (image.length > 3.5 * 1024 * 1024) {
+      window.alert("รูปหลังย่อยังใหญ่เกินไป กรุณาส่งออกจาก Canva เป็น JPG หรือปรับขนาดรูปให้เล็กลง");
+      event.target.value = "";
+      return;
+    }
+    siteDraft.settings = {
+      ...settings,
+      promo: {
+        enabled: settings.promo.enabled,
+        image,
+        delay: settings.promo.delay
+      }
+    };
+    renderSettings();
+    setStatus("เลือกรูปโปรโมชั่นใหม่แล้ว กดบันทึก Settings Draft เพื่อแทนรูปเก่า");
+  } catch (error) {
+    console.warn("RPV promo image load failed.", error);
+    window.alert("อ่านรูปไม่สำเร็จ กรุณาลองเลือกไฟล์ใหม่");
+    event.target.value = "";
+  }
+});
+
+$("#removePromoImageButton")?.addEventListener("click", () => {
+  const settings = mergeSettings(siteDraft.settings);
+  siteDraft.settings = {
+    ...settings,
+    promo: {
+      enabled: settings.promo.enabled,
+      image: "",
+      delay: settings.promo.delay
+    }
+  };
+  const fileInput = $("#settingPromoImageFile");
+  if (fileInput) fileInput.value = "";
+  renderSettings();
+  setStatus("ลบรูปโปรโมชั่นเก่าแล้ว กดบันทึก Settings Draft เพื่อยืนยัน");
 });
 
 $("#saveSettingsButton")?.addEventListener("click", saveSettings);
