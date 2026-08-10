@@ -135,10 +135,11 @@ input {
   color: var(--green);
 }
 
-.nav-dropdown { position: relative; }
+.nav-dropdown { position: relative; flex: 0 0 auto; }
 .nav-dropdown-toggle { display: inline-flex; align-items: center; gap: 6px; }
 .nav-arrow { color: var(--green); font-size: 16px; line-height: 1; }
 .nav-dropdown-menu {
+  display: grid;
   position: absolute;
   top: calc(100% + 14px);
   left: 50%;
