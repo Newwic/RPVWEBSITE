@@ -1017,12 +1017,144 @@ function initHoverLabels(root = document) {
   });
 }
 
+let activeImageZoom = null;
+const imageZoomFactor = 2.35;
+
+function clampNumber(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function canUseImageZoom() {
+  return !window.matchMedia || window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
+function getImageZoomMetrics(image) {
+  const rect = image.getBoundingClientRect();
+  const style = window.getComputedStyle(image);
+  const paddingLeft = parseFloat(style.paddingLeft) || 0;
+  const paddingRight = parseFloat(style.paddingRight) || 0;
+  const paddingTop = parseFloat(style.paddingTop) || 0;
+  const paddingBottom = parseFloat(style.paddingBottom) || 0;
+  const boxWidth = Math.max(rect.width - paddingLeft - paddingRight, 1);
+  const boxHeight = Math.max(rect.height - paddingTop - paddingBottom, 1);
+  const naturalWidth = image.naturalWidth || image.width;
+  const naturalHeight = image.naturalHeight || image.height;
+
+  if (!naturalWidth || !naturalHeight) return null;
+
+  const naturalRatio = naturalWidth / naturalHeight;
+  const boxRatio = boxWidth / boxHeight;
+  let renderedWidth;
+  let renderedHeight;
+  let offsetLeft;
+  let offsetTop;
+
+  if (naturalRatio >= boxRatio) {
+    renderedWidth = boxWidth;
+    renderedHeight = boxWidth / naturalRatio;
+    offsetLeft = 0;
+    offsetTop = (boxHeight - renderedHeight) / 2;
+  } else {
+    renderedHeight = boxHeight;
+    renderedWidth = boxHeight * naturalRatio;
+    offsetLeft = (boxWidth - renderedWidth) / 2;
+    offsetTop = 0;
+  }
+
+  return {
+    rect,
+    contentLeft: rect.left + paddingLeft + offsetLeft,
+    contentTop: rect.top + paddingTop + offsetTop,
+    renderedWidth,
+    renderedHeight
+  };
+}
+
+function positionImageZoomPreview(preview, sourceRect, pointerX, pointerY) {
+  const gap = 14;
+  const edge = 12;
+  const previewWidth = preview.offsetWidth || 360;
+  const previewHeight = preview.offsetHeight || 300;
+  let left = sourceRect.right + gap;
+
+  if (left + previewWidth > window.innerWidth - edge) {
+    left = sourceRect.left - previewWidth - gap;
+  }
+
+  if (left < edge) {
+    left = clampNumber(pointerX + gap, edge, Math.max(edge, window.innerWidth - previewWidth - edge));
+  }
+
+  const top = clampNumber(
+    pointerY - previewHeight / 2,
+    edge,
+    Math.max(edge, window.innerHeight - previewHeight - edge)
+  );
+
+  preview.style.left = `${left}px`;
+  preview.style.top = `${top}px`;
+}
+
+function updateImageZoom(image, event) {
+  if (!activeImageZoom || activeImageZoom.image !== image) return;
+
+  const metrics = getImageZoomMetrics(image);
+  if (!metrics) return;
+
+  const preview = activeImageZoom.preview;
+  const x = clampNumber(event.clientX - metrics.contentLeft, 0, metrics.renderedWidth);
+  const y = clampNumber(event.clientY - metrics.contentTop, 0, metrics.renderedHeight);
+  const scaledWidth = metrics.renderedWidth * imageZoomFactor;
+  const scaledHeight = metrics.renderedHeight * imageZoomFactor;
+  const previewWidth = preview.offsetWidth || 360;
+  const previewHeight = preview.offsetHeight || 300;
+  const imageSource = image.currentSrc || image.src;
+
+  preview.style.backgroundImage = `url("${imageSource.replace(/"/g, "\\\"")}")`;
+  preview.style.backgroundSize = `${scaledWidth}px ${scaledHeight}px`;
+  preview.style.backgroundPosition = `${previewWidth / 2 - x * imageZoomFactor}px ${previewHeight / 2 - y * imageZoomFactor}px`;
+  positionImageZoomPreview(preview, metrics.rect, event.clientX, event.clientY);
+  preview.classList.add("is-visible");
+}
+
+function showImageZoom(image, event) {
+  if (!canUseImageZoom() || !image.complete || !image.naturalWidth) return;
+
+  if (activeImageZoom?.image !== image) {
+    activeImageZoom?.preview.remove();
+    const preview = document.createElement("div");
+    preview.className = "image-zoom-preview";
+    preview.setAttribute("aria-hidden", "true");
+    document.body.appendChild(preview);
+    activeImageZoom = { image, preview };
+  }
+
+  updateImageZoom(image, event);
+}
+
+function hideImageZoom(image) {
+  if (!activeImageZoom || activeImageZoom.image !== image) return;
+  activeImageZoom.preview.remove();
+  activeImageZoom = null;
+}
+
+function initImageZoom(root = document) {
+  root.querySelectorAll(".product-image img[data-image-zoom]").forEach((image) => {
+    if (image.dataset.zoomBound === "true") return;
+    image.dataset.zoomBound = "true";
+    image.addEventListener("mouseenter", (event) => showImageZoom(image, event));
+    image.addEventListener("mousemove", (event) => updateImageZoom(image, event));
+    image.addEventListener("mouseleave", () => hideImageZoom(image));
+    image.addEventListener("error", () => hideImageZoom(image));
+  });
+}
+
 function imageMarkup(product) {
   const name = productName(product);
 
   if (product.image) {
     const image = productImageSource(product);
-    return `<img src="${image}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='${product.image}'">`;
+    return `<img src="${image}" alt="${name}" loading="lazy" draggable="false" data-image-zoom="true" onerror="this.onerror=null;this.src='${product.image}'">`;
   }
 
   return `
@@ -1080,6 +1212,7 @@ function renderProducts() {
   });
 
   initHoverLabels(productGrid);
+  initImageZoom(productGrid);
 }
 
 async function hydrateProductsFromSupabase() {
@@ -1135,6 +1268,7 @@ function openProductModal(product) {
       </div>
     </div>
   `;
+  initImageZoom(modalContent);
   productModal.showModal();
 }
 

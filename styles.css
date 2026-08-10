@@ -933,13 +933,38 @@ a[href*="line.me"]:focus-visible {
   object-fit: contain;
   padding: 8px;
   cursor: zoom-in;
-  transform: scale(1);
-  transition: transform 280ms ease;
-  will-change: transform;
+  transform: none;
 }
 
 .product-image:hover img {
-  transform: scale(1.14);
+  transform: none;
+}
+
+.image-zoom-preview {
+  position: fixed;
+  z-index: 1200;
+  width: min(380px, 34vw);
+  height: min(320px, 30vw);
+  min-width: 260px;
+  min-height: 220px;
+  overflow: hidden;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(24, 33, 29, 0.24);
+  border-radius: 4px;
+  box-shadow: 0 18px 42px rgba(24, 33, 29, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.98);
+  transform-origin: center;
+  transition: opacity 120ms ease, transform 120ms ease;
+  visibility: hidden;
+}
+
+.image-zoom-preview.is-visible {
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
 }
 
 @media (hover: none) {
@@ -949,6 +974,10 @@ a[href*="line.me"]:focus-visible {
 
   .product-image:hover img {
     transform: none;
+  }
+
+  .image-zoom-preview {
+    display: none;
   }
 }
 
