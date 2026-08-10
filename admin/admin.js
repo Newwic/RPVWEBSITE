@@ -83,8 +83,35 @@ const defaultSettings = {
   line: "@rpvofficial",
   address: "บางบัวทอง นนทบุรี",
   primaryColor: "#1f8e3d",
-  accentColor: "#f5a623"
+  accentColor: "#f5a623",
+  promo: {
+    enabled: true,
+    eyebrow: "RPV PROMOTION",
+    title: "โปรโมชั่นพิเศษสำหรับงานขัดผิว",
+    text: "สอบถามเครื่องจักร วัสดุขัด และโซลูชันที่เหมาะกับชิ้นงานของคุณ พร้อมรับข้อเสนอพิเศษจากทีม RPV",
+    image: "assets/rpv-banner-reference.jpg",
+    primaryText: "ติดต่อขอราคา",
+    primaryLink: "https://line.me/R/ti/p/@rpvofficial",
+    secondaryText: "ดูสินค้าทั้งหมด",
+    secondaryLink: "products.html",
+    delay: 700
+  }
 };
+
+function mergeSettings(savedSettings, baseSettings = {}) {
+  const saved = savedSettings && typeof savedSettings === "object" ? savedSettings : {};
+  const base = baseSettings && typeof baseSettings === "object" ? baseSettings : {};
+  return {
+    ...defaultSettings,
+    ...base,
+    ...saved,
+    promo: {
+      ...defaultSettings.promo,
+      ...(base.promo || {}),
+      ...(saved.promo || {})
+    }
+  };
+}
 
 const homeCategoryDefaults = [
   { id: "machine", title: "เครื่องขัดผิว", link: "products.html?group=polishing-machines", image: "../assets/itopplus/images/Screenshot2024-06-18133652z-z181602969884-934d1b8a39.webp" },
@@ -161,7 +188,7 @@ function loadSiteDraft() {
   const extraPages = savedPages.filter((page) => !pages.some((item) => item.id === page.id));
   return {
     pages: [...pages, ...extraPages],
-    settings: { ...defaultSettings, ...(saved.settings || {}) },
+    settings: mergeSettings(saved.settings),
     appearance: saved.appearance || {},
     homeCategories: mergeHomeCategories(saved.homeCategories)
   };
@@ -241,7 +268,7 @@ async function hydrateSiteFromSupabase() {
       ...siteDraft,
       ...remoteDraft,
       pages: Array.isArray(remoteDraft.pages) ? remoteDraft.pages : siteDraft.pages,
-      settings: { ...siteDraft.settings, ...(remoteDraft.settings || {}) },
+      settings: mergeSettings(remoteDraft.settings, siteDraft.settings),
       homeCategories: Array.isArray(remoteDraft.homeCategories) ? remoteDraft.homeCategories : siteDraft.homeCategories
     };
     localStorage.setItem(STORAGE_SITE, JSON.stringify(siteDraft));
@@ -263,7 +290,7 @@ function enableSiteRealtime() {
       ...siteDraft,
       ...remoteDraft,
       pages: Array.isArray(remoteDraft.pages) ? remoteDraft.pages : siteDraft.pages,
-      settings: { ...siteDraft.settings, ...(remoteDraft.settings || {}) },
+      settings: mergeSettings(remoteDraft.settings, siteDraft.settings),
       homeCategories: Array.isArray(remoteDraft.homeCategories) ? remoteDraft.homeCategories : siteDraft.homeCategories
     };
     localStorage.setItem(STORAGE_SITE, JSON.stringify(siteDraft));
@@ -1073,23 +1100,53 @@ function uniqueImages() {
 }
 
 function renderSettings() {
-  const settings = siteDraft.settings || defaultSettings;
+  const settings = mergeSettings(siteDraft.settings);
+  const promo = settings.promo;
   setValue("#settingPhone", settings.phone);
   setValue("#settingEmail", settings.email);
   setValue("#settingLine", settings.line);
   setValue("#settingAddress", settings.address);
   setValue("#settingPrimaryColor", settings.primaryColor || "#1f8e3d");
   setValue("#settingAccentColor", settings.accentColor || "#f5a623");
+  const promoEnabled = $("#settingPromoEnabled");
+  if (promoEnabled) promoEnabled.checked = promo.enabled !== false;
+  setValue("#settingPromoEyebrow", promo.eyebrow);
+  setValue("#settingPromoTitle", promo.title);
+  setValue("#settingPromoText", promo.text);
+  setValue("#settingPromoImage", promo.image);
+  setValue("#settingPromoPrimaryText", promo.primaryText);
+  setValue("#settingPromoPrimaryLink", promo.primaryLink);
+  setValue("#settingPromoSecondaryText", promo.secondaryText);
+  setValue("#settingPromoSecondaryLink", promo.secondaryLink);
+  setValue("#settingPromoDelay", promo.delay);
 }
 
 function saveSettings() {
+  const currentSettings = mergeSettings(siteDraft.settings);
+  const currentPromo = currentSettings.promo;
+  const promoEnabled = $("#settingPromoEnabled");
+  const promoDelay = Number(readValue("#settingPromoDelay"));
   siteDraft.settings = {
+    ...currentSettings,
     phone: readValue("#settingPhone"),
     email: readValue("#settingEmail"),
     line: readValue("#settingLine"),
     address: readValue("#settingAddress"),
     primaryColor: readValue("#settingPrimaryColor"),
-    accentColor: readValue("#settingAccentColor")
+    accentColor: readValue("#settingAccentColor"),
+    promo: {
+      ...currentPromo,
+      enabled: promoEnabled ? promoEnabled.checked : currentPromo.enabled,
+      eyebrow: readValue("#settingPromoEyebrow"),
+      title: readValue("#settingPromoTitle"),
+      text: readValue("#settingPromoText"),
+      image: readValue("#settingPromoImage"),
+      primaryText: readValue("#settingPromoPrimaryText"),
+      primaryLink: readValue("#settingPromoPrimaryLink"),
+      secondaryText: readValue("#settingPromoSecondaryText"),
+      secondaryLink: readValue("#settingPromoSecondaryLink"),
+      delay: Number.isFinite(promoDelay) ? Math.min(10000, Math.max(0, promoDelay)) : currentPromo.delay
+    }
   };
   persistSite();
 }

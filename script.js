@@ -11,6 +11,21 @@ const promoPopup = document.querySelector("#promoPopup");
 const promoCloseButtons = document.querySelectorAll("[data-promo-close]");
 const languageButtons = document.querySelectorAll("[data-lang]");
 
+const defaultPromoSettings = {
+  enabled: true,
+  eyebrow: "RPV PROMOTION",
+  title: "โปรโมชั่นพิเศษสำหรับงานขัดผิว",
+  text: "สอบถามเครื่องจักร วัสดุขัด และโซลูชันที่เหมาะกับชิ้นงานของคุณ พร้อมรับข้อเสนอพิเศษจากทีม RPV",
+  image: "assets/rpv-banner-reference.jpg",
+  primaryText: "ติดต่อขอราคา",
+  primaryLink: "https://line.me/R/ti/p/@rpvofficial",
+  secondaryText: "ดูสินค้าทั้งหมด",
+  secondaryLink: "products.html",
+  delay: 700
+};
+
+let promoTimer = null;
+
 function loadAdminProductDraft() {
   try {
     const draft = JSON.parse(localStorage.getItem("rpvProductsDraft") || "null");
@@ -360,6 +375,65 @@ Object.assign(ui.en, {
 
 let adminSiteDraft = loadAdminSiteDraft();
 
+function getPromoSettings() {
+  const savedPromo = adminSiteDraft?.settings?.promo;
+  return { ...defaultPromoSettings, ...(savedPromo || {}) };
+}
+
+function safePromoLink(value, fallback) {
+  const link = String(value || "").trim();
+  if (!link || /^(javascript|data):/i.test(link)) return fallback;
+  return link;
+}
+
+function applyPromoSettings() {
+  if (!promoPopup) return;
+
+  const promo = getPromoSettings();
+  const image = document.querySelector("#promoImage");
+  const eyebrow = document.querySelector("#promoEyebrow");
+  const title = document.querySelector("#promoTitle");
+  const text = document.querySelector("#promoText");
+  const primaryLink = document.querySelector("#promoPrimaryLink");
+  const secondaryLink = document.querySelector("#promoSecondaryLink");
+
+  window.clearTimeout(promoTimer);
+  promoPopup.hidden = true;
+  promoPopup.setAttribute("aria-hidden", promo.enabled === false ? "true" : "false");
+
+  if (image) {
+    image.hidden = !promo.image;
+    if (promo.image) image.src = promo.image;
+    image.alt = promo.title || "โปรโมชั่นสินค้า RPV";
+  }
+  if (eyebrow) eyebrow.textContent = promo.eyebrow || "";
+  if (title) title.textContent = promo.title || "";
+  if (text) text.textContent = promo.text || "";
+
+  if (primaryLink) {
+    primaryLink.hidden = !promo.primaryText || !promo.primaryLink;
+    primaryLink.textContent = promo.primaryText || "";
+    primaryLink.href = safePromoLink(promo.primaryLink, defaultPromoSettings.primaryLink);
+  }
+  if (secondaryLink) {
+    secondaryLink.hidden = !promo.secondaryText || !promo.secondaryLink;
+    secondaryLink.textContent = promo.secondaryText || "";
+    secondaryLink.href = safePromoLink(promo.secondaryLink, defaultPromoSettings.secondaryLink);
+  }
+
+  const actions = promoPopup.querySelector(".promo-actions");
+  if (actions) actions.hidden = Boolean(primaryLink?.hidden && secondaryLink?.hidden);
+  if (promo.enabled === false || sessionStorage.getItem("rpvPromoSeen")) return;
+
+  const delay = Number.isFinite(Number(promo.delay))
+    ? Math.min(10000, Math.max(0, Number(promo.delay)))
+    : defaultPromoSettings.delay;
+  promoTimer = window.setTimeout(() => {
+    promoPopup.hidden = false;
+    sessionStorage.setItem("rpvPromoSeen", "1");
+  }, delay);
+}
+
 const canonicalHomeCategoryLinks = [
   "products.html?group=polishing-machines",
   "products.html?group=special-polishing",
@@ -372,7 +446,10 @@ const canonicalHomeCategoryLinks = [
 ];
 
 function applyAdminSiteDraft() {
-  if (!adminSiteDraft) return;
+  if (!adminSiteDraft) {
+    applyPromoSettings();
+    return;
+  }
 
   if (adminSiteDraft.home) {
     if (adminSiteDraft.home.heroTitle) {
@@ -514,6 +591,8 @@ function applyAdminSiteDraft() {
   if (Array.isArray(adminSiteDraft.homeCategories)) {
     applyAdminHomeCategories(adminSiteDraft.homeCategories);
   }
+
+  applyPromoSettings();
 }
 
 function applySectionText(root, section) {
@@ -1084,13 +1163,6 @@ function closePromoPopup() {
 }
 
 promoCloseButtons.forEach((button) => button.addEventListener("click", closePromoPopup));
-
-if (promoPopup && !sessionStorage.getItem("rpvPromoSeen")) {
-  window.setTimeout(() => {
-    promoPopup.hidden = false;
-    sessionStorage.setItem("rpvPromoSeen", "1");
-  }, 700);
-}
 
 navToggle?.addEventListener("click", () => {
   const isOpen = siteNav.classList.toggle("is-open");

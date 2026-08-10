@@ -7,7 +7,7 @@
     <title>RPV Admin | ระบบจัดการแก้ไขเนื้อหา</title>
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20260727-itopplus-ui">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="admin.css?v=20260807-product-list-polish">
+    <link rel="stylesheet" href="admin.css?v=20260810-promo-settings">
   </head>
   <body class="admin-page">
     <header class="admin-topbar">
@@ -326,6 +326,47 @@
               <p class="admin-note">ถ้ายังไม่ได้ต่อ Supabase การบันทึกจะเป็น Draft ใน browser ก่อน เมื่อต่อ Supabase แล้วจะบันทึกเข้าเว็บ RPVWEBSITE ของเรา</p>
             </div>
           </div>
+          <div class="admin-card settings-wide-card">
+            <div class="admin-card-head">
+              <strong>จัดการ Popup โปรโมชั่น</strong>
+              <label class="admin-check">
+                <input id="settingPromoEnabled" type="checkbox">
+                <span>เปิดแสดง Popup หน้าแรก</span>
+              </label>
+            </div>
+            <div class="admin-two-cols">
+              <label>ข้อความเล็กด้านบน
+                <input id="settingPromoEyebrow" type="text" placeholder="RPV PROMOTION">
+              </label>
+              <label>หัวข้อโปรโมชั่น
+                <input id="settingPromoTitle" type="text">
+              </label>
+            </div>
+            <label>รายละเอียดโปรโมชั่น
+              <textarea id="settingPromoText" rows="3"></textarea>
+            </label>
+            <label>URL รูปโปรโมชั่น
+              <input id="settingPromoImage" type="text" placeholder="assets/rpv-banner-reference.jpg">
+            </label>
+            <div class="admin-two-cols">
+              <label>ข้อความปุ่มหลัก
+                <input id="settingPromoPrimaryText" type="text">
+              </label>
+              <label>ลิงก์ปุ่มหลัก
+                <input id="settingPromoPrimaryLink" type="text" placeholder="https://line.me/R/ti/p/@rpvofficial">
+              </label>
+              <label>ข้อความปุ่มรอง
+                <input id="settingPromoSecondaryText" type="text">
+              </label>
+              <label>ลิงก์ปุ่มรอง
+                <input id="settingPromoSecondaryLink" type="text" placeholder="products.html">
+              </label>
+            </div>
+            <label>หน่วงเวลาก่อน Popup แสดง (มิลลิวินาที)
+              <input id="settingPromoDelay" type="number" min="0" max="10000" step="100">
+            </label>
+            <p class="admin-note">Popup จะแสดงครั้งเดียวต่อการเปิดเว็บหนึ่งครั้ง ถ้าไม่ได้ต่อ Supabase การแก้ไขจะเห็นเฉพาะ browser นี้</p>
+          </div>
         </section>
       </section>
     </main>
@@ -334,6 +375,6 @@
     <script src="config.js?v=20260807-supabase"></script>
     <script src="../rpv-supabase.js?v=20260807-analytics-db"></script>
     <script src="../data/rpv-products.js?v=20260727-itopplus-ui"></script>
-    <script src="admin.js?v=20260807-product-list-polish"></script>
+    <script src="admin.js?v=20260810-promo-settings"></script>
   </body>
 </html>
