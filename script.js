@@ -7,6 +7,8 @@ const productCount = document.querySelector("#productCount");
 const productModal = document.querySelector("#productModal");
 const modalContent = document.querySelector("#modalContent");
 const modalClose = document.querySelector(".modal-close");
+const promoPopup = document.querySelector("#promoPopup");
+const promoCloseButtons = document.querySelectorAll("[data-promo-close]");
 const languageButtons = document.querySelectorAll("[data-lang]");
 
 function loadAdminProductDraft() {
@@ -1074,6 +1076,20 @@ function closeMobileNav() {
   document.body.classList.remove("nav-open");
   navToggle?.setAttribute("aria-expanded", "false");
   navToggle?.setAttribute("aria-label", "เปิดเมนู");
+}
+
+function closePromoPopup() {
+  if (!promoPopup) return;
+  promoPopup.hidden = true;
+}
+
+promoCloseButtons.forEach((button) => button.addEventListener("click", closePromoPopup));
+
+if (promoPopup && !sessionStorage.getItem("rpvPromoSeen")) {
+  window.setTimeout(() => {
+    promoPopup.hidden = false;
+    sessionStorage.setItem("rpvPromoSeen", "1");
+  }, 700);
 }
 
 navToggle?.addEventListener("click", () => {
