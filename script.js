@@ -21,7 +21,6 @@ const languageButtons = document.querySelectorAll("[data-lang]");
 const rpvShowcase = document.querySelector("#rpvShowcase");
 const showcaseStage = rpvShowcase?.querySelector("#showcaseStage");
 const showcaseDots = rpvShowcase?.querySelector("#showcaseDots");
-const showcaseCounter = rpvShowcase?.querySelector("#showcaseCounter");
 const showcaseProgress = rpvShowcase?.querySelector("#showcaseProgress");
 
 const defaultPromoSettings = {
@@ -486,8 +485,6 @@ function renderShowcase() {
 
   const slide = showcaseSlides[showcaseIndex];
   const language = currentLanguage === "en" ? "en" : "th";
-  const slideNumber = String(showcaseIndex + 1).padStart(2, "0");
-
   showcaseStage.innerHTML = `
     <article class="showcase-slide">
       <div class="showcase-slide-image">
@@ -502,7 +499,6 @@ function renderShowcase() {
     </article>
   `;
 
-  showcaseCounter && (showcaseCounter.textContent = `${slideNumber} / ${String(showcaseSlides.length).padStart(2, "0")}`);
   showcaseDots.replaceChildren();
 
   showcaseSlides.forEach((item, index) => {
