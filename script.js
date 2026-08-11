@@ -22,6 +22,7 @@ const rpvShowcase = document.querySelector("#rpvShowcase");
 const showcaseStage = rpvShowcase?.querySelector("#showcaseStage");
 const showcaseDots = rpvShowcase?.querySelector("#showcaseDots");
 const showcaseCounter = rpvShowcase?.querySelector("#showcaseCounter");
+const showcaseProgress = rpvShowcase?.querySelector("#showcaseProgress");
 
 const defaultPromoSettings = {
   enabled: true,
@@ -474,6 +475,7 @@ const showcaseSlides = [
 
 let showcaseIndex = 0;
 let showcaseTimer = null;
+let showcaseTouchStartX = null;
 
 function showcaseCopy(key) {
   return showcaseUi[currentLanguage]?.[key] || showcaseUi.th[key] || "";
@@ -517,6 +519,7 @@ function renderShowcase() {
   });
 
   initHoverLabels(rpvShowcase);
+  resetShowcaseProgress();
 }
 
 function goToShowcase(index) {
@@ -524,14 +527,23 @@ function goToShowcase(index) {
   renderShowcase();
 }
 
+function resetShowcaseProgress() {
+  if (!showcaseProgress) return;
+  showcaseProgress.classList.remove("is-running", "is-paused");
+  void showcaseProgress.offsetWidth;
+  showcaseProgress.classList.add("is-running");
+}
+
 function stopShowcaseTimer() {
   window.clearInterval(showcaseTimer);
   showcaseTimer = null;
+  showcaseProgress?.classList.add("is-paused");
 }
 
 function startShowcaseTimer() {
   stopShowcaseTimer();
   if (!rpvShowcase || showcaseSlides.length < 2) return;
+  showcaseProgress?.classList.remove("is-paused");
   showcaseTimer = window.setInterval(() => goToShowcase(showcaseIndex + 1), 6000);
 }
 
@@ -1676,6 +1688,40 @@ rpvShowcase?.addEventListener("mouseleave", startShowcaseTimer);
 rpvShowcase?.addEventListener("focusin", stopShowcaseTimer);
 rpvShowcase?.addEventListener("focusout", (event) => {
   if (!rpvShowcase.contains(event.relatedTarget)) {
+    startShowcaseTimer();
+  }
+});
+
+rpvShowcase?.addEventListener("keydown", (event) => {
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+  event.preventDefault();
+  goToShowcase(showcaseIndex + (event.key === "ArrowRight" ? 1 : -1));
+  startShowcaseTimer();
+});
+
+rpvShowcase?.addEventListener("touchstart", (event) => {
+  showcaseTouchStartX = event.changedTouches[0]?.clientX ?? null;
+  stopShowcaseTimer();
+}, { passive: true });
+
+rpvShowcase?.addEventListener("touchend", (event) => {
+  if (showcaseTouchStartX === null) return;
+  const touchEndX = event.changedTouches[0]?.clientX ?? showcaseTouchStartX;
+  const distance = touchEndX - showcaseTouchStartX;
+  showcaseTouchStartX = null;
+
+  if (Math.abs(distance) >= 45) {
+    goToShowcase(showcaseIndex + (distance < 0 ? 1 : -1));
+  }
+
+  startShowcaseTimer();
+}, { passive: true });
+
+document.addEventListener("visibilitychange", () => {
+  if (!rpvShowcase) return;
+  if (document.hidden) {
+    stopShowcaseTimer();
+  } else {
     startShowcaseTimer();
   }
 });
