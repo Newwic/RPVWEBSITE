@@ -5759,6 +5759,7 @@ a[href*="line.me"]:focus-visible {
 .rpv-showcase-shell {
   position: relative;
   z-index: 1;
+  display: block;
   width: min(100%, 1450px);
   padding: clamp(24px, 4vw, 54px) clamp(18px, 4vw, 52px) 0;
 }
