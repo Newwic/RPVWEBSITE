@@ -18,6 +18,12 @@ const imageZoomLevel = document.querySelector("#imageZoomLevel");
 const promoPopup = document.querySelector("#promoPopup");
 const promoCloseButtons = document.querySelectorAll("[data-promo-close]");
 const languageButtons = document.querySelectorAll("[data-lang]");
+const surfaceFinder = document.querySelector("#surfaceFinder");
+const finderProgressSteps = surfaceFinder?.querySelectorAll("[data-finder-progress]");
+const finderResultTitle = surfaceFinder?.querySelector("#finderResultTitle");
+const finderResultText = surfaceFinder?.querySelector("#finderResultText");
+const finderSelection = surfaceFinder?.querySelector("#finderSelection");
+const finderResultLinks = surfaceFinder?.querySelector("#finderResultLinks");
 
 const defaultPromoSettings = {
   enabled: true,
@@ -289,7 +295,44 @@ const ui = {
     modalNote: "ยังไม่มีสเปกรายละเอียดหรือราคาที่ตรวจสอบครบถ้วน จึงแสดงเป็น “สอบถามราคา” เพื่อหลีกเลี่ยงข้อมูลผิดพลาด",
     addLine: "เพิ่ม LINE",
     closeModal: "ปิดหน้าต่างสินค้า",
-    zoomImage: "ขยายรูป"
+    zoomImage: "ขยายรูป",
+    finderEyebrow: "RPV QUICK FINDER",
+    finderTitle: "เริ่มจากงานที่คุณต้องการแก้",
+    finderText: "ตอบ 2 คำถามสั้น ๆ เพื่อหาหมวดสินค้าและโซลูชันที่ควรเริ่มดู",
+    finderStepOne: "STEP 1 / 2 · เป้าหมายงาน",
+    finderQuestionOne: "คุณกำลังมองหาวิธีแก้ปัญหาแบบไหน?",
+    finderGoalDeburr: "ลบครีบ / ลบคม",
+    finderGoalDeburrHint: "เก็บขอบและผิวชิ้นงาน",
+    finderGoalPrepare: "ขจัดสนิม / เตรียมผิว",
+    finderGoalPrepareHint: "เตรียมผิวก่อนพ่นสีหรือเคลือบ",
+    finderGoalShine: "ขัดเงา / เก็บผิว",
+    finderGoalShineHint: "ต้องการผิวเรียบหรือเงาสม่ำเสมอ",
+    finderGoalEquipment: "หาเครื่อง / อุปกรณ์",
+    finderGoalEquipmentHint: "เริ่มจากระบบที่เหมาะกับหน้างาน",
+    finderStepTwo: "STEP 2 / 2 · ลักษณะงาน",
+    finderQuestionTwo: "ลักษณะงานของคุณใกล้เคียงแบบไหน?",
+    finderFinishSmall: "ชิ้นงานเล็ก / รายละเอียด",
+    finderFinishSmallHint: "ต้องการเข้าถึงซอกหรือชิ้นส่วนขนาดเล็ก",
+    finderFinishBatch: "งานจำนวนมาก / สม่ำเสมอ",
+    finderFinishBatchHint: "ต้องการทำซ้ำและควบคุมผลลัพธ์",
+    finderFinishLarge: "ชิ้นงานใหญ่ / พื้นที่กว้าง",
+    finderFinishLargeHint: "ต้องการระบบสำหรับงานภาคสนามหรือชิ้นงานใหญ่",
+    finderFinishUnsure: "ยังไม่แน่ใจ",
+    finderFinishUnsureHint: "ส่งรูปชิ้นงานให้ทีม RPV ช่วยดูได้",
+    finderBack: "ย้อนกลับ",
+    finderResultEyebrow: "แนวทางเริ่มต้นสำหรับคุณ",
+    finderSelectionLabel: "ลักษณะงานที่เลือก",
+    finderResultNote: "คำแนะนำนี้เป็นจุดเริ่มต้นเบื้องต้น ทีม RPV ช่วยยืนยันจากรูปชิ้นงาน วัสดุ และผลลัพธ์ที่ต้องการได้",
+    finderLine: "ส่งรูปให้ทีม RPV",
+    finderRestart: "เริ่มใหม่",
+    finderLinkPolishing: "ดูเครื่องขัดผิว",
+    finderLinkMedia: "ดูหินขัด / น้ำยา",
+    finderLinkBlastMachines: "ดูเครื่องพ่นทราย",
+    finderLinkBlastAbrasives: "ดูทรายพ่น / เม็ดขัด",
+    finderLink8K: "ดูระบบขัดเงา 8K",
+    finderLinkCompound: "ดูวัสดุขัดและน้ำยา",
+    finderLinkOther: "ดูสินค้าอื่น ๆ",
+    finderLinkServices: "ดูบริการ RPV"
   },
   en: {
     title: "RPV Industrial Supply | Surface Finishing Machines and Industrial Equipment",
@@ -336,7 +379,44 @@ const ui = {
     modalNote: "Detailed specifications or verified pricing are not yet available, so this item is shown as “Ask for Price” to avoid inaccurate information.",
     addLine: "Add LINE",
     closeModal: "Close product dialog",
-    zoomImage: "Zoom image"
+    zoomImage: "Zoom image",
+    finderEyebrow: "RPV QUICK FINDER",
+    finderTitle: "Start with the job you need to solve",
+    finderText: "Answer two quick questions to find the product categories and solutions to explore first.",
+    finderStepOne: "STEP 1 / 2 · JOB GOAL",
+    finderQuestionOne: "What kind of result are you looking for?",
+    finderGoalDeburr: "Deburr / Edge finishing",
+    finderGoalDeburrHint: "Smooth edges and part surfaces",
+    finderGoalPrepare: "Remove rust / Prepare surface",
+    finderGoalPrepareHint: "Prepare before painting or coating",
+    finderGoalShine: "Polish / Refine surface",
+    finderGoalShineHint: "Aim for a smoother or brighter finish",
+    finderGoalEquipment: "Find machines / equipment",
+    finderGoalEquipmentHint: "Start with a system for your work area",
+    finderStepTwo: "STEP 2 / 2 · WORK PROFILE",
+    finderQuestionTwo: "Which work profile is closest to yours?",
+    finderFinishSmall: "Small / detailed parts",
+    finderFinishSmallHint: "Need access to small parts or tight areas",
+    finderFinishBatch: "High volume / consistent result",
+    finderFinishBatchHint: "Need repeatable process control",
+    finderFinishLarge: "Large parts / wide area",
+    finderFinishLargeHint: "Need a system for field or large-part work",
+    finderFinishUnsure: "Not sure yet",
+    finderFinishUnsureHint: "Send a part photo for the RPV team to review",
+    finderBack: "Back",
+    finderResultEyebrow: "A starting point for you",
+    finderSelectionLabel: "Selected work profile",
+    finderResultNote: "This is a starting point. The RPV team can confirm the fit from your part photo, material, and target result.",
+    finderLine: "Send a photo to RPV",
+    finderRestart: "Start over",
+    finderLinkPolishing: "View polishing machines",
+    finderLinkMedia: "View media / compound",
+    finderLinkBlastMachines: "View blasting machines",
+    finderLinkBlastAbrasives: "View blasting abrasives",
+    finderLink8K: "View 8K polishing",
+    finderLinkCompound: "View media and compound",
+    finderLinkOther: "View other products",
+    finderLinkServices: "View RPV services"
   }
 };
 
@@ -375,6 +455,132 @@ Object.assign(ui.en, {
   homeCategorySupport: "Services",
   mobileCall: "Call 086-399-0785"
 });
+
+const finderRecommendations = {
+  deburr: {
+    title: {
+      th: "เริ่มจากเครื่องขัดผิวและวัสดุขัด",
+      en: "Start with polishing machines and media"
+    },
+    text: {
+      th: "สำหรับงานลบครีบ ลบคม หรือเก็บผิว ให้เริ่มดูเครื่องขัดผิวและวัสดุขัดที่เลือกให้เหมาะกับชิ้นงาน",
+      en: "For deburring, edge finishing, or surface refinement, start with polishing machines and media matched to the part."
+    },
+    links: [
+      { key: "finderLinkPolishing", href: "products.html?group=polishing-machines" },
+      { key: "finderLinkMedia", href: "products.html?group=media-compound" }
+    ]
+  },
+  prepare: {
+    title: {
+      th: "เริ่มจากระบบพ่นทรายและวัสดุพ่น",
+      en: "Start with blasting systems and abrasives"
+    },
+    text: {
+      th: "สำหรับงานขจัดสนิม เตรียมผิว หรือสร้างผิวก่อนเคลือบ ให้เริ่มดูเครื่องพ่นทรายและวัสดุพ่น",
+      en: "For rust removal, surface preparation, or creating a profile before coating, start with blasting systems and abrasives."
+    },
+    links: [
+      { key: "finderLinkBlastMachines", href: "products.html?group=blasting-system" },
+      { key: "finderLinkBlastAbrasives", href: "products.html?group=blasting-abrasives" }
+    ]
+  },
+  shine: {
+    title: {
+      th: "เริ่มจากระบบขัดเงาและวัสดุขัด",
+      en: "Start with polishing systems and finishing media"
+    },
+    text: {
+      th: "สำหรับงานขัดเงาและเก็บผิว ให้เริ่มดูระบบขัดเงา 8K รวมถึงหินขัดและน้ำยาที่เกี่ยวข้อง",
+      en: "For polishing and final surface finishing, start with 8K polishing plus the related media and compounds."
+    },
+    links: [
+      { key: "finderLink8K", href: "products.html?group=special-polishing" },
+      { key: "finderLinkCompound", href: "products.html?group=media-compound" }
+    ]
+  },
+  equipment: {
+    title: {
+      th: "เริ่มจากหมวดเครื่องและบริการของ RPV",
+      en: "Start with RPV equipment and services"
+    },
+    text: {
+      th: "ถ้ายังไม่แน่ใจว่าต้องใช้ระบบใด ให้เริ่มดูสินค้าอื่น ๆ และบริการ แล้วส่งรายละเอียดหน้างานให้ทีม RPV ช่วยคัดให้",
+      en: "If you are not sure which system you need, start with other products and services, then share your work details with the RPV team."
+    },
+    links: [
+      { key: "finderLinkOther", href: "products.html?group=other-products" },
+      { key: "finderLinkServices", href: "products.html?group=services" }
+    ]
+  }
+};
+
+const finderFinishKeys = {
+  small: "finderFinishSmall",
+  batch: "finderFinishBatch",
+  large: "finderFinishLarge",
+  unsure: "finderFinishUnsure"
+};
+
+let finderState = { goal: "", finish: "" };
+
+function finderCopy(key) {
+  return ui[currentLanguage]?.[key] || ui.th?.[key] || "";
+}
+
+function renderFinderResult() {
+  if (!surfaceFinder || !finderResultTitle || !finderResultText || !finderSelection || !finderResultLinks) return;
+  if (!finderState.goal || !finderState.finish) return;
+
+  const recommendation = finderRecommendations[finderState.goal];
+  const finishKey = finderFinishKeys[finderState.finish];
+  if (!recommendation || !finishKey) return;
+
+  finderResultTitle.textContent = recommendation.title[currentLanguage] || recommendation.title.th;
+  finderResultText.textContent = recommendation.text[currentLanguage] || recommendation.text.th;
+  finderSelection.textContent = `${finderCopy("finderSelectionLabel")}: ${finderCopy(finishKey)}`;
+  finderResultLinks.replaceChildren();
+
+  recommendation.links.forEach((link) => {
+    const anchor = document.createElement("a");
+    anchor.className = "finder-result-link";
+    anchor.href = link.href;
+    anchor.textContent = finderCopy(link.key);
+    finderResultLinks.appendChild(anchor);
+  });
+}
+
+function setFinderStep(step) {
+  if (!surfaceFinder) return;
+  const targetStep = String(step);
+  const panels = surfaceFinder.querySelectorAll("[data-finder-step]");
+  panels.forEach((panel) => {
+    const isVisible = panel.dataset.finderStep === targetStep
+      || (targetStep === "result" && panel.dataset.finderStep === "result");
+    panel.hidden = !isVisible;
+    panel.classList.toggle("is-active", isVisible);
+  });
+
+  const progressIndex = targetStep === "1" ? 1 : targetStep === "2" ? 2 : 3;
+  finderProgressSteps?.forEach((stepElement) => {
+    const stepNumber = Number(stepElement.dataset.finderProgress);
+    stepElement.classList.toggle("is-active", stepNumber === progressIndex);
+    stepElement.classList.toggle("is-complete", stepNumber < progressIndex);
+  });
+
+  if (targetStep === "result") {
+    renderFinderResult();
+  }
+}
+
+function applyFinderLanguage() {
+  if (!surfaceFinder) return;
+  surfaceFinder.querySelectorAll("[data-i18n]").forEach((element) => {
+    const value = finderCopy(element.dataset.i18n);
+    if (value) element.textContent = value;
+  });
+  renderFinderResult();
+}
 
 let adminSiteDraft = loadAdminSiteDraft();
 
@@ -990,6 +1196,7 @@ function applyLanguage() {
   setText('.footer-links a[href="about.html"]', t("footerAboutLink"));
   setText('.footer-links a[href="contact.html"]', t("footerContactLink"));
   setText(".copyright", t("footerCopyright"));
+  applyFinderLanguage();
 }
 
 function renderFilters() {
@@ -1476,6 +1683,43 @@ languageButtons.forEach((button) => {
   });
 });
 
+surfaceFinder?.addEventListener("click", (event) => {
+  const goalButton = event.target.closest("[data-finder-goal]");
+  const finishButton = event.target.closest("[data-finder-finish]");
+  const backButton = event.target.closest("[data-finder-back]");
+  const resetButton = event.target.closest("[data-finder-reset]");
+
+  if (goalButton) {
+    finderState = { goal: goalButton.dataset.finderGoal, finish: "" };
+    setFinderStep("2");
+    surfaceFinder.querySelector('[data-finder-step="2"] .finder-option')?.focus();
+    return;
+  }
+
+  if (finishButton) {
+    if (!finderState.goal) {
+      setFinderStep("1");
+      return;
+    }
+    finderState.finish = finishButton.dataset.finderFinish;
+    renderFinderResult();
+    setFinderStep("result");
+    surfaceFinder.querySelector("[data-finder-reset]")?.focus();
+    return;
+  }
+
+  if (backButton) {
+    setFinderStep("1");
+    return;
+  }
+
+  if (resetButton) {
+    finderState = { goal: "", finish: "" };
+    setFinderStep("1");
+    surfaceFinder.querySelector('[data-finder-step="1"] .finder-option')?.focus();
+  }
+});
+
 productSearch?.addEventListener("input", renderProducts);
 
 productGrid?.addEventListener("click", (event) => {
@@ -1526,6 +1770,7 @@ applyCategoryFromUrl();
 applyAdminSiteDraft();
 applyLanguage();
 applySearchFromUrl();
+setFinderStep("1");
 renderFilters();
 renderProducts();
 initHoverLabels();
