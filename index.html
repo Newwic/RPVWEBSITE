@@ -87,6 +87,32 @@
     </header>
 
     <main id="home" class="home-catalog-page">
+      <section class="rpv-showcase" id="rpvShowcase" aria-labelledby="showcaseTitle">
+        <div class="rpv-showcase-shell">
+          <div class="showcase-heading">
+            <div>
+              <p class="eyebrow" data-showcase-i18n="showcaseEyebrow">RPV PRODUCT SPOTLIGHT</p>
+              <h2 id="showcaseTitle" data-showcase-i18n="showcaseTitle">ดูโซลูชันเด่นของ RPV</h2>
+              <p data-showcase-i18n="showcaseText">เลื่อนดูหมวดสินค้าและบริการที่ช่วยให้งานขัดผิวของคุณเดินต่อได้ง่ายขึ้น</p>
+            </div>
+            <div class="showcase-controls" aria-label="ควบคุมสไลด์">
+              <button class="showcase-control" type="button" data-showcase-action="prev" aria-label="สไลด์ก่อนหน้า">←</button>
+              <span class="showcase-counter" id="showcaseCounter" aria-live="polite">01 / 06</span>
+              <button class="showcase-control" type="button" data-showcase-action="next" aria-label="สไลด์ถัดไป">→</button>
+            </div>
+          </div>
+
+          <div class="showcase-viewport">
+            <div class="showcase-stage" id="showcaseStage" aria-live="polite"></div>
+          </div>
+
+          <div class="showcase-bottom">
+            <div class="showcase-dots" id="showcaseDots" role="tablist" aria-label="เลือกสไลด์"></div>
+            <p class="showcase-hint" data-showcase-i18n="showcaseHint">สไลด์จะเปลี่ยนอัตโนมัติ · กดลูกศรเพื่อดูรายการถัดไป</p>
+          </div>
+        </div>
+      </section>
+
       <section class="home-catalog-layout" aria-labelledby="homeCatalogTitle">
         <aside class="home-info-rail">
           <div>
@@ -127,32 +153,6 @@
           <a class="home-category-tile tile-support" href="products.html?group=services">
             <span>บริการ</span>
           </a>
-        </div>
-      </section>
-
-      <section class="rpv-showcase" id="rpvShowcase" aria-labelledby="showcaseTitle">
-        <div class="rpv-showcase-shell">
-          <div class="showcase-heading">
-            <div>
-              <p class="eyebrow" data-showcase-i18n="showcaseEyebrow">RPV PRODUCT SPOTLIGHT</p>
-              <h2 id="showcaseTitle" data-showcase-i18n="showcaseTitle">ดูโซลูชันเด่นของ RPV</h2>
-              <p data-showcase-i18n="showcaseText">เลื่อนดูหมวดสินค้าและบริการที่ช่วยให้งานขัดผิวของคุณเดินต่อได้ง่ายขึ้น</p>
-            </div>
-            <div class="showcase-controls" aria-label="ควบคุมสไลด์">
-              <button class="showcase-control" type="button" data-showcase-action="prev" aria-label="สไลด์ก่อนหน้า">←</button>
-              <span class="showcase-counter" id="showcaseCounter" aria-live="polite">01 / 06</span>
-              <button class="showcase-control" type="button" data-showcase-action="next" aria-label="สไลด์ถัดไป">→</button>
-            </div>
-          </div>
-
-          <div class="showcase-viewport">
-            <div class="showcase-stage" id="showcaseStage" aria-live="polite"></div>
-          </div>
-
-          <div class="showcase-bottom">
-            <div class="showcase-dots" id="showcaseDots" role="tablist" aria-label="เลือกสไลด์"></div>
-            <p class="showcase-hint" data-showcase-i18n="showcaseHint">สไลด์จะเปลี่ยนอัตโนมัติ · กดลูกศรเพื่อดูรายการถัดไป</p>
-          </div>
         </div>
       </section>
 
