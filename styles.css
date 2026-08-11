@@ -4937,3 +4937,99 @@ a[href*="line.me"]:focus-visible {
     display: none;
   }
 }
+
+/* Stronger visual direction: a dark, premium industrial hero strip. */
+.rpv-showcase {
+  padding: clamp(22px, 3vw, 38px) 0 clamp(18px, 2.4vw, 28px);
+  color: #effcf4;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(35, 178, 116, 0.2), transparent 30%),
+    radial-gradient(circle at 92% 100%, rgba(232, 192, 117, 0.11), transparent 25%),
+    #071e17;
+}
+
+.rpv-showcase::before {
+  background: linear-gradient(90deg, #0b5139, #06c755 52%, #e8c075);
+}
+
+.rpv-showcase-shell {
+  width: min(100%, 1340px);
+}
+
+.showcase-heading {
+  padding-inline: 20px;
+}
+
+.showcase-heading .eyebrow {
+  color: #a4f3bd;
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(164, 243, 189, 0.32);
+}
+
+.showcase-heading h2 {
+  color: #f4fff8;
+}
+
+.showcase-heading > div:first-child > p:not(.eyebrow) {
+  color: rgba(238, 252, 244, 0.7);
+}
+
+.showcase-controls {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: none;
+}
+
+.showcase-control {
+  color: #effff5;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.showcase-control:hover,
+.showcase-control:focus-visible {
+  color: #063522;
+  background: #9cf0b7;
+  border-color: #9cf0b7;
+}
+
+.showcase-counter {
+  color: #eafff0;
+}
+
+.showcase-viewport {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.3);
+}
+
+.showcase-progress {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.showcase-bottom {
+  padding-inline: 20px;
+}
+
+.showcase-dots {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.showcase-dot {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.showcase-dot.is-active {
+  background: #7bea9f;
+}
+
+.showcase-hint {
+  color: rgba(238, 252, 244, 0.58);
+}
+
+@media (max-width: 620px) {
+  .showcase-heading,
+  .showcase-bottom {
+    padding-inline: 16px;
+  }
+}
