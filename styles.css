@@ -5721,3 +5721,331 @@ a[href*="line.me"]:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+/* RPV homepage visual reset: a compact split hero with clean product photography. */
+.home-catalog-page {
+  background: #f3f6f3;
+}
+
+.rpv-showcase {
+  position: relative;
+  overflow: hidden;
+  padding: 0 0 24px;
+  color: #f5fff8;
+  background:
+    linear-gradient(135deg, rgba(20, 118, 79, 0.24), transparent 34%),
+    linear-gradient(180deg, #071e17 0%, #0b2c20 100%);
+  border: 0;
+}
+
+.rpv-showcase::before {
+  height: 4px;
+  background: linear-gradient(90deg, #0b5139 0%, #8ee65f 48%, #e8c075 100%);
+}
+
+.rpv-showcase::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  opacity: 0.15;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(90deg, #000, transparent 72%);
+}
+
+.rpv-showcase-shell {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1450px);
+  padding: clamp(24px, 4vw, 54px) clamp(18px, 4vw, 52px) 0;
+}
+
+.showcase-heading {
+  display: none;
+}
+
+.showcase-viewport {
+  height: clamp(470px, 42vw, 620px);
+  margin-top: 0;
+  background: #0a251b;
+  border: 1px solid rgba(166, 242, 190, 0.24);
+  border-radius: 22px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+}
+
+.showcase-stage,
+.showcase-slide {
+  height: 100%;
+  min-height: 0;
+}
+
+.showcase-slide {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.43fr) minmax(0, 0.57fr);
+  animation: showcase-in 420ms ease-out;
+}
+
+.showcase-slide-copy {
+  position: relative;
+  inset: auto;
+  order: 1;
+  width: auto;
+  height: 100%;
+  min-height: 0;
+  justify-content: center;
+  padding: clamp(34px, 5vw, 76px);
+  background:
+    radial-gradient(circle at 10% 14%, rgba(121, 229, 143, 0.16), transparent 30%),
+    linear-gradient(150deg, #0d3b2a 0%, #08251b 76%);
+  border: 0;
+  border-left: 4px solid #a7e86a;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.showcase-slide-copy::after {
+  position: absolute;
+  right: 34px;
+  bottom: 32px;
+  width: 70px;
+  height: 70px;
+  content: "";
+  border-right: 1px solid rgba(167, 232, 106, 0.46);
+  border-bottom: 1px solid rgba(167, 232, 106, 0.46);
+  opacity: 0.7;
+}
+
+.showcase-slide-copy h3 {
+  max-width: 520px;
+  font-size: clamp(31px, 3.5vw, 56px);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.showcase-slide-copy p:not(.showcase-slide-kicker) {
+  max-width: 430px;
+  margin-top: 17px;
+  color: rgba(245, 255, 248, 0.72);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.showcase-slide-kicker {
+  color: #b5f58d;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+}
+
+.showcase-slide-copy .button {
+  min-height: 42px;
+  margin-top: 25px;
+  padding-inline: 20px;
+  color: #062217;
+  background: #a7e86a;
+  border-color: #a7e86a;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.showcase-slide-copy .button:hover,
+.showcase-slide-copy .button:focus-visible {
+  color: #062217;
+  background: #d2f79b;
+  border-color: #d2f79b;
+}
+
+.showcase-slide-image {
+  position: relative;
+  inset: auto;
+  order: 2;
+  height: 100%;
+  min-width: 0;
+  background: #e8eee9;
+}
+
+.showcase-slide-image::after {
+  background:
+    linear-gradient(90deg, rgba(6, 35, 25, 0.18), transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(6, 35, 25, 0.22));
+}
+
+.showcase-slide-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center;
+  transform: none;
+  animation: none;
+}
+
+.showcase-slide-image img[src*="imagez-z154"] {
+  padding: 24px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.showcase-slide:hover .showcase-slide-image img {
+  transform: scale(1.025);
+}
+
+.showcase-side-controls {
+  padding: 0 16px;
+}
+
+.showcase-side-control {
+  width: 42px;
+  height: 42px;
+  color: #eaffef;
+  background: rgba(6, 35, 25, 0.78);
+  border-color: rgba(234, 255, 239, 0.45);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+  opacity: 0.92;
+}
+
+.showcase-side-control:hover,
+.showcase-side-control:focus-visible {
+  color: #062217;
+  background: #a7e86a;
+  border-color: #a7e86a;
+}
+
+.showcase-progress {
+  height: 2px;
+  margin: 13px 0 0;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.showcase-progress-fill {
+  background: linear-gradient(90deg, #a7e86a, #e8c075);
+}
+
+.showcase-bottom {
+  margin-top: 11px;
+  padding-inline: 0;
+}
+
+.showcase-dots {
+  gap: 6px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.showcase-dot {
+  width: 24px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.showcase-dot.is-active {
+  width: 48px;
+  background: #a7e86a;
+}
+
+.showcase-hint {
+  color: rgba(245, 255, 248, 0.56);
+}
+
+.home-catalog-layout {
+  background: #f3f6f3;
+}
+
+@media (max-width: 900px) {
+  .showcase-viewport {
+    height: auto;
+  }
+
+  .showcase-stage,
+  .showcase-slide {
+    height: auto;
+  }
+
+  .showcase-slide {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(300px, 52vw) auto;
+  }
+
+  .showcase-slide-image {
+    height: 100%;
+    min-height: 300px;
+  }
+
+  .showcase-slide-copy {
+    height: auto;
+    min-height: 255px;
+    padding: 30px 34px 36px;
+    border-top: 3px solid #a7e86a;
+    border-left: 0;
+  }
+
+  .showcase-slide-copy::after {
+    right: 24px;
+    bottom: 22px;
+  }
+}
+
+@media (max-width: 620px) {
+  .rpv-showcase {
+    padding-bottom: 18px;
+  }
+
+  .rpv-showcase-shell {
+    padding: 20px 12px 0;
+  }
+
+  .showcase-viewport {
+    border-radius: 16px;
+  }
+
+  .showcase-slide {
+    grid-template-rows: 280px auto;
+  }
+
+  .showcase-slide-image {
+    min-height: 280px;
+  }
+
+  .showcase-slide-image img[src*="imagez-z154"] {
+    padding: 12px;
+  }
+
+  .showcase-slide-copy {
+    min-height: 255px;
+    padding: 27px 24px 30px;
+  }
+
+  .showcase-slide-copy h3 {
+    font-size: 31px;
+  }
+
+  .showcase-slide-copy p:not(.showcase-slide-kicker) {
+    margin-top: 11px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .showcase-slide-copy .button {
+    margin-top: 18px;
+  }
+
+  .showcase-side-controls {
+    padding-inline: 8px;
+  }
+
+  .showcase-side-control {
+    width: 36px;
+    height: 36px;
+  }
+
+  .showcase-bottom {
+    align-items: center;
+  }
+
+  .showcase-hint {
+    display: none;
+  }
+}

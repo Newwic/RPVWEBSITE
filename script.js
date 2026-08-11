@@ -405,7 +405,7 @@ const showcaseUi = {
 
 const showcaseSlides = [
   {
-    image: "assets/rpv-watermarked-pattern/rpv-Screenshot2024-06-18133652z-z181602969884-934d1b8a39.webp",
+    image: "assets/itopplus/images/MagneticPolishing1z-z1212556474250-1ab4f57805.webp",
     kicker: { th: "POLISHING MACHINES", en: "POLISHING MACHINES" },
     title: { th: "เครื่องขัดผิว", en: "Polishing Machines" },
     text: {
@@ -416,7 +416,7 @@ const showcaseSlides = [
     href: "products.html?group=polishing-machines"
   },
   {
-    image: "assets/rpv-watermarked-pattern/rpv-MagneticPolishingz-z418977855235-91289e9807.webp",
+    image: "assets/itopplus/images/imagez-z1544257692379-d0437be28e.webp",
     kicker: { th: "MAGNETIC / 8K", en: "MAGNETIC / 8K" },
     title: { th: "แม่เหล็ก / ขัดเงา 8K", en: "Magnetic / 8K Polishing" },
     text: {
@@ -427,7 +427,7 @@ const showcaseSlides = [
     href: "products.html?group=special-polishing"
   },
   {
-    image: "assets/rpv-watermarked-pattern/rpv-image-Photoroom-6-z-z449893161938-e7edeee5f2.png",
+    image: "assets/itopplus/images/1-z-z1448313185752-01d0ba63ba.webp",
     kicker: { th: "BLASTING SYSTEM", en: "BLASTING SYSTEM" },
     title: { th: "เครื่องพ่นทรายและอุปกรณ์", en: "Blasting Machines & Equipment" },
     text: {
@@ -438,7 +438,7 @@ const showcaseSlides = [
     href: "products.html?group=blasting-system"
   },
   {
-    image: "assets/rpv-watermarked-pattern/rpv-GBSandz-z1506707535607-3ac278e469.webp",
+    image: "assets/itopplus/images/Blasting-System-01z-z1386860092891-c5915eedf5.webp",
     kicker: { th: "BLASTING ABRASIVES", en: "BLASTING ABRASIVES" },
     title: { th: "ทรายพ่น / เม็ดขัด", en: "Blasting Abrasives" },
     text: {
@@ -449,7 +449,7 @@ const showcaseSlides = [
     href: "products.html?group=blasting-abrasives"
   },
   {
-    image: "assets/rpv-watermarked-pattern/rpv-PolishingMediaz-z119638418684-8589fbfcdd.webp",
+    image: "assets/itopplus/images/PlasticAbrasivez-z1637906437542-0547a4eadd.webp",
     kicker: { th: "MEDIA / COMPOUND", en: "MEDIA / COMPOUND" },
     title: { th: "หินขัด / น้ำยาขัด", en: "Media / Compound" },
     text: {
@@ -460,7 +460,7 @@ const showcaseSlides = [
     href: "products.html?group=media-compound"
   },
   {
-    image: "assets/rpv-watermarked-pattern/rpv-ServiceRepairz-z1108734234555-def29d64e2.webp",
+    image: "assets/itopplus/images/GlassBeadsz-z1294738503976-ef60efa805.webp",
     kicker: { th: "RPV SUPPORT", en: "RPV SUPPORT" },
     title: { th: "บริการและคำแนะนำจาก RPV", en: "RPV Services & Support" },
     text: {
