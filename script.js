@@ -492,7 +492,6 @@ function renderShowcase() {
     <article class="showcase-slide">
       <div class="showcase-slide-image">
         <img src="${slide.image}" alt="${slide.alt[language] || slide.alt.th}">
-        <span class="showcase-slide-number">${slideNumber} / 06</span>
       </div>
       <div class="showcase-slide-copy">
         <p class="showcase-slide-kicker">${slide.kicker[language] || slide.kicker.th}</p>

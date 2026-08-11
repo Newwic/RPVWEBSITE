@@ -5033,3 +5033,87 @@ a[href*="line.me"]:focus-visible {
     padding-inline: 16px;
   }
 }
+
+/* Keep the hero clean: navigation lives on the image edges. */
+.showcase-heading .showcase-controls {
+  display: none;
+}
+
+.showcase-side-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  pointer-events: none;
+}
+
+.showcase-side-control {
+  position: relative;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  place-items: center;
+  color: #f4fff8;
+  background: rgba(7, 30, 23, 0.36);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 50%;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  opacity: 0.78;
+  pointer-events: auto;
+  backdrop-filter: blur(8px);
+  transition: transform 180ms ease, color 180ms ease, background 180ms ease, border-color 180ms ease, opacity 180ms ease;
+}
+
+.showcase-side-control::before {
+  width: 11px;
+  height: 11px;
+  content: "";
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(135deg) translate(-1px, -1px);
+}
+
+.showcase-side-control[data-showcase-action="next"]::before {
+  transform: rotate(-45deg) translate(-1px, -1px);
+}
+
+.showcase-side-control:hover,
+.showcase-side-control:focus-visible {
+  color: #063522;
+  background: #9cf0b7;
+  border-color: #9cf0b7;
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.showcase-side-control:focus-visible {
+  outline: 3px solid rgba(156, 240, 183, 0.42);
+  outline-offset: 3px;
+}
+
+@media (max-width: 620px) {
+  .showcase-side-controls {
+    padding: 0 10px;
+  }
+
+  .showcase-side-control {
+    width: 40px;
+    height: 40px;
+  }
+
+  .showcase-side-control::before {
+    width: 9px;
+    height: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase-side-control {
+    transition: none;
+  }
+}
