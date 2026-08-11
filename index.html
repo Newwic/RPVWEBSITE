@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260715-r">
     <link rel="shortcut icon" type="image/svg+xml" href="assets/favicon.svg?v=20260715-r">
-    <link rel="stylesheet" href="styles.css?v=20260811-rpv-surface-finder">
+    <link rel="stylesheet" href="styles.css?v=20260811-rpv-slideshow">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -130,91 +130,28 @@
         </div>
       </section>
 
-      <section class="surface-finder" id="surfaceFinder" aria-labelledby="surfaceFinderTitle">
-        <div class="surface-finder-intro">
-          <p class="eyebrow" data-i18n="finderEyebrow">RPV QUICK FINDER</p>
-          <h2 id="surfaceFinderTitle" data-i18n="finderTitle">เริ่มจากงานที่คุณต้องการแก้</h2>
-          <p data-i18n="finderText">ตอบ 2 คำถามสั้น ๆ เพื่อหาหมวดสินค้าและโซลูชันที่ควรเริ่มดู</p>
-          <div class="finder-progress" role="group" aria-label="ขั้นตอนตัวช่วยเลือกโซลูชัน">
-            <span class="finder-progress-step is-active" data-finder-progress="1">1</span>
-            <span class="finder-progress-line" aria-hidden="true"></span>
-            <span class="finder-progress-step" data-finder-progress="2">2</span>
-            <span class="finder-progress-line" aria-hidden="true"></span>
-            <span class="finder-progress-step" data-finder-progress="3">✓</span>
-          </div>
-        </div>
-
-        <div class="surface-finder-card">
-          <div class="finder-step is-active" data-finder-step="1">
-            <p class="finder-step-label" data-i18n="finderStepOne">STEP 1 / 2 · เป้าหมายงาน</p>
-            <h3 data-i18n="finderQuestionOne">คุณกำลังมองหาวิธีแก้ปัญหาแบบไหน?</h3>
-            <div class="finder-options" role="group" aria-label="เป้าหมายงาน">
-              <button class="finder-option" type="button" data-finder-goal="deburr">
-                <span class="finder-option-icon" aria-hidden="true">◌</span>
-                <strong data-i18n="finderGoalDeburr">ลบครีบ / ลบคม</strong>
-                <small data-i18n="finderGoalDeburrHint">เก็บขอบและผิวชิ้นงาน</small>
-              </button>
-              <button class="finder-option" type="button" data-finder-goal="prepare">
-                <span class="finder-option-icon" aria-hidden="true">◒</span>
-                <strong data-i18n="finderGoalPrepare">ขจัดสนิม / เตรียมผิว</strong>
-                <small data-i18n="finderGoalPrepareHint">เตรียมผิวก่อนพ่นสีหรือเคลือบ</small>
-              </button>
-              <button class="finder-option" type="button" data-finder-goal="shine">
-                <span class="finder-option-icon" aria-hidden="true">✦</span>
-                <strong data-i18n="finderGoalShine">ขัดเงา / เก็บผิว</strong>
-                <small data-i18n="finderGoalShineHint">ต้องการผิวเรียบหรือเงาสม่ำเสมอ</small>
-              </button>
-              <button class="finder-option" type="button" data-finder-goal="equipment">
-                <span class="finder-option-icon" aria-hidden="true">⌘</span>
-                <strong data-i18n="finderGoalEquipment">หาเครื่อง / อุปกรณ์</strong>
-                <small data-i18n="finderGoalEquipmentHint">เริ่มจากระบบที่เหมาะกับหน้างาน</small>
-              </button>
+      <section class="rpv-showcase" id="rpvShowcase" aria-labelledby="showcaseTitle">
+        <div class="rpv-showcase-shell">
+          <div class="showcase-heading">
+            <div>
+              <p class="eyebrow" data-showcase-i18n="showcaseEyebrow">RPV PRODUCT SPOTLIGHT</p>
+              <h2 id="showcaseTitle" data-showcase-i18n="showcaseTitle">ดูโซลูชันเด่นของ RPV</h2>
+              <p data-showcase-i18n="showcaseText">เลื่อนดูหมวดสินค้าและบริการที่ช่วยให้งานขัดผิวของคุณเดินต่อได้ง่ายขึ้น</p>
+            </div>
+            <div class="showcase-controls" aria-label="ควบคุมสไลด์">
+              <button class="showcase-control" type="button" data-showcase-action="prev" aria-label="สไลด์ก่อนหน้า">←</button>
+              <span class="showcase-counter" id="showcaseCounter" aria-live="polite">01 / 06</span>
+              <button class="showcase-control" type="button" data-showcase-action="next" aria-label="สไลด์ถัดไป">→</button>
             </div>
           </div>
 
-          <div class="finder-step" data-finder-step="2" hidden>
-            <button class="finder-back" type="button" data-finder-back>
-              <span aria-hidden="true">←</span>
-              <span data-i18n="finderBack">ย้อนกลับ</span>
-            </button>
-            <p class="finder-step-label" data-i18n="finderStepTwo">STEP 2 / 2 · ลักษณะงาน</p>
-            <h3 data-i18n="finderQuestionTwo">ลักษณะงานของคุณใกล้เคียงแบบไหน?</h3>
-            <div class="finder-options" role="group" aria-label="ลักษณะงาน">
-              <button class="finder-option" type="button" data-finder-finish="small">
-                <span class="finder-option-icon" aria-hidden="true">01</span>
-                <strong data-i18n="finderFinishSmall">ชิ้นงานเล็ก / รายละเอียด</strong>
-                <small data-i18n="finderFinishSmallHint">ต้องการเข้าถึงซอกหรือชิ้นส่วนขนาดเล็ก</small>
-              </button>
-              <button class="finder-option" type="button" data-finder-finish="batch">
-                <span class="finder-option-icon" aria-hidden="true">02</span>
-                <strong data-i18n="finderFinishBatch">งานจำนวนมาก / สม่ำเสมอ</strong>
-                <small data-i18n="finderFinishBatchHint">ต้องการทำซ้ำและควบคุมผลลัพธ์</small>
-              </button>
-              <button class="finder-option" type="button" data-finder-finish="large">
-                <span class="finder-option-icon" aria-hidden="true">03</span>
-                <strong data-i18n="finderFinishLarge">ชิ้นงานใหญ่ / พื้นที่กว้าง</strong>
-                <small data-i18n="finderFinishLargeHint">ต้องการระบบสำหรับงานภาคสนามหรือชิ้นงานใหญ่</small>
-              </button>
-              <button class="finder-option" type="button" data-finder-finish="unsure">
-                <span class="finder-option-icon" aria-hidden="true">?</span>
-                <strong data-i18n="finderFinishUnsure">ยังไม่แน่ใจ</strong>
-                <small data-i18n="finderFinishUnsureHint">ส่งรูปชิ้นงานให้ทีม RPV ช่วยดูได้</small>
-              </button>
-            </div>
+          <div class="showcase-viewport">
+            <div class="showcase-stage" id="showcaseStage" aria-live="polite"></div>
           </div>
 
-          <div class="finder-result" data-finder-step="result" aria-live="polite" hidden>
-            <span class="finder-result-badge">RPV / MATCH</span>
-            <p class="finder-step-label" data-i18n="finderResultEyebrow">แนวทางเริ่มต้นสำหรับคุณ</p>
-            <h3 id="finderResultTitle"></h3>
-            <p id="finderResultText"></p>
-            <p class="finder-selection" id="finderSelection"></p>
-            <div class="finder-result-links" id="finderResultLinks"></div>
-            <p class="finder-result-note" data-i18n="finderResultNote">คำแนะนำนี้เป็นจุดเริ่มต้นเบื้องต้น ทีม RPV ช่วยยืนยันจากรูปชิ้นงาน วัสดุ และผลลัพธ์ที่ต้องการได้</p>
-            <div class="finder-result-actions">
-              <a class="button line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener" data-i18n="finderLine">ส่งรูปให้ทีม RPV</a>
-              <button class="finder-reset" type="button" data-finder-reset data-i18n="finderRestart">เริ่มใหม่</button>
-            </div>
+          <div class="showcase-bottom">
+            <div class="showcase-dots" id="showcaseDots" role="tablist" aria-label="เลือกสไลด์"></div>
+            <p class="showcase-hint" data-showcase-i18n="showcaseHint">สไลด์จะเปลี่ยนอัตโนมัติ · กดลูกศรเพื่อดูรายการถัดไป</p>
           </div>
         </div>
       </section>
@@ -297,6 +234,6 @@
     <script src="rpv-supabase.js?v=20260807-analytics-db"></script>
     <script src="data/rpv-products.js?v=20260727-itopplus-admin"></script>
     <script src="analytics.js?v=20260807-analytics-db"></script>
-    <script src="script.js?v=20260811-rpv-surface-finder"></script>
+    <script src="script.js?v=20260811-rpv-slideshow"></script>
   </body>
 </html>
