@@ -4271,18 +4271,20 @@ a[href*="line.me"]:focus-visible {
 }
 
 .showcase-stage {
-  min-height: 390px;
+  min-height: 520px;
 }
 
 .showcase-slide {
-  display: grid;
-  grid-template-columns: minmax(0, 1.14fr) minmax(360px, 0.86fr);
-  min-height: 420px;
+  position: relative;
+  display: block;
+  min-height: 520px;
   animation: showcase-in 360ms ease-out;
 }
 
 .showcase-slide-image {
-  position: relative;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   min-width: 0;
   overflow: hidden;
   background: #123c2d;
@@ -4293,13 +4295,15 @@ a[href*="line.me"]:focus-visible {
   inset: 0;
   content: "";
   pointer-events: none;
-  background: linear-gradient(90deg, transparent 42%, rgba(4, 25, 17, 0.34) 100%);
+  background:
+    linear-gradient(90deg, rgba(4, 25, 17, 0.82) 0%, rgba(4, 25, 17, 0.45) 38%, rgba(4, 25, 17, 0.04) 82%),
+    linear-gradient(0deg, rgba(4, 25, 17, 0.44), transparent 38%);
 }
 
 .showcase-slide-image img {
   width: 100%;
   height: 100%;
-  min-height: 420px;
+  min-height: 520px;
   object-fit: cover;
   object-position: center;
   transition: transform 700ms ease;
@@ -4312,7 +4316,8 @@ a[href*="line.me"]:focus-visible {
 .showcase-slide-number {
   position: absolute;
   top: 22px;
-  left: 24px;
+  right: 24px;
+  left: auto;
   z-index: 1;
   display: inline-flex;
   padding: 6px 10px;
@@ -4328,29 +4333,38 @@ a[href*="line.me"]:focus-visible {
 
 .showcase-slide-copy {
   display: flex;
-  position: relative;
+  position: absolute;
+  right: auto;
+  bottom: clamp(24px, 4vw, 48px);
+  left: clamp(20px, 4vw, 56px);
   overflow: hidden;
+  z-index: 1;
+  width: min(560px, calc(100% - clamp(40px, 8vw, 112px)));
   min-width: 0;
+  min-height: 0;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding: clamp(24px, 4vw, 52px);
+  padding: clamp(24px, 3.5vw, 40px);
   color: var(--white);
   background:
-    radial-gradient(circle at 100% 0%, rgba(114, 224, 150, 0.2), transparent 35%),
-    linear-gradient(145deg, #0b5139 0%, #063025 100%);
+    linear-gradient(135deg, rgba(6, 48, 37, 0.94), rgba(6, 48, 37, 0.72));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 24px;
+  box-shadow: 0 22px 44px rgba(3, 24, 16, 0.28);
+  backdrop-filter: blur(12px);
 }
 
 .showcase-slide-copy::before {
   position: absolute;
-  top: -110px;
-  right: -92px;
-  width: 270px;
-  height: 270px;
+  top: 0;
+  right: 0;
+  width: 46%;
+  height: 3px;
   content: "";
-  border: 1px solid rgba(156, 240, 183, 0.24);
-  border-radius: 50%;
-  box-shadow: 0 0 0 28px rgba(156, 240, 183, 0.04), 0 0 0 56px rgba(156, 240, 183, 0.025);
+  background: linear-gradient(90deg, transparent, #9cf0b7);
+  border: 0;
+  border-radius: 0 24px 0 999px;
   pointer-events: none;
 }
 
@@ -4386,11 +4400,11 @@ a[href*="line.me"]:focus-visible {
 }
 
 .showcase-slide-copy .button {
-  min-height: 46px;
-  margin-top: 26px;
-  padding-inline: 20px;
+  min-height: 44px;
+  margin-top: 22px;
+  padding-inline: 18px;
   border-radius: 999px;
-  box-shadow: 0 12px 24px rgba(6, 199, 85, 0.18);
+  box-shadow: 0 10px 22px rgba(6, 199, 85, 0.18);
 }
 
 .showcase-bottom {
@@ -4464,22 +4478,31 @@ a[href*="line.me"]:focus-visible {
   }
 
   .showcase-slide {
-    grid-template-columns: 1fr;
+    min-height: 500px;
+  }
+
+  .showcase-slide-image {
+    position: absolute;
+    inset: 0;
+  }
+
+  .showcase-slide-image img {
+    width: 100%;
+    height: 100%;
     min-height: 0;
   }
 
-  .showcase-slide-image,
-  .showcase-slide-image img {
-    min-height: 270px;
-    height: 270px;
-  }
-
   .showcase-slide-image::after {
-    background: linear-gradient(180deg, transparent 48%, rgba(4, 25, 17, 0.36) 100%);
+    background:
+      linear-gradient(180deg, rgba(4, 25, 17, 0.12) 15%, rgba(4, 25, 17, 0.2) 38%, rgba(4, 25, 17, 0.88) 100%);
   }
 
   .showcase-slide-copy {
-    min-height: 300px;
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    width: auto;
+    min-height: 0;
   }
 }
 
@@ -4515,23 +4538,26 @@ a[href*="line.me"]:focus-visible {
 
   .showcase-stage,
   .showcase-slide {
-    min-height: 0;
+    min-height: 470px;
   }
 
   .showcase-slide-image,
   .showcase-slide-image img {
-    min-height: 210px;
-    height: 210px;
+    min-height: 0;
+    height: 100%;
   }
 
   .showcase-slide-number {
     top: 16px;
     left: 17px;
+    right: auto;
   }
 
   .showcase-slide-copy {
-    min-height: 0;
-    padding: 24px 18px 26px;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    padding: 22px 18px 22px;
   }
 
   .showcase-slide-copy h3 {
