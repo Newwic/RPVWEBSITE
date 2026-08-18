@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260715-r">
-    <link rel="stylesheet" href="styles.css?v=20260810-rpv-image-zoom-cue">
+    <link rel="stylesheet" href="styles.css?v=20260813-cross-page-polish">
   </head>
   <body>
     <header class="site-header">
@@ -27,7 +27,20 @@
       <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false"><span></span><span></span><span></span></button>
       <nav class="site-nav" aria-label="เมนูหลัก">
         <a href="index.html">Home</a>
-        <a href="products.html">Products</a>
+        <div class="nav-dropdown">
+          <a class="nav-dropdown-toggle" href="products.html" aria-haspopup="true"><span class="nav-label">Products</span> <span class="nav-arrow" aria-hidden="true">▾</span></a>
+          <div class="nav-dropdown-menu" role="menu">
+            <a href="products.html" role="menuitem">สินค้าทั้งหมด</a>
+            <a href="products.html?group=polishing-machines" role="menuitem">เครื่องขัดผิว</a>
+            <a href="products.html?group=blasting-system" role="menuitem">เครื่องพ่นทรายและอุปกรณ์</a>
+            <a href="products.html?group=blasting-abrasives" role="menuitem">ทรายพ่น / เม็ดขัด</a>
+            <a href="products.html?group=media-compound" role="menuitem">หินขัดและน้ำยาขัด</a>
+            <a href="products.html?group=dryer-separator" role="menuitem">อบแห้ง / แยกชิ้นงาน</a>
+            <a href="products.html?group=special-polishing" role="menuitem">ขัดเงา 8K</a>
+            <a href="products.html?group=other-products" role="menuitem">สินค้าอื่น ๆ</a>
+            <a href="products.html?group=services" role="menuitem">บริการ</a>
+          </div>
+        </div>
         <a href="solutions.html">Solutions</a>
         <a href="about.html" aria-current="page">About Us</a>
         <a href="contact.html">Contact</a>
@@ -198,9 +211,9 @@
     </div>
     <a class="floating-line" href="https://line.me/R/ti/p/@rpvofficial" target="_blank" rel="noopener" aria-label="เพิ่ม LINE @rpvofficial">LINE</a>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="admin/config.js?v=20260807-supabase"></script>
-    <script src="rpv-supabase.js?v=20260807-analytics-db"></script>
-    <script src="analytics.js?v=20260807-analytics-db"></script>
+    <script src="admin/config.js?v=20260817-ga4-internal"></script>
+    <script src="rpv-supabase.js?v=20260817-ga4-internal"></script>
+    <script src="analytics.js?v=20260817-ga4-internal"></script>
     <script src="script.js?v=20260810-rpv-image-zoom-cue"></script>
   </body>
 </html>

@@ -466,6 +466,21 @@ a.button {
   margin-bottom: 12px;
 }
 
+.admin-preview-page-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--admin-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.admin-preview-page-select select {
+  min-width: 124px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
 .admin-product-list-head {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--admin-line);
@@ -1550,5 +1565,259 @@ textarea {
   .admin-product-title-row {
     display: grid;
     justify-items: start;
+  }
+
+  .admin-preview-page-select {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+
+  .admin-preview-page-select select {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* On small screens the preview is the quickest way to confirm an edit.
+   Keep it above the long field editor while preserving the desktop split. */
+@media (max-width: 860px) {
+  .page-preview-layout .admin-preview {
+    order: -1;
+  }
+
+  .page-preview-layout .admin-card {
+    order: 1;
+  }
+
+  .page-preview-layout .admin-preview,
+  .page-preview-layout .admin-card {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .admin-web-site-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .admin-web-brand,
+  .admin-web-brand span {
+    min-width: 0;
+  }
+
+  .admin-web-brand strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .admin-web-site-header nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    min-width: 0;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+
+  .admin-web-site-header nav span {
+    flex: 0 0 auto;
+  }
+
+  .admin-web-quote {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* Google Ads + GA4 admin dashboard */
+.marketing-dashboard {
+  display: grid;
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.marketing-dashboard-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #173e2a, #246f42);
+  border: 1px solid #12552e;
+  border-radius: 6px;
+  color: #fff;
+  box-shadow: var(--admin-shadow);
+}
+
+.marketing-dashboard-head .admin-kicker,
+.marketing-dashboard-head p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.marketing-dashboard-head h2 {
+  margin: 2px 0 4px;
+  font-size: 24px;
+}
+
+.marketing-dashboard-head p:last-child {
+  margin: 0;
+}
+
+.marketing-dashboard-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.marketing-dashboard-links .button.secondary {
+  color: #173e2a;
+  border-color: rgba(255, 255, 255, 0.72);
+}
+
+.marketing-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.marketing-metric-grid article {
+  min-width: 0;
+  padding: 14px 12px;
+  background: var(--admin-panel);
+  border: 1px solid var(--admin-line);
+  border-top: 3px solid var(--admin-green);
+  border-radius: 4px;
+  box-shadow: var(--admin-shadow);
+}
+
+.marketing-metric-grid span,
+.marketing-metric-grid small {
+  display: block;
+}
+
+.marketing-metric-grid span {
+  overflow: hidden;
+  color: var(--admin-text);
+  font-size: 20px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.marketing-metric-grid small {
+  margin-top: 5px;
+  color: var(--admin-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.marketing-dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.7fr) minmax(0, 1.3fr);
+  gap: 14px;
+}
+
+.marketing-status-card,
+.marketing-embed-card {
+  min-width: 0;
+}
+
+.marketing-connection-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  color: #795900;
+  background: #fff4cf;
+  border: 1px solid #f1d36d;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.marketing-connection-badge.is-ready {
+  color: #0d6e2c;
+  background: #e1f7e8;
+  border-color: #8bd6a1;
+}
+
+.marketing-status-card > p {
+  color: var(--admin-muted);
+  line-height: 1.6;
+}
+
+#marketingConnectionSteps {
+  display: grid;
+  gap: 8px;
+  padding-left: 22px;
+  color: var(--admin-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.marketing-embed-card {
+  overflow: hidden;
+}
+
+.marketing-embed-card > .admin-card-head a {
+  color: var(--admin-green-dark);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.marketing-embed-empty {
+  display: grid;
+  min-height: 250px;
+  place-items: center;
+  padding: 24px;
+  color: var(--admin-muted);
+  background: repeating-linear-gradient(-45deg, #f8fafb, #f8fafb 12px, #f0f4f6 12px, #f0f4f6 24px);
+  border: 1px dashed #cbd5dd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+#marketingEmbedFrame {
+  display: block;
+  width: 100%;
+  min-height: 640px;
+  border: 1px solid var(--admin-line);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.marketing-settings-card {
+  display: grid;
+  gap: 12px;
+}
+
+@media (max-width: 1180px) {
+  .marketing-metric-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .marketing-dashboard-head,
+  .marketing-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .marketing-dashboard-head {
+    display: grid;
+    align-items: start;
+  }
+
+  .marketing-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #marketingEmbedFrame {
+    min-height: 520px;
   }
 }

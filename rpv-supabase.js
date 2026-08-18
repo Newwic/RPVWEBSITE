@@ -78,6 +78,35 @@
     return data.session;
   }
 
+  async function getInternalStatus() {
+    if (!client) return false;
+
+    try {
+      const session = await getSession();
+      const userId = session?.user?.id;
+      if (!userId) return false;
+
+      // Only role/status are read. The authenticated email is never passed to
+      // analytics, dataLayer, or any GA4 event.
+      const { data, error } = await client
+        .from("admin_profiles")
+        .select("role,status")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (error || !data || data.status !== "active") return false;
+
+      const allowedRoles = Array.isArray(config.internalRoles)
+        ? config.internalRoles
+        : ["super_admin", "editor", "viewer"];
+      return allowedRoles.includes(data.role);
+    } catch {
+      // Fail closed: a Supabase/network error must never make a visitor
+      // internal by accident.
+      return false;
+    }
+  }
+
   async function loadProducts({ includeHidden = false } = {}) {
     if (!client) return null;
     let query = client
@@ -318,6 +347,7 @@
     client,
     getSession,
     signIn,
+    getInternalStatus,
     loadProducts,
     saveProducts,
     loadSiteDraft,

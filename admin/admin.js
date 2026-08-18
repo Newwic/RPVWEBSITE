@@ -88,6 +88,12 @@ const defaultSettings = {
     enabled: true,
     image: "assets/rpv-banner-reference.jpg",
     delay: 700
+  },
+  marketing: {
+    siteUrl: "https://www.rpv.co.th/",
+    embedUrl: "",
+    googleAdsUrl: "https://ads.google.com/aw/ads?campaignId=596918843&adGroupId=28953558735&ocid=145760775",
+    ga4Url: "https://analytics.google.com/analytics/web/#/a404761554p550052300/reports/intelligenthome"
   }
 };
 
@@ -102,6 +108,11 @@ function mergeSettings(savedSettings, baseSettings = {}) {
       ...defaultSettings.promo,
       ...(base.promo || {}),
       ...(saved.promo || {})
+    },
+    marketing: {
+      ...defaultSettings.marketing,
+      ...(base.marketing || {}),
+      ...(saved.marketing || {})
     }
   };
 }
@@ -438,6 +449,7 @@ function renderAll() {
   renderProductForm();
   renderMedia();
   renderAnalytics();
+  renderMarketingDashboard();
   renderSupabaseSetupStatus();
   renderSettings();
 }
@@ -873,6 +885,96 @@ function renderAnalytics() {
   }
 
   renderSupabaseSetupStatus();
+  renderMarketingDashboard();
+}
+
+function renderMarketingDashboard() {
+  const settings = mergeSettings(siteDraft.settings).marketing;
+  const configMarketing = window.RPV_ADMIN_CONFIG?.marketing || {};
+  const marketing = {
+    ...settings,
+    ...configMarketing
+  };
+  const stats = analyticsStats || loadAnalyticsStats();
+  const embedUrl = trustedMarketingUrl(marketing.embedUrl, { embed: true });
+  const googleAdsUrl = trustedMarketingUrl(marketing.googleAdsUrl);
+  const ga4Url = trustedMarketingUrl(marketing.ga4Url);
+  const frame = $("#marketingEmbedFrame");
+  const empty = $("#marketingEmbedEmpty");
+  const openEmbed = $("#marketingEmbedOpenLink");
+  const badge = $("#marketingConnectionBadge");
+  const message = $("#marketingConnectionMessage");
+  const steps = $("#marketingConnectionSteps");
+
+  setText("#marketingImpressions", "—");
+  setText("#marketingClicks", "—");
+  setText("#marketingCtr", "—");
+  setText("#marketingCpc", "—");
+  setText("#marketingCost", "—");
+  setText("#marketingUsers", "—");
+  setText("#marketingSessions", "—");
+  setText("#marketingTopPage", "—");
+
+  setHref("#googleAdsReportLink", googleAdsUrl || "https://ads.google.com/");
+  setHref("#ga4ReportLink", ga4Url || "https://analytics.google.com/");
+
+  if (embedUrl) {
+    if (frame && frame.src !== embedUrl) frame.src = embedUrl;
+    if (frame) frame.hidden = false;
+    if (empty) empty.hidden = true;
+    if (openEmbed) {
+      openEmbed.href = embedUrl;
+      openEmbed.hidden = false;
+    }
+    if (badge) {
+      badge.textContent = "เชื่อมแล้ว";
+      badge.classList.add("is-ready");
+    }
+    if (message) message.textContent = `รายงาน Google Ads + GA4 ของ ${marketing.siteUrl} ถูกฝังไว้ในหน้า Admin แล้ว ตัวเลขจะมาจากรายงาน Google โดยตรง`;
+    if (steps) steps.innerHTML = [
+      "ตรวจวันที่และช่วงเวลาของรายงานให้ตรงกับที่ต้องการ",
+      "ใช้ Google Ads ดู Impressions, Clicks, CTR, CPC และ Cost",
+      "ใช้ GA4 ดู Users, Sessions, หน้าที่ดู และ Conversion"
+    ].map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+    return;
+  }
+
+  if (frame) {
+    frame.removeAttribute("src");
+    frame.hidden = true;
+  }
+  if (empty) empty.hidden = false;
+  if (openEmbed) openEmbed.hidden = true;
+  if (badge) {
+    badge.textContent = "ยังไม่ได้เชื่อม";
+    badge.classList.remove("is-ready");
+  }
+  if (message) message.textContent = `ยังไม่ได้เชื่อมข้อมูลของ ${marketing.siteUrl} ตอนนี้จึงไม่แสดงตัวเลขจาก GitHub Pages หรือ browser เครื่องนี้เป็นตัวเลขของเว็บจริง`;
+  if (steps) steps.innerHTML = [
+    "สร้างรายงาน Looker Studio จาก Google Ads และ GA4 ของ www.rpv.co.th",
+    "เปิดการแชร์แบบ Embed report และคัดลอก Embed URL",
+    "วาง URL ใน Admin > ตั้งค่า > เชื่อม Google Ads + GA4",
+    "กดบันทึก Settings Draft แล้วกลับมาที่ Admin > สถิติ"
+  ].map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+}
+
+function trustedMarketingUrl(value, { embed = false } = {}) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "https:") return "";
+    const host = url.hostname.toLowerCase();
+    if (embed) {
+      if (!(host === "lookerstudio.google.com" || host === "datastudio.google.com")) return "";
+      if (!url.pathname.startsWith("/embed/") && !url.pathname.startsWith("/reporting/")) return "";
+      return url.href;
+    }
+    if (!(host === "ads.google.com" || host === "analytics.google.com" || host.endsWith(".google.com"))) return "";
+    return url.href;
+  } catch {
+    return "";
+  }
 }
 
 function renderSupabaseSetupStatus() {
@@ -1095,12 +1197,16 @@ function uniqueImages() {
 function renderSettings() {
   const settings = mergeSettings(siteDraft.settings);
   const promo = settings.promo;
+  const marketing = settings.marketing;
   setValue("#settingPhone", settings.phone);
   setValue("#settingEmail", settings.email);
   setValue("#settingLine", settings.line);
   setValue("#settingAddress", settings.address);
   setValue("#settingPrimaryColor", settings.primaryColor || "#1f8e3d");
   setValue("#settingAccentColor", settings.accentColor || "#f5a623");
+  setValue("#settingMarketingEmbedUrl", marketing.embedUrl);
+  setValue("#settingGoogleAdsUrl", marketing.googleAdsUrl);
+  setValue("#settingGa4Url", marketing.ga4Url);
   const promoEnabled = $("#settingPromoEnabled");
   if (promoEnabled) promoEnabled.checked = promo.enabled !== false;
   setValue("#settingPromoDelay", promo.delay);
@@ -1126,6 +1232,7 @@ function renderSettings() {
 function saveSettings() {
   const currentSettings = mergeSettings(siteDraft.settings);
   const currentPromo = currentSettings.promo;
+  const currentMarketing = currentSettings.marketing;
   const promoEnabled = $("#settingPromoEnabled");
   const promoDelay = Number(readValue("#settingPromoDelay"));
   siteDraft.settings = {
@@ -1136,6 +1243,11 @@ function saveSettings() {
     address: readValue("#settingAddress"),
     primaryColor: readValue("#settingPrimaryColor"),
     accentColor: readValue("#settingAccentColor"),
+    marketing: {
+      embedUrl: readValue("#settingMarketingEmbedUrl") || currentMarketing.embedUrl,
+      googleAdsUrl: readValue("#settingGoogleAdsUrl") || currentMarketing.googleAdsUrl,
+      ga4Url: readValue("#settingGa4Url") || currentMarketing.ga4Url
+    },
     promo: {
       enabled: promoEnabled ? promoEnabled.checked : currentPromo.enabled,
       image: String(currentPromo.image || "").trim(),
@@ -1237,6 +1349,11 @@ function readValue(selector) {
 function setText(selector, value) {
   const element = $(selector);
   if (element) element.textContent = value;
+}
+
+function setHref(selector, value) {
+  const element = $(selector);
+  if (element) element.href = value || "#";
 }
 
 function formatDateTime(value) {

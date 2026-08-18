@@ -7,7 +7,7 @@
     <title>RPV Admin | ระบบจัดการแก้ไขเนื้อหา</title>
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20260727-itopplus-ui">
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="admin.css?v=20260810-promo-image-upload">
+    <link rel="stylesheet" href="admin.css?v=20260815-marketing-dashboard">
   </head>
   <body class="admin-page">
     <header class="admin-topbar">
@@ -91,9 +91,6 @@
 
           <div class="admin-editor-layout page-preview-layout">
             <div class="admin-card">
-              <label>เลือกหน้า
-                <select id="pageSelect"></select>
-              </label>
               <label>ชื่อเมนู
                 <input id="pageMenuLabel" type="text">
               </label>
@@ -136,6 +133,9 @@
               <div class="admin-preview-head">
                 <strong>Live Preview</strong>
                 <a id="pagePreviewLink" href="../index.html" target="_blank" rel="noopener">เปิดหน้านี้</a>
+                <label class="admin-preview-page-select">เลือกหน้า
+                  <select id="pageSelect"></select>
+                </label>
               </div>
               <div class="admin-web-preview" id="pagePreview"></div>
             </div>
@@ -240,7 +240,7 @@
             <div>
               <p class="admin-kicker">WEB STAT</p>
               <h1>สถิติเข้าชมเว็บ</h1>
-              <p>ดูยอดเข้าชมเว็บ RPVWEBSITE ถ้าต่อ Supabase แล้วจะรวมข้อมูลจากมือถือและคอมทุกเครื่อง</p>
+              <p>ดูสถิติของเว็บไซต์จริง <strong>www.rpv.co.th</strong> ถ้าต่อ GA4/Supabase บนโดเมนจริงแล้วจะรวมข้อมูลจากทุกอุปกรณ์</p>
             </div>
             <button class="button secondary" id="resetAnalyticsButton" type="button">ล้างสถิติ</button>
           </div>
@@ -265,6 +265,47 @@
             </div>
             <ol id="analyticsSetupSteps"></ol>
           </div>
+          <section class="marketing-dashboard" id="marketingDashboard" aria-labelledby="marketingDashboardTitle">
+            <div class="marketing-dashboard-head">
+              <div>
+                <p class="admin-kicker">GOOGLE MARKETING</p>
+                <h2 id="marketingDashboardTitle">Google Ads + GA4 ของ rpv.co.th</h2>
+                <p>ดูโฆษณาของ <strong>www.rpv.co.th</strong> และพฤติกรรมผู้เข้าชมจากหน้า Admin เดียว</p>
+              </div>
+              <div class="marketing-dashboard-links">
+                <a class="button secondary" id="googleAdsReportLink" href="https://ads.google.com/" target="_blank" rel="noopener">เปิด Google Ads</a>
+                <a class="button secondary" id="ga4ReportLink" href="https://analytics.google.com/" target="_blank" rel="noopener">เปิด GA4</a>
+              </div>
+            </div>
+            <div class="marketing-metric-grid" aria-label="Google Ads and GA4 metrics">
+              <article><span id="marketingImpressions">—</span><small>Impressions</small></article>
+              <article><span id="marketingClicks">—</span><small>Clicks</small></article>
+              <article><span id="marketingCtr">—</span><small>CTR</small></article>
+              <article><span id="marketingCpc">—</span><small>Avg. CPC</small></article>
+              <article><span id="marketingCost">—</span><small>ค่าใช้จ่าย</small></article>
+              <article><span id="marketingUsers">—</span><small>Website visitors</small></article>
+              <article><span id="marketingSessions">—</span><small>Page views</small></article>
+              <article><span id="marketingTopPage">—</span><small>หน้าที่ดูมากที่สุด</small></article>
+            </div>
+            <div class="marketing-dashboard-grid">
+              <article class="admin-card marketing-status-card">
+                <div class="admin-card-head">
+                  <strong>สถานะการเชื่อมต่อ</strong>
+                  <span class="marketing-connection-badge" id="marketingConnectionBadge">ยังไม่ได้เชื่อม</span>
+                </div>
+                <p id="marketingConnectionMessage">ใส่ Looker Studio Embed URL ในหน้า Settings เพื่อให้ตัวเลขของ www.rpv.co.th แสดงในหน้านี้</p>
+                <ol id="marketingConnectionSteps"></ol>
+              </article>
+              <article class="admin-card marketing-embed-card">
+                <div class="admin-card-head">
+                  <strong>รายงาน Google Ads + GA4 ของ rpv.co.th</strong>
+                  <a id="marketingEmbedOpenLink" href="#" target="_blank" rel="noopener" hidden>เปิดรายงาน</a>
+                </div>
+                <div class="marketing-embed-empty" id="marketingEmbedEmpty">ยังไม่มีรายงานที่เชื่อมต่อ</div>
+                <iframe id="marketingEmbedFrame" title="Google Ads and GA4 report" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+              </article>
+            </div>
+          </section>
           <div class="analytics-itop-panel">
             <div class="analytics-tabs" role="tablist" aria-label="ประเภทสถิติ">
               <button class="analytics-tab is-active" type="button" data-analytics-tab="website">สถิติการเข้าชมเว็บไซต์</button>
@@ -323,8 +364,26 @@
               <label>สีรอง
                 <input id="settingAccentColor" type="color" value="#f5a623">
               </label>
-              <p class="admin-note">ถ้ายังไม่ได้ต่อ Supabase การบันทึกจะเป็น Draft ใน browser ก่อน เมื่อต่อ Supabase แล้วจะบันทึกเข้าเว็บ RPVWEBSITE ของเรา</p>
+              <p class="admin-note">ถ้ายังไม่ได้ต่อ Supabase การบันทึกจะเป็น Draft ใน browser ก่อน เมื่อต่อ Supabase แล้วจึงจะบันทึกเข้าแหล่งข้อมูลของระบบ Admin</p>
             </div>
+          </div>
+          <div class="admin-card settings-wide-card marketing-settings-card">
+            <div class="admin-card-head">
+              <strong>เชื่อม Google Ads + GA4 ของ rpv.co.th</strong>
+            </div>
+            <p class="admin-note">ใช้ Looker Studio เป็นชั้นเชื่อมข้อมูลแบบปลอดภัยของเว็บไซต์จริง www.rpv.co.th ไม่ใส่รหัสผ่าน, API key หรือบัตรเครดิตในเว็บ</p>
+            <label>Looker Studio Embed URL
+              <input id="settingMarketingEmbedUrl" type="url" placeholder="https://lookerstudio.google.com/embed/reporting/...">
+            </label>
+            <div class="admin-two-cols">
+              <label>ลิงก์ Google Ads
+                <input id="settingGoogleAdsUrl" type="url" placeholder="https://ads.google.com/">
+              </label>
+              <label>ลิงก์ GA4
+                <input id="settingGa4Url" type="url" placeholder="https://analytics.google.com/">
+              </label>
+            </div>
+            <p class="admin-note">หลังสร้างรายงานของ www.rpv.co.th ใน Looker Studio ให้เปิดการฝังรายงาน แล้วนำ Embed URL มาวางที่นี่ จากนั้นกดบันทึก Settings Draft</p>
           </div>
           <div class="admin-card settings-wide-card">
             <div class="admin-card-head">
@@ -357,9 +416,9 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="config.js?v=20260807-supabase"></script>
-    <script src="../rpv-supabase.js?v=20260807-analytics-db"></script>
+    <script src="config.js?v=20260817-ga4-internal"></script>
+    <script src="../rpv-supabase.js?v=20260817-ga4-internal"></script>
     <script src="../data/rpv-products.js?v=20260727-itopplus-ui"></script>
-    <script src="admin.js?v=20260810-promo-image-upload"></script>
+    <script src="admin.js?v=20260815-marketing-dashboard"></script>
   </body>
 </html>
