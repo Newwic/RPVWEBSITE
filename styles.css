@@ -7727,3 +7727,91 @@ body .showcase-viewport {
     height: auto;
   }
 }
+
+/* Product detail modal overlap fix: let each grid item stay inside its own track. */
+.product-modal {
+  box-sizing: border-box;
+  max-width: calc(100vw - 28px);
+  overflow-x: hidden;
+}
+
+.product-modal,
+.product-modal *,
+.modal-layout,
+.modal-layout > * {
+  box-sizing: border-box;
+}
+
+.modal-layout {
+  grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.04fr);
+  align-items: start;
+}
+
+.modal-layout > *,
+.modal-image,
+.modal-copy {
+  min-width: 0;
+}
+
+.modal-image {
+  width: 100%;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  align-self: start;
+}
+
+.modal-image > img {
+  min-width: 0;
+  min-height: 0;
+}
+
+.modal-copy {
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.modal-copy h2,
+.modal-copy p,
+.modal-copy h3,
+.modal-copy ul,
+.modal-copy .modal-actions {
+  max-width: 100%;
+}
+
+@media (max-width: 700px) {
+  .product-modal {
+    width: calc(100vw - 18px);
+    max-height: calc(100dvh - 18px);
+    border-radius: 18px;
+  }
+
+  .modal-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding: 58px 16px 24px;
+  }
+
+  .modal-image {
+    min-height: 0;
+    max-width: 100%;
+  }
+
+  .modal-copy {
+    padding: 0;
+  }
+
+  .modal-copy h2 {
+    max-width: 100%;
+    font-size: clamp(25px, 8vw, 34px);
+  }
+
+  .modal-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .modal-actions .button {
+    flex-basis: 100%;
+  }
+}
