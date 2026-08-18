@@ -3204,6 +3204,58 @@ a[href*="line.me"]:focus-visible {
     margin-top: 6px;
   }
 
+  .site-nav .nav-dropdown {
+    display: block;
+  }
+
+  .site-nav .nav-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .site-nav .nav-dropdown-menu {
+    display: none;
+    max-height: min(420px, 56vh);
+    padding: 6px 0 2px 12px !important;
+    overflow-y: auto;
+    background: transparent;
+  }
+
+  .site-nav .nav-dropdown.is-open .nav-dropdown-menu {
+    display: grid;
+  }
+
+  .site-nav .nav-dropdown:not(.is-open) .nav-dropdown-menu {
+    display: none;
+  }
+
+  .site-nav .nav-dropdown-menu a {
+    min-height: 36px;
+    margin-top: 4px;
+    padding: 8px 12px !important;
+    color: var(--green-dark);
+    background: #edf7f1;
+    border: 1px solid rgba(22, 134, 92, 0.12);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .site-nav .nav-dropdown-menu a:first-child {
+    margin-top: 0;
+  }
+
+  .site-nav .nav-dropdown.is-open > .nav-dropdown-toggle .nav-arrow {
+    transform: rotate(180deg);
+  }
+
+  .site-nav .nav-dropdown-menu a:hover,
+  .site-nav .nav-dropdown-menu a:focus-visible {
+    color: var(--white);
+    background: var(--green);
+  }
+
   .header-actions {
     right: 12px !important;
     bottom: 12px !important;

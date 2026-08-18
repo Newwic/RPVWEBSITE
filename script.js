@@ -1,5 +1,7 @@
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
+const navDropdown = document.querySelector(".nav-dropdown");
+const navDropdownToggle = document.querySelector(".nav-dropdown-toggle");
 const productGrid = document.querySelector("#productGrid");
 const categoryFilters = document.querySelector("#categoryFilters");
 const productSearch = document.querySelector("#productSearch");
@@ -1614,7 +1616,16 @@ function closeMobileNav() {
   document.body.classList.remove("nav-open");
   navToggle?.setAttribute("aria-expanded", "false");
   navToggle?.setAttribute("aria-label", "เปิดเมนู");
+  setProductDropdownOpen(false);
 }
+
+function setProductDropdownOpen(isOpen) {
+  if (!navDropdown || !navDropdownToggle) return;
+  navDropdown.classList.toggle("is-open", isOpen);
+  navDropdownToggle.setAttribute("aria-expanded", String(isOpen));
+}
+
+setProductDropdownOpen(false);
 
 function closePromoPopup() {
   if (!promoPopup) return;
@@ -1628,12 +1639,20 @@ navToggle?.addEventListener("click", () => {
   document.body.classList.toggle("nav-open", isOpen);
   navToggle.setAttribute("aria-expanded", String(isOpen));
   navToggle.setAttribute("aria-label", isOpen ? "ปิดเมนู" : "เปิดเมนู");
+  if (!isOpen) setProductDropdownOpen(false);
 });
 
 navToggle?.addEventListener("touchend", (event) => {
   event.preventDefault();
   navToggle.click();
 }, { passive: false });
+
+navDropdownToggle?.addEventListener("click", (event) => {
+  if (!window.matchMedia("(max-width: 1100px)").matches) return;
+  event.preventDefault();
+  event.stopPropagation();
+  setProductDropdownOpen(!navDropdown?.classList.contains("is-open"));
+});
 
 siteNav?.addEventListener("click", (event) => {
   if (event.target.matches("a")) {
