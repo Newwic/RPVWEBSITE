@@ -18,6 +18,7 @@ const imageZoomLevel = document.querySelector("#imageZoomLevel");
 const promoPopup = document.querySelector("#promoPopup");
 const promoCloseButtons = document.querySelectorAll("[data-promo-close]");
 const languageButtons = document.querySelectorAll("[data-lang]");
+const previewMode = new URLSearchParams(window.location.search).has("preview");
 const rpvShowcase = document.querySelector("#rpvShowcase");
 const showcaseStage = rpvShowcase?.querySelector("#showcaseStage");
 const showcaseDots = rpvShowcase?.querySelector("#showcaseDots");
@@ -26,7 +27,7 @@ const showcaseProgress = rpvShowcase?.querySelector("#showcaseProgress");
 const defaultPromoSettings = {
   enabled: true,
   image: "assets/rpv-banner-reference.jpg",
-  delay: 700
+  delay: 4500
 };
 
 let promoTimer = null;
@@ -382,9 +383,9 @@ Object.assign(ui.en, {
 
 const showcaseUi = {
   th: {
-    showcaseEyebrow: "RPV PRODUCT SPOTLIGHT",
-    showcaseTitle: "ดูโซลูชันเด่นของ RPV",
-    showcaseText: "เลื่อนดูหมวดสินค้าและบริการที่ช่วยให้งานขัดผิวของคุณเดินต่อได้ง่ายขึ้น",
+    showcaseEyebrow: "RPV INDUSTRIAL SUPPLY · SURFACE FINISHING",
+    showcaseTitle: "เครื่องจักรและโซลูชันสำหรับงานขัดผิว",
+    showcaseText: "เครื่องจักร วัสดุขัด และบริการที่ช่วยให้งานเตรียมผิวของคุณเดินต่อได้อย่างมั่นใจ",
     showcaseHint: "สไลด์จะเปลี่ยนอัตโนมัติ · กดลูกศรเพื่อดูรายการถัดไป",
     view: "ดูหมวดนี้",
     prev: "สไลด์ก่อนหน้า",
@@ -392,9 +393,9 @@ const showcaseUi = {
     slide: "สไลด์"
   },
   en: {
-    showcaseEyebrow: "RPV PRODUCT SPOTLIGHT",
-    showcaseTitle: "Explore RPV solutions",
-    showcaseText: "Browse product categories and services that help you move your surface finishing work forward.",
+    showcaseEyebrow: "RPV INDUSTRIAL SUPPLY · SURFACE FINISHING",
+    showcaseTitle: "Machines and solutions for surface finishing",
+    showcaseText: "Machines, media, and support for a more reliable surface finishing process.",
     showcaseHint: "Slides change automatically · Use the arrows to browse",
     view: "Explore this category",
     prev: "Previous slide",
@@ -405,7 +406,7 @@ const showcaseUi = {
 
 const showcaseSlides = [
   {
-    image: "assets/itopplus/images/MagneticPolishing1z-z1212556474250-1ab4f57805.webp",
+    image: "assets/itopplus/images/MagneticPolishing5z-z440206550433-ac31af1c8a.webp",
     kicker: { th: "POLISHING MACHINES", en: "POLISHING MACHINES" },
     title: { th: "เครื่องขัดผิว", en: "Polishing Machines" },
     text: {
@@ -485,15 +486,21 @@ function renderShowcase() {
 
   const slide = showcaseSlides[showcaseIndex];
   const language = currentLanguage === "en" ? "en" : "th";
+  const title = slide.title[language] || slide.title.th;
+  const kicker = slide.kicker[language] || slide.kicker.th;
+  const description = slide.text[language] || slide.text.th;
+  const position = `${String(showcaseIndex + 1).padStart(2, "0")} / ${String(showcaseSlides.length).padStart(2, "0")}`;
   showcaseStage.innerHTML = `
-    <article class="showcase-slide">
+    <article class="showcase-slide" data-showcase-index="${showcaseIndex}" aria-label="${showcaseCopy("slide")} ${showcaseIndex + 1}: ${title}">
+      <span class="showcase-slide-number" aria-hidden="true">${position}</span>
       <div class="showcase-slide-image">
-        <img src="${slide.image}" alt="${slide.alt[language] || slide.alt.th}">
+        <span class="showcase-image-label" aria-hidden="true">RPV INDUSTRIAL SUPPLY</span>
+        <img src="${slide.image}" alt="${slide.alt[language] || slide.alt.th}" loading="${showcaseIndex === 0 ? "eager" : "lazy"}" decoding="async"${showcaseIndex === 0 ? ' fetchpriority="high"' : ""}>
       </div>
       <div class="showcase-slide-copy">
-        <p class="showcase-slide-kicker">${slide.kicker[language] || slide.kicker.th}</p>
-        <h3>${slide.title[language] || slide.title.th}</h3>
-        <p>${slide.text[language] || slide.text.th}</p>
+        <p class="showcase-slide-kicker">${kicker}</p>
+        <h3>${title}</h3>
+        <p>${description}</p>
         <a class="button line" href="${slide.href}">${showcaseCopy("view")}</a>
       </div>
     </article>
@@ -537,7 +544,7 @@ function stopShowcaseTimer() {
 
 function startShowcaseTimer() {
   stopShowcaseTimer();
-  if (!rpvShowcase || showcaseSlides.length < 2) return;
+  if (previewMode || !rpvShowcase || showcaseSlides.length < 2) return;
   showcaseProgress?.classList.remove("is-paused");
   showcaseTimer = window.setInterval(() => goToShowcase(showcaseIndex + 1), 6000);
 }
@@ -586,7 +593,7 @@ function applyPromoSettings() {
     image.alt = "โปรโมชั่นสินค้า RPV";
   }
 
-  if (promo.enabled === false || !imageSource || sessionStorage.getItem("rpvPromoSeen")) return;
+  if (promo.enabled === false || !imageSource || previewMode || sessionStorage.getItem("rpvPromoSeen")) return;
 
   const delay = Number.isFinite(Number(promo.delay))
     ? Math.min(10000, Math.max(0, Number(promo.delay)))
