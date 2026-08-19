@@ -3181,6 +3181,7 @@ a[href*="line.me"]:focus-visible {
     border-radius: 8px !important;
     box-shadow: 0 18px 40px rgba(24, 33, 29, 0.22) !important;
     transform: translateY(-8px) !important;
+    overflow-x: hidden !important;
   }
 
   body.nav-open .site-nav,
@@ -3205,7 +3206,10 @@ a[href*="line.me"]:focus-visible {
   }
 
   .site-nav .nav-dropdown {
+    position: relative !important;
     display: block;
+    width: 100%;
+    min-width: 0;
   }
 
   .site-nav .nav-dropdown-toggle {
@@ -3216,15 +3220,28 @@ a[href*="line.me"]:focus-visible {
   }
 
   .site-nav .nav-dropdown-menu {
-    display: none;
+    position: static !important;
+    inset: auto !important;
+    display: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
     max-height: min(420px, 56vh);
-    padding: 6px 0 2px 12px !important;
+    margin: 6px 0 0 !important;
+    padding: 6px 0 2px !important;
     overflow-y: auto;
+    overflow-x: hidden;
     background: transparent;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: stretch;
+    transform: none !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .site-nav .nav-dropdown.is-open .nav-dropdown-menu {
-    display: grid;
+    display: grid !important;
   }
 
   .site-nav .nav-dropdown:not(.is-open) .nav-dropdown-menu {
@@ -3232,6 +3249,12 @@ a[href*="line.me"]:focus-visible {
   }
 
   .site-nav .nav-dropdown-menu a {
+    display: flex;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0;
+    box-sizing: border-box;
+    white-space: normal;
     min-height: 36px;
     margin-top: 4px;
     padding: 8px 12px !important;
@@ -3244,6 +3267,10 @@ a[href*="line.me"]:focus-visible {
 
   .site-nav .nav-dropdown-menu a:first-child {
     margin-top: 0;
+  }
+
+  .site-nav .nav-dropdown-menu::before {
+    display: none !important;
   }
 
   .site-nav .nav-dropdown.is-open > .nav-dropdown-toggle .nav-arrow {

@@ -1639,7 +1639,7 @@ navToggle?.addEventListener("click", () => {
   document.body.classList.toggle("nav-open", isOpen);
   navToggle.setAttribute("aria-expanded", String(isOpen));
   navToggle.setAttribute("aria-label", isOpen ? "ปิดเมนู" : "เปิดเมนู");
-  if (!isOpen) setProductDropdownOpen(false);
+  setProductDropdownOpen(false);
 });
 
 navToggle?.addEventListener("touchend", (event) => {
