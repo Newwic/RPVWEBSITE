@@ -411,7 +411,7 @@ const showcaseUi = {
 
 const showcaseSlides = [
   {
-    image: "assets/itopplus/images/MagneticPolishing5z-z440206550433-ac31af1c8a.webp",
+    image: "assets/RPV/images/MagneticPolishing5z-z440206550433-ac31af1c8a.webp",
     kicker: { th: "POLISHING MACHINES", en: "POLISHING MACHINES" },
     title: { th: "เครื่องขัดผิว", en: "Polishing Machines" },
     text: {
@@ -422,7 +422,7 @@ const showcaseSlides = [
     href: "products.html?group=polishing-machines"
   },
   {
-    image: "assets/itopplus/images/imagez-z1544257692379-d0437be28e.webp",
+    image: "assets/RPV/images/imagez-z1544257692379-d0437be28e.webp",
     kicker: { th: "MAGNETIC / 8K", en: "MAGNETIC / 8K" },
     title: { th: "แม่เหล็ก / ขัดเงา 8K", en: "Magnetic / 8K Polishing" },
     text: {
@@ -433,7 +433,7 @@ const showcaseSlides = [
     href: "products.html?group=special-polishing"
   },
   {
-    image: "assets/itopplus/images/1-z-z1448313185752-01d0ba63ba.webp",
+    image: "assets/RPV/images/1-z-z1448313185752-01d0ba63ba.webp",
     kicker: { th: "BLASTING SYSTEM", en: "BLASTING SYSTEM" },
     title: { th: "เครื่องพ่นทรายและอุปกรณ์", en: "Blasting Machines & Equipment" },
     text: {
@@ -444,7 +444,7 @@ const showcaseSlides = [
     href: "products.html?group=blasting-system"
   },
   {
-    image: "assets/itopplus/images/Blasting-System-01z-z1386860092891-c5915eedf5.webp",
+    image: "assets/RPV/images/Blasting-System-01z-z1386860092891-c5915eedf5.webp",
     kicker: { th: "BLASTING ABRASIVES", en: "BLASTING ABRASIVES" },
     title: { th: "ทรายพ่น / เม็ดขัด", en: "Blasting Abrasives" },
     text: {
@@ -455,7 +455,7 @@ const showcaseSlides = [
     href: "products.html?group=blasting-abrasives"
   },
   {
-    image: "assets/itopplus/images/PlasticAbrasivez-z1637906437542-0547a4eadd.webp",
+    image: "assets/RPV/images/PlasticAbrasivez-z1637906437542-0547a4eadd.webp",
     kicker: { th: "MEDIA / COMPOUND", en: "MEDIA / COMPOUND" },
     title: { th: "หินขัด / น้ำยาขัด", en: "Media / Compound" },
     text: {
@@ -466,7 +466,7 @@ const showcaseSlides = [
     href: "products.html?group=media-compound"
   },
   {
-    image: "assets/itopplus/images/GlassBeadsz-z1294738503976-ef60efa805.webp",
+    image: "assets/RPV/images/GlassBeadsz-z1294738503976-ef60efa805.webp",
     kicker: { th: "RPV SUPPORT", en: "RPV SUPPORT" },
     title: { th: "บริการและคำแนะนำจาก RPV", en: "RPV Services & Support" },
     text: {
@@ -1003,7 +1003,7 @@ function watermarkedAssetPath(value) {
   if (!source) return "";
 
   const normalized = source.replace(/^\.\.\//, "");
-  if (normalized.startsWith("assets/itopplus/images/")) {
+  if (normalized.startsWith("assets/RPV/images/")) {
     const fileName = normalized.split("/").pop();
     return `assets/rpv-watermarked-pattern/rpv-${fileName}`;
   }
