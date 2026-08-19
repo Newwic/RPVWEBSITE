@@ -33,6 +33,9 @@ const defaultPromoSettings = {
 };
 
 let promoTimer = null;
+let productModalScrollY = 0;
+let productModalScrollLocked = false;
+let productModalBodyStyles = null;
 
 function loadAdminProductDraft() {
   try {
@@ -1608,7 +1611,49 @@ function openProductModal(product) {
     if (event.target !== modalImage) return;
     openImageViewer(modalImageElement);
   });
-  productModal.showModal();
+
+  lockProductPageScroll();
+  try {
+    productModal.showModal();
+  } catch (error) {
+    restoreProductPageScroll();
+    throw error;
+  }
+}
+
+function lockProductPageScroll() {
+  if (productModalScrollLocked) return;
+
+  productModalScrollY = window.scrollY;
+  productModalBodyStyles = {
+    position: document.body.style.position,
+    top: document.body.style.top,
+    width: document.body.style.width
+  };
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${productModalScrollY}px`;
+  document.body.style.width = "100%";
+  productModalScrollLocked = true;
+}
+
+function restoreProductPageScroll() {
+  if (!productModalScrollLocked) return;
+
+  const scrollY = productModalScrollY;
+  const bodyStyles = productModalBodyStyles;
+  productModalScrollLocked = false;
+  productModalBodyStyles = null;
+  productModalScrollY = 0;
+
+  document.body.style.position = bodyStyles?.position || "";
+  document.body.style.top = bodyStyles?.top || "";
+  document.body.style.width = bodyStyles?.width || "";
+  window.requestAnimationFrame(() => window.scrollTo(0, scrollY));
+}
+
+function closeProductModal() {
+  if (!productModal?.open) return;
+  productModal.close();
 }
 
 function closeMobileNav() {
@@ -1786,10 +1831,11 @@ productGrid?.addEventListener("keydown", (event) => {
   }
 });
 
-modalClose?.addEventListener("click", () => productModal.close());
+productModal?.addEventListener("close", restoreProductPageScroll);
+modalClose?.addEventListener("click", closeProductModal);
 productModal?.addEventListener("click", (event) => {
   if (event.target === productModal) {
-    productModal.close();
+    closeProductModal();
   }
 });
 
