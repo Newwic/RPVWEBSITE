@@ -10,8 +10,15 @@
 
   const config = window.RPV_ADMIN_CONFIG || {};
   const measurementId = String(config.ga4MeasurementId || "").trim();
+  const googleAdsId = String(config.googleAdsId || "").trim();
+  const googleAdsConversionLabel = String(config.googleAdsConversionLabel || "").trim();
   const hasGa4Config = GA4_ID_PATTERN.test(measurementId);
+  const hasGoogleAdsConfig = /^AW-[0-9]+$/i.test(googleAdsId) && Boolean(googleAdsConversionLabel);
+  const googleAdsConversionSendTo = hasGoogleAdsConfig
+    ? `${googleAdsId}/${googleAdsConversionLabel}`
+    : "";
   const pendingEvents = [];
+  const pendingGoogleAdsConversions = [];
   const ga4State = {
     ready: false,
     isInternal: false
@@ -48,9 +55,13 @@
     storageKey: STORAGE_KEY,
     stats,
     measurementId: hasGa4Config ? measurementId : "",
+    googleAdsId: hasGoogleAdsConfig ? googleAdsId : "",
+    googleAdsConversionSendTo,
     ga4Ready: false,
+    googleAdsReady: false,
     isInternal: false,
-    track: trackEvent
+    track: trackEvent,
+    trackQuoteConversion: trackGoogleAdsConversion
   };
 
   if (window.rpvSupabase?.enabled) {
@@ -68,7 +79,7 @@
   initializeGoogleAnalytics();
 
   async function initializeGoogleAnalytics() {
-    if (!hasGa4Config) return;
+    if (!hasGa4Config && !hasGoogleAdsConfig) return;
 
     // The existing Supabase Auth session is the only source of internal status.
     // Missing config, missing session, disabled profile, and network errors all
@@ -82,10 +93,13 @@
       window.dataLayer.push(arguments);
     };
 
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
-    document.head.appendChild(script);
+    const primaryGoogleTagId = hasGa4Config ? measurementId : googleAdsId;
+    if (!document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(primaryGoogleTagId)}`;
+      document.head.appendChild(script);
+    }
 
     window.gtag("js", new Date());
 
@@ -97,27 +111,67 @@
 
     const safeLocation = getSafeUrl(location.href) || location.origin + location.pathname;
     const safeReferrer = getSafeUrl(document.referrer);
-    window.gtag("config", measurementId, {
-      send_page_view: false,
-      page_location: safeLocation,
-      ...(safeReferrer ? { page_referrer: safeReferrer } : {})
-    });
+    if (hasGa4Config) {
+      window.gtag("config", measurementId, {
+        send_page_view: false,
+        page_location: safeLocation,
+        ...(safeReferrer ? { page_referrer: safeReferrer } : {})
+      });
+    }
+    if (hasGoogleAdsConfig) {
+      window.gtag("config", googleAdsId);
+    }
 
     ga4State.ready = true;
     syncPublicAnalyticsState();
 
-    // Send the first page_view only after internal status is known.
-    sendGa4Event("page_view", {
-      page_path: location.pathname,
-      page_title: document.title,
-      page_location: safeLocation
-    });
+    if (hasGa4Config) {
+      // Send the first page_view only after internal status is known.
+      sendGa4Event("page_view", {
+        page_path: location.pathname,
+        page_title: document.title,
+        page_location: safeLocation
+      });
+    }
 
     while (pendingEvents.length) {
       const queued = pendingEvents.shift();
       sendGa4Event(queued.name, queued.params);
     }
+
+    while (pendingGoogleAdsConversions.length) {
+      pendingGoogleAdsConversions.shift();
+      sendGoogleAdsConversion();
+    }
   }
+
+  // Call this only after the quote form's backend request succeeds.
+  // A normal page load, submit attempt, or contact-link click must not call it.
+  function trackGoogleAdsConversion() {
+    if (!hasGoogleAdsConfig) return false;
+
+    if (!ga4State.ready) {
+      if (pendingGoogleAdsConversions.length < MAX_QUEUED_EVENTS) {
+        pendingGoogleAdsConversions.push(true);
+      }
+      return false;
+    }
+
+    return sendGoogleAdsConversion();
+  }
+
+  function sendGoogleAdsConversion() {
+    if (!hasGoogleAdsConfig || !ga4State.ready || typeof window.gtag !== "function") return false;
+
+    window.gtag("event", "conversion", {
+      send_to: googleAdsConversionSendTo
+    });
+    return true;
+  }
+
+  // Future quote forms can dispatch this event after a confirmed successful
+  // response: document.dispatchEvent(new Event("rpv:quote-form-success"));
+  document.addEventListener("rpv:quote-form-success", trackGoogleAdsConversion);
 
   function installContactTracking() {
     document.addEventListener("click", (event) => {
@@ -167,8 +221,10 @@
     window.rpvAnalytics = {
       ...window.rpvAnalytics,
       ga4Ready: ga4State.ready,
+      googleAdsReady: ga4State.ready && hasGoogleAdsConfig,
       isInternal: ga4State.isInternal,
-      track: trackEvent
+      track: trackEvent,
+      trackQuoteConversion: trackGoogleAdsConversion
     };
   }
 

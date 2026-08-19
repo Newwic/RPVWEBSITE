@@ -5,10 +5,11 @@ window.RPV_ADMIN_CONFIG = {
   supabaseUrl: "",
   supabaseAnonKey: "",
 
-  // Public GA4 Measurement ID already used by the live RPV site.
-  // This is an identifier, not a secret. Replace it only if production uses
-  // a different web data stream.
+  // Public Google tag identifiers used by the live RPV site.
+  // These identifiers are not secrets.
   ga4MeasurementId: "G-Y63LFN3KPY",
+  googleAdsId: "AW-929735425",
+  googleAdsConversionLabel: "V4j4CMS08-IcEIHGqrsD",
 
   // These are the existing Supabase admin roles that count as internal staff.
   // Authorization is still enforced by Supabase Auth + RLS; this list is not
