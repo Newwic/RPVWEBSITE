@@ -562,6 +562,50 @@ Object.assign(ui.en, {
   aboutContactText: "Send your part photo, material, surface issue, and target result so our team can recommend the right option."
 });
 
+Object.assign(ui.th, {
+  contactPageTitle: "ติดต่อ RPV",
+  contactPageIntro: "ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการ เพื่อให้ทีมงานช่วยแนะนำเครื่องจักรหรือวัสดุขัดที่เหมาะสม",
+  contactPrimaryTitle: "ช่องทางหลัก",
+  contactMobileButton: "โทร 086-399-0785",
+  contactOfficeButton: "สำนักงาน 02-194-4346-7",
+  contactCompanyTitle: "ข้อมูลบริษัท",
+  contactQrTitle: "LINE QR",
+  contactQrText: "สแกนเพื่อสอบถามสินค้าและส่งรูปชิ้นงาน",
+  contactMapHeading: "แผนที่บริษัท",
+  contactMapText: "RPV Industrial Supply Co., Ltd. ลำโพ บางบัวทอง นนทบุรี",
+  contactMapsButton: "เปิด Google Maps",
+  contactGuideTitle: "ส่งข้อมูลแบบนี้ ทีมงานจะช่วยดูได้เร็วขึ้น",
+  contactGuideButton: "เปิด LINE",
+  contactGuideItem1Title: "1. รูปชิ้นงาน",
+  contactGuideItem1Text: "ถ่ายให้เห็นผิวที่ต้องการแก้หรือบริเวณที่ต้องการขัด",
+  contactGuideItem2Title: "2. วัสดุและปัญหา",
+  contactGuideItem2Text: "แจ้งวัสดุ เช่น เหล็ก สแตนเลส อะลูมิเนียม และปัญหาผิวที่พบ",
+  contactGuideItem3Title: "3. ผลลัพธ์ที่ต้องการ",
+  contactGuideItem3Text: "เช่น ลบคม ขัดเงา เตรียมผิวก่อนเคลือบ หรือทำผิวด้าน"
+});
+
+Object.assign(ui.en, {
+  contactPageTitle: "Contact RPV",
+  contactPageIntro: "Send your part photo, material, surface issue, and target result so our team can recommend the right machine or polishing media.",
+  contactPrimaryTitle: "MAIN CONTACT CHANNELS",
+  contactMobileButton: "Call 086-399-0785",
+  contactOfficeButton: "Office 02-194-4346-7",
+  contactCompanyTitle: "COMPANY INFORMATION",
+  contactQrTitle: "LINE QR",
+  contactQrText: "Scan to ask about products and send a photo of your workpiece.",
+  contactMapHeading: "Company location",
+  contactMapText: "RPV Industrial Supply Co., Ltd., Lam Pho, Bang Bua Thong, Nonthaburi",
+  contactMapsButton: "Open Google Maps",
+  contactGuideTitle: "Share these details so our team can help faster",
+  contactGuideButton: "Open LINE",
+  contactGuideItem1Title: "1. Workpiece photo",
+  contactGuideItem1Text: "Show the surface that needs attention or the area to be polished.",
+  contactGuideItem2Title: "2. Material and issue",
+  contactGuideItem2Text: "Tell us the material—such as steel, stainless steel, or aluminum—and the surface issue.",
+  contactGuideItem3Title: "3. Target result",
+  contactGuideItem3Text: "For example, deburring, polishing, pre-coating preparation, or a matte finish."
+});
+
 const showcaseUi = {
   th: {
     showcaseEyebrow: "RPV INDUSTRIAL SUPPLY · SURFACE FINISHING",
