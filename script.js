@@ -386,6 +386,64 @@ Object.assign(ui.en, {
   mobileCall: "Call 086-399-0785"
 });
 
+Object.assign(ui.th, {
+  solutionsHeroTitle: "แนวทางเลือกเครื่องจักรและวัสดุขัด",
+  solutionsHeroText: "เริ่มจากชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการ แล้วเลือกกระบวนการที่เหมาะกับงานจริง",
+  solutionsDeburringTitle: "งานลบคมและขัดผิว",
+  solutionsDeburringText: "เหมาะกับชิ้นงานจำนวนมากที่ต้องการลบคม ลดรอย และปรับผิวก่อนกระบวนการต่อไป",
+  solutionsDeburringButton: "ดูเครื่องขัดผิว",
+  solutionsMagneticTitle: "Magnetic Polishing",
+  solutionsMagneticText: "เหมาะกับชิ้นงานขนาดเล็กหรือมีรายละเอียดซับซ้อนที่ต้องการเข้าถึงพื้นที่เล็ก",
+  solutionsMagneticButton: "ดูสินค้า Magnetic",
+  solutionsMediaTitle: "วัสดุขัดและ Media",
+  solutionsMediaText: "เลือก Ceramic, Plastic, Stainless Steel หรือวัสดุขัดอื่นตามวัสดุชิ้นงานและผลลัพธ์ผิวที่ต้องการ",
+  solutionsMediaButton: "ดูวัสดุขัด",
+  solutionsBlastingTitle: "งานพ่นผิวและเตรียมผิว",
+  solutionsBlastingText: "ใช้สำหรับเตรียมผิวโลหะ ลบรอย สนิม หรือสร้างผิวก่อนเคลือบ โดยควรเลือก media ให้เหมาะกับงาน",
+  solutionsBlastingButton: "ปรึกษาเรา",
+  solutionsFlowTitle: "ข้อมูลที่ควรเตรียมก่อนเลือกกระบวนการ",
+  solutionsFlowText: "ยิ่งข้อมูลชิ้นงานชัด ทีมงานยิ่งช่วยแนะนำแนวทางได้ตรงขึ้น โดยไม่ต้องเดาจากชื่อสินค้าอย่างเดียว",
+  solutionsMaterialTitle: "วัสดุชิ้นงาน",
+  solutionsMaterialText: "เหล็ก สแตนเลส อะลูมิเนียม ทองเหลือง หรือวัสดุอื่น",
+  solutionsSurfaceTitle: "ปัญหาผิว",
+  solutionsSurfaceText: "คม รอย สนิม ผิวด้าน คราบ หรือผิวไม่สม่ำเสมอ",
+  solutionsResultTitle: "ผลลัพธ์ที่ต้องการ",
+  solutionsResultText: "ลบคม ขัดเงา เตรียมผิวก่อนเคลือบ หรือทำผิว satin",
+  solutionsVolumeTitle: "ปริมาณงาน",
+  solutionsVolumeText: "ชิ้นงานต่อวัน ขนาดชิ้นงาน และข้อจำกัดพื้นที่ติดตั้ง",
+  solutionsContactTitle: "ไม่แน่ใจว่าควรเลือกกระบวนการแบบไหน?",
+  solutionsContactText: "ส่งรูปชิ้นงาน วัสดุ ปัญหาผิว และผลลัพธ์ที่ต้องการมาให้ทีมงานช่วยแนะนำ"
+});
+
+Object.assign(ui.en, {
+  solutionsHeroTitle: "How to choose machines and polishing media",
+  solutionsHeroText: "Start with your workpiece, material, surface issue, and target result, then choose the process that fits the job.",
+  solutionsDeburringTitle: "Deburring and Surface Finishing",
+  solutionsDeburringText: "For high-volume parts that need deburring, scratch reduction, and surface refinement before the next process.",
+  solutionsDeburringButton: "View Finishing Machines",
+  solutionsMagneticTitle: "Magnetic Polishing",
+  solutionsMagneticText: "For small or complex parts that need precise access to hard-to-reach areas.",
+  solutionsMagneticButton: "View Magnetic Products",
+  solutionsMediaTitle: "Polishing Media and Compounds",
+  solutionsMediaText: "Choose ceramic, plastic, stainless steel, or other media based on the workpiece and desired finish.",
+  solutionsMediaButton: "View Polishing Media",
+  solutionsBlastingTitle: "Blasting and Surface Preparation",
+  solutionsBlastingText: "For preparing metal surfaces, removing scratches and rust, or creating a profile before coating. Choose media to suit the job.",
+  solutionsBlastingButton: "Talk to Our Team",
+  solutionsFlowTitle: "Information to prepare before choosing a process",
+  solutionsFlowText: "The clearer the workpiece information, the more accurately our team can recommend the right approach.",
+  solutionsMaterialTitle: "Workpiece material",
+  solutionsMaterialText: "Steel, stainless steel, aluminum, brass, or other materials",
+  solutionsSurfaceTitle: "Surface issue",
+  solutionsSurfaceText: "Sharp edges, scratches, rust, dullness, residue, or an uneven finish",
+  solutionsResultTitle: "Target result",
+  solutionsResultText: "Deburring, polishing, pre-coating preparation, or a satin finish",
+  solutionsVolumeTitle: "Production volume",
+  solutionsVolumeText: "Parts per day, workpiece size, and installation space constraints",
+  solutionsContactTitle: "Not sure which process to choose?",
+  solutionsContactText: "Send your part photo, material, surface issue, and target result so our team can recommend the right option."
+});
+
 const showcaseUi = {
   th: {
     showcaseEyebrow: "RPV INDUSTRIAL SUPPLY · SURFACE FINISHING",
@@ -1121,6 +1179,13 @@ function applyLanguage() {
   document.title = t("title");
   modalClose?.setAttribute("aria-label", t("closeModal"));
   updateLanguageButtons();
+
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const value = t(element.dataset.i18n);
+    if (typeof value === "string") {
+      element.textContent = value;
+    }
+  });
 
   setText(".quote-button", t("quoteButton"));
   setText(".brand small", t("brandSubtitle"));
