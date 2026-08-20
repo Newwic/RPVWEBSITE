@@ -6320,8 +6320,9 @@ body .home-catalog-layout {
 }
 
 .contact-cta .button.secondary {
-  color: #d7f8e3;
-  border-color: rgba(215, 248, 227, 0.36);
+  color: #0b5139;
+  background: #ffffff;
+  border-color: rgba(11, 81, 57, 0.28);
 }
 
 .office-link {
