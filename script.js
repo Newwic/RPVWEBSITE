@@ -89,7 +89,7 @@ let products = (loadAdminProductDraft() || window.rpvProducts || [])
   .filter((product) => product.status === "active")
   .sort((a, b) => a.sortOrder - b.sortOrder);
 
-const productsPerPage = 10;
+const productsPerPage = 8;
 let currentProductPage = 1;
 
 const urlParams = new URLSearchParams(window.location.search);
